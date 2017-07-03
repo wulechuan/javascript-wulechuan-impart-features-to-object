@@ -63,9 +63,9 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * @example
  * 	二维矢量.wulechuanImpartationProfiles = {
- * 		'二维位置': { __chiefName__: '位置', ... },
- * 		'二维力':   { __chiefName__: '受力', ... },
- * 		'二维速度': { __chiefName__: '速度', ... }
+ * 		'二维位置': { __theObjectItself__: '位置', ... },
+ * 		'二维力':   { __theObjectItself__: '受力', ... },
+ * 		'二维速度': { __theObjectItself__: '速度', ... }
  * 	}
  * 
  * 	function 二维点() {
@@ -97,7 +97,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 				y: -19
  * 			})
  * 			.并更名以下属性({
- * 				__chiefName__: '中心点',
+ * 				__theObjectItself__: '中心点',
  * 				x: '水平位置',
  * 				y: '垂直位置'
  * 			})
@@ -117,7 +117,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 采用所谓“普通对象”，如“明文对象（一译‘字面量对象’）”，作为“受体”对象亦是可行的。
  * @example
  * 	二维粒子.wulechuanImpartationProfiles = {
- * 		default: { __chiefName__: '二维粒子', ... }
+ * 		default: { __theObjectItself__: '二维粒子', ... }
  * 	};
  * 
  * 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
@@ -207,9 +207,9 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * @example
  * 	My2DVector.wulechuanImpartationProfiles = {
- * 		position2D: { __chiefName__: 'position', ... },
- * 		force2D:    { __chiefName__: 'force', ... },
- * 		velocity2D: { __chiefName__: 'velocity', ... }
+ * 		position2D: { __theObjectItself__: 'position', ... },
+ * 		force2D:    { __theObjectItself__: 'force', ... },
+ * 		velocity2D: { __theObjectItself__: 'velocity', ... }
  * 	}
  * 
  * 	function My2DPoint() {
@@ -232,7 +232,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 				y: -19
  * 			})
  * 			.withCustomizedPropertyNames({
- * 				__chiefName__: 'centerPos',
+ * 				__theObjectItself__: 'centerPos',
  * 				x: 'centerX',
  * 				y: 'centerY'
  * 			})
@@ -254,7 +254,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * Thus the object literal gains new properties and methods.
  * @example
  * 	My2DParticle.wulechuanImpartationProfiles = {
- * 		default: { __chiefName__: 'particle2D', ... }
+ * 		default: { __theObjectItself__: 'particle2D', ... }
  * 	};
  * 
  * 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
@@ -375,7 +375,7 @@ function WulechuanImpartationOperator() {
 
 
 	var methodNames_withCustomizedPropertyNames_zhCN = [
-		'且定名为',     // 用于仅更改主名称（__chiefName__）时较为符合汉语习惯。
+		'且定名为',     // 用于仅更改主名称（__theObjectItself__）时较为符合汉语习惯。
 		'并更名以下属性' // 用于更改多种属性名称时，较为符合汉语习惯。
 	];
 	var methodNames_withCustomizedPropertyNames_enUS = [
