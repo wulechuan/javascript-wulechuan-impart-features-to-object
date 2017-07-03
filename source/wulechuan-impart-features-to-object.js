@@ -2,9 +2,6 @@
 	WulechuanApplyOneStageOneMethodProgrammingPatternTo
 */
 
-var nameOfEntranceMethod_zhCN = '传授';
-var nameOfEntranceMethod_enUS = 'impart';
-
 window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsInMultipleLanguages();
 
 
@@ -221,19 +218,19 @@ window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsIn
  * 	}
  * 
  * 	function My2DPoint() {
- * 		impart().anInstanceOfClass(My2DVector).as('position2D').to(this);
+ * 		impart().theClass(My2DVector).as('position2D').to(this);
  * 	}
  * 
  * 	function My2DParticle() {
- * 		impart().anInstanceOfClass(My2DVector).as('position2D').renamedAs('pos').to(this);
+ * 		impart().theClass(My2DVector).as('position2D').renamedAs('pos').to(this);
  * 
- * 		impart().anInstanceOfClass(My2DVector).as('velocity2D').renamedAs({
+ * 		impart().theClass(My2DVector).as('velocity2D').renamedAs({
  * 			speed: 'velocityLength',
  * 			speed2: 'squareSpeed'
  * 			velocityDirection: 'movingDirection'
  * 		}).to(this);
  * 
- * 		impart().anInstanceOfClass(My2DVector)
+ * 		impart().theClass(My2DVector)
  * 			.as('position2D')
  * 			.buildAccordingTo({
  * 				x: 3,
@@ -246,7 +243,7 @@ window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsIn
  * 			})
  * 			.to(this);
  * 
- * 		impart().anInstanceOfClass(My2DVector)
+ * 		impart().theClass(My2DVector)
  * 			.usingThisProfile('force2D')
  * 			.withCustomizedPropertyNames({
  * 				strength: 's',
@@ -266,7 +263,7 @@ window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsIn
  * 	};
  * 
  * 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
- * 	impart().anInstanceOfClass(My2DParticle).to(myLovelyObjectLiteral);
+ * 	impart().theClass(My2DParticle).to(myLovelyObjectLiteral);
  * 
  * 
  * One can imagine that an object literal can also treated
@@ -293,21 +290,24 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 	var languageCode_enUS = 'en-US';
 
 
+	var nameOfEntranceMethod_zhCN = '传授';
+	var nameOfEntranceMethod_enUS = 'impart';
+
 
 	// This method name below, which is the first method to invoke,
 	// will NOT be public.
 	// Because we are wrapping it with an outer function,
 	// so that we can easily decide the using langugae.
 	// Thus, only one alias is enough for it to use inside this scope.
-	var methodName_startToImpart = ['startToImpart'];
+	var methodName_startToImpart = 'startToImpart';
 
 
 
-	var methodNames_anInstanceOfClass_zhCN = [
-		'实例对象源于此类'
+	var methodNames_theClass_zhCN = [
+		'此类'
 	];
-	var methodNames_anInstanceOfClass_enUS = [
-		'anInstanceOfClass'
+	var methodNames_theClass_enUS = [
+		'theClass'
 	];
 
 
@@ -377,19 +377,19 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 	 * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定位“简体中文”。
 	 * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
 	 */
-	var wulechuanImpartationFunctionsHost = {};
+	var wulechuanImpartationOperator = {};
 
-	wulechuanImpartationFunctionsHost[nameOfEntranceMethod_zhCN] =
+	wulechuanImpartationOperator[nameOfEntranceMethod_zhCN] =
 		function() {
 			return impart(languageCode_zhCN);
 		};
 
-	wulechuanImpartationFunctionsHost[nameOfEntranceMethod_enUS] =
+	wulechuanImpartationOperator[nameOfEntranceMethod_enUS] =
 		function() {
 			return impart(languageCode_enUS);
 		};
 
-	return wulechuanImpartationFunctionsHost;
+	return wulechuanImpartationOperator;
 
 
 
@@ -409,7 +409,7 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 	 */
 	function impart(usingLanguage) {
 		var operator = new _WulechuanImpartationOperator(usingLanguage);
-		return operator.startToImpart();
+		return operator[methodName_startToImpart]();
 	}
 
 
@@ -458,13 +458,13 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 		var stagesOfClassRoute = new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
 
 		stagesOfClassRoute.addStage(startToImpart, {
-			'zh-CN': methodName_startToImpart,
-			'en-US': methodName_startToImpart
+			'zh-CN': [methodName_startToImpart],
+			'en-US': [methodName_startToImpart]
 		});
 
-		stagesOfClassRoute.addStage(anInstanceOfClass, {
-			'zh-CN': methodNames_anInstanceOfClass_zhCN,
-			'en-US': methodNames_anInstanceOfClass_enUS
+		stagesOfClassRoute.addStage(theClass, {
+			'zh-CN': methodNames_theClass_zhCN,
+			'en-US': methodNames_theClass_enUS
 		});
 
 		stagesOfClassRoute.addStage(usingThisProfile, true, {
@@ -500,8 +500,8 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 		var stagesOfObjectRoute = new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
 
 		stagesOfObjectRoute.addStage(startToImpart, {
-			'zh-CN': methodName_startToImpart,
-			'en-US': methodName_startToImpart
+			'zh-CN': [methodName_startToImpart],
+			'en-US': [methodName_startToImpart]
 		});
 
 		stagesOfObjectRoute.addStage(theObject, {
@@ -599,7 +599,7 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 		 *
 		 * @param {!function} theGivenFunction
 		 */
-		function anInstanceOfClass(theGivenFunction) {
+		function theClass(theGivenFunction) {
 			if (typeof theGivenFunction !== 'function') {
 				switch (usingLanguage) {
 					case languageCode_zhCN:

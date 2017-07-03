@@ -196,19 +196,19 @@ So we need a solution, hopefully a slightly better one.
 	}
 
 	function My2DPoint() {
-		impart().anInstanceOfClass(My2DVector).as('position2D').to(this);
+		impart().theClass(My2DVector).as('position2D').to(this);
 	}
 
 	function My2DParticle() {
-		impart().anInstanceOfClass(My2DVector).as('position2D').renamedAs('pos').to(this);
+		impart().theClass(My2DVector).as('position2D').renamedAs('pos').to(this);
 
-		impart().anInstanceOfClass(My2DVector).as('velocity2D').renamedAs({
+		impart().theClass(My2DVector).as('velocity2D').renamedAs({
 			speed: 'velocityLength',
 			speed2: 'squareSpeed'
 			velocityDirection: 'movingDirection'
 		}).to(this);
 
-		impart().anInstanceOfClass(My2DVector)
+		impart().theClass(My2DVector)
 			.as('position2D')
 			.buildAccordingTo({
 				x: 3,
@@ -221,7 +221,7 @@ So we need a solution, hopefully a slightly better one.
 			})
 			.to(this);
 
-		impart().anInstanceOfClass(My2DVector)
+		impart().theClass(My2DVector)
 			.usingThisProfile('force2D')
 			.withCustomizedPropertyNames({
 				strength: 's',
@@ -241,7 +241,7 @@ Thus the object literal gains new properties and methods.
 	};
 
 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
-	impart().anInstanceOfClass(My2DParticle).to(myLovelyObjectLiteral);
+	impart().theClass(My2DParticle).to(myLovelyObjectLiteral);
 
 
 One can imagine that an object literal can also treated
