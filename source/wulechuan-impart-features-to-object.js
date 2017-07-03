@@ -318,21 +318,13 @@ function WulechuanImpartationOperator() {
 	// Because we are wrapping it with getter functions,
 	// so that we can easily decide the using langugae.
 	// Thus, only one alias is enough for it to use inside this scope.
-	var methodName_startToImpart = 'startToImpart';
+	var methodName_startToImpart = '__startToImpart__';
 
-
-
-	var methodNames_theClass_zhCN = [
-		'此类'
-	];
-	var methodNames_theClass_enUS = [
-		'theClass'
-	];
 
 
 
 	var methodNames_theObject_zhCN = [
-		'对象'
+		'此对象'
 	];
 	var methodNames_theObject_enUS = [
 		'theObject'
@@ -340,22 +332,45 @@ function WulechuanImpartationOperator() {
 
 
 
-	var methodNames_usingThisProfile_zhCN = [
+
+	var methodNames_theClass_zhCN = [
+		'此类'
+	];
+	var methodNames_theClass_enUS = [
+		'anInstanceOf',
+		'anInstanceOfClass'
+	];
+
+	var methodNames_useTheseOptionsWhenConstructInstance_zhCN = [
+		'依据'
+	];
+	var methodNames_useTheseOptionsWhenConstructInstance_enUS = [
+		'withTheseOptions'
+	];
+
+	var methodNames_buildInstanceObject_zhCN = [
+		'之实例',
+		'之实例对象',
+		'构建之实例',
+		'构建之实例对象'
+	];
+
+	var methodNames_buildInstanceObject_enUS = [
+		'whenConstructed'
+	];
+
+
+
+
+	var methodNames_useThisProfile_zhCN = [
 		'视作'
 	];
-	var methodNames_usingThisProfile_enUS = [
+	var methodNames_useThisProfile_enUS = [
 		'as',
+		'treatAs',
 		'usingThisProfile'
 	];
 
-
-
-	var methodNames_buildAccordingTo_zhCN = [
-		'构建时依据'
-	];
-	var methodNames_buildAccordingTo_enUS = [
-		'buildAccordingTo'
-	];
 
 
 
@@ -370,12 +385,14 @@ function WulechuanImpartationOperator() {
 
 
 
-	var methodNames_addDirectAccessingProperties_zhCN = [
+
+	var methodNames_addDirectlyAccessibleProperties_zhCN = [
 		'且设以下直接可用之属性',
 	];
-	var methodNames_addDirectAccessingProperties_enUS = [
-		'addDirectAccessingProperties'
+	var methodNames_addDirectlyAccessibleProperties_enUS = [
+		'addingDirectlyAccessibleProperties'
 	];
+
 
 
 
@@ -384,9 +401,11 @@ function WulechuanImpartationOperator() {
 
 
 
+
+
 	var propertyName_wulechuanImpartationProfiles = 'wulechuanImpartationProfiles';
 	var propertyName_defaultProfile = 'default';
-	var propertyName_instanceChiefName = '__chiefName__';
+	var propertyName_objectItself = '__theObjectItself__';
 
 
 
@@ -407,12 +426,14 @@ function WulechuanImpartationOperator() {
 	var currentErrorMessage;
 	var shouldThrowErrors;
 
-	var theConstructor;
-	var theConstructionOptions;
-	var allImpartationProfiles;
-	var usedImpartationProfile;
+	var usingLanguage = '';
 
-	var theSourceObject;
+	var theClassConstructor;
+	var theClassConstructionOptions;
+	var allImpartationProfilesOfClass;
+	var usedImpartationProfileOfClass;
+
+	var theSourceObjectToImpartThingsFrom;
 	var usedPropertyNamesCustomization = {};
 	var directlyAccessiblePropertiesToAdd = {};
 
@@ -422,17 +443,17 @@ function WulechuanImpartationOperator() {
 	var stagesOfClassRoute  = _defineExecutionRouteForImpartingClassInstance();
 	var stagesOfObjectRoute = _defineExecutionRouteForImpartingObject();
 
+	// Hide(remove) the "startToImpart" method, because we only want to expose
+	// the entrance getters defined below.
+	var backupOfStartToImpartMethod = thisOperator[methodName_startToImpart];
+	delete thisOperator[methodName_startToImpart];
+
 
 
 	_defineEntranceGettersInLanguage('zh-CN', nameOfEntranceProperty_zhCN);
 	_defineEntranceGettersInLanguage('en-US', nameOfEntranceProperty_enUS);
 
 
-
-	// Hide(remove) the "startToImpart" method, because we only want to expose
-	// the entrance getters defined above.
-	var backupOfStartToImpartMethod = thisOperator[methodName_startToImpart];
-	delete thisOperator[methodName_startToImpart];
 
 
 
@@ -446,7 +467,8 @@ function WulechuanImpartationOperator() {
 		Object.defineProperty(thisOperator, entrancePropertyName, {
 			enumerable: true,
 			get: function () {
-				_forAllRoutesSetPreferredNaturalLanguageTo(languageCode);
+				usingLanguage = languageCode;
+				_forAllRoutesSetPreferredNaturalLanguageTo(usingLanguage);
 
 
 				// Execute first stage to automatically hide methods in other languages.
@@ -475,14 +497,19 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_theClass_enUS
 		});
 
-		stagesOfClassRoute.addStage(usingThisProfile, true, {
-			'zh-CN': methodNames_usingThisProfile_zhCN,
-			'en-US': methodNames_usingThisProfile_enUS
+		stagesOfClassRoute.addStage(useTheseOptionsWhenConstructInstance, true, {
+			'zh-CN': methodNames_useTheseOptionsWhenConstructInstance_zhCN,
+			'en-US': methodNames_useTheseOptionsWhenConstructInstance_enUS
 		});
 
-		stagesOfClassRoute.addStage(buildAccordingTo, true, {
-			'zh-CN': methodNames_buildAccordingTo_zhCN,
-			'en-US': methodNames_buildAccordingTo_enUS
+		stagesOfClassRoute.addStage(buildInstanceObject, true, {
+			'zh-CN': methodNames_buildInstanceObject_zhCN,
+			'en-US': methodNames_buildInstanceObject_enUS
+		});
+
+		stagesOfClassRoute.addStage(useThisProfile, true, {
+			'zh-CN': methodNames_useThisProfile_zhCN,
+			'en-US': methodNames_useThisProfile_enUS
 		});
 
 		stagesOfClassRoute.addStage(withCustomizedPropertyNames, true, {
@@ -490,9 +517,9 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_withCustomizedPropertyNames_enUS
 		});
 
-		stagesOfClassRoute.addStage(addDirectAccessingProperties, true, {
-			'zh-CN': methodNames_addDirectAccessingProperties_zhCN,
-			'en-US': methodNames_addDirectAccessingProperties_enUS
+		stagesOfClassRoute.addStage(addDirectlyAccessibleProperties, true, {
+			'zh-CN': methodNames_addDirectlyAccessibleProperties_zhCN,
+			'en-US': methodNames_addDirectlyAccessibleProperties_enUS
 		});
 
 		stagesOfClassRoute.addStage(towards, {
@@ -521,9 +548,9 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_withCustomizedPropertyNames_enUS
 		});
 
-		stagesOfObjectRoute.addStage(addDirectAccessingProperties, true, {
-			'zh-CN': methodNames_addDirectAccessingProperties_zhCN,
-			'en-US': methodNames_addDirectAccessingProperties_enUS
+		stagesOfObjectRoute.addStage(addDirectlyAccessibleProperties, true, {
+			'zh-CN': methodNames_addDirectlyAccessibleProperties_zhCN,
+			'en-US': methodNames_addDirectlyAccessibleProperties_enUS
 		});
 
 		stagesOfObjectRoute.addStage(towards, {
@@ -569,7 +596,7 @@ function WulechuanImpartationOperator() {
 			isAValidProfile: function() {
 				var isValid =
 						_the(subject).isAValidObject(subject)
-					&&	_the(subject).isAValidKey(subject[propertyName_instanceChiefName])
+					&&	_the(subject).isAValidKey(subject[propertyName_objectItself])
 					;
 
 				return isValid;
@@ -593,7 +620,7 @@ function WulechuanImpartationOperator() {
 	 * the object route and the class route.
 	 */
 	function startToImpart() {
-		// shouldThrowErrors = !shouldNotThrowErrors;
+		// nothing explicitly
 	}
 
 
@@ -626,23 +653,23 @@ function WulechuanImpartationOperator() {
 
 			_dealWithCurrentError();
 		} else {
-			theConstructor = theGivenFunction;
+			theClassConstructor = theGivenFunction;
 		}
 
 
-		var _allImpartationProfiles = theConstructor[propertyName_wulechuanImpartationProfiles];
+		var _allImpartationProfiles = theClassConstructor[propertyName_wulechuanImpartationProfiles];
 		if (_the(_allImpartationProfiles).isNotAValidObject()) {
 			_allImpartationProfiles = {};
 			_allImpartationProfiles[propertyName_defaultProfile] = {};
 		}
 
 
-		allImpartationProfiles = _allImpartationProfiles;
+		allImpartationProfilesOfClass = _allImpartationProfiles;
 
 
-		var _defaultProfile = allImpartationProfiles[propertyName_defaultProfile];
+		var _defaultProfile = allImpartationProfilesOfClass[propertyName_defaultProfile];
 		if (_the(_defaultProfile).isAValidProfile()) {
-			usedImpartationProfile = _defaultProfile;
+			usedImpartationProfileOfClass = _defaultProfile;
 		}
 	}
 
@@ -673,11 +700,11 @@ function WulechuanImpartationOperator() {
 
 			_dealWithCurrentError();
 		} else {
-			theSourceObject = sourceObject;
+			theSourceObjectToImpartThingsFrom = sourceObject;
 		}
 
 
-		allImpartationProfiles = {};
+		allImpartationProfilesOfClass = {};
 		// allImpartationProfiles[propertyName_defaultProfile] = null;
 	}
 
@@ -686,17 +713,17 @@ function WulechuanImpartationOperator() {
 	 *
 	 * @param {!string} variantName
 	 */
-	function usingThisProfile(profileName) {
+	function useThisProfile(profileName) {
 		if (errorAlreadyOcurred) return;
 
 		var _foundProfile;
 		var _theFoundProfileIsInvalid = true;
 
 		if (_the(profileName).isAValidKey()) {
-			_foundProfile = allImpartationProfiles[profileName];
+			_foundProfile = allImpartationProfilesOfClass[profileName];
 
 			if (_the(_foundProfile).isAValidProfile()) {
-				usedImpartationProfile = _foundProfile;
+				usedImpartationProfileOfClass = _foundProfile;
 				_theFoundProfileIsInvalid = false;
 			}
 		}
@@ -726,15 +753,24 @@ function WulechuanImpartationOperator() {
 	}
 
 	/**
-	 * Step 3 - to accept the options for construction of an instance that is to impart.
+	 * To accept the options for construction of an instance that is to impart.
 	 *
 	 * @param {?object} constructionOptions
 	 */
-	function buildAccordingTo(constructionOptions) {
+	function useTheseOptionsWhenConstructInstance(constructionOptions) {
 		if (errorAlreadyOcurred) return;
 
-		theConstructionOptions = constructionOptions;
+		theClassConstructionOptions = constructionOptions;
 	}
+
+	function buildInstanceObject() {
+		if (errorAlreadyOcurred) return;
+
+		theSourceObjectToImpartThingsFrom = new theClassConstructor(theClassConstructionOptions);
+	}
+
+
+
 
 	function withCustomizedPropertyNames(propertyNamesCustomization) {
 		if (errorAlreadyOcurred) return;
@@ -746,9 +782,14 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function addDirectAccessingProperties(directAccessingPropertyDefinitions) {
+	function addDirectlyAccessibleProperties(_directlyAccessiblePropertiesToAdd) {
 		if (errorAlreadyOcurred) return;
-		
+
+		if (_the(_directlyAccessiblePropertiesToAdd).isNotAValidObject()) {
+			errorAlreadyOcurred = true;
+		} else {
+			directlyAccessiblePropertiesToAdd = _directlyAccessiblePropertiesToAdd;
+		}
 	}
 
 	function towards(granteeOfMethods, granteeOfProperties) {
@@ -792,17 +833,17 @@ function WulechuanImpartationOperator() {
 
 
 	function _impartIt(granteeOfMethods, granteeOfProperties) {
-		for (var attributeName in theSourceObject) {
-			var attribute = theSourceObject[attributeName];
+		for (var attributeName in theSourceObjectToImpartThingsFrom) {
+			var attribute = theSourceObjectToImpartThingsFrom[attributeName];
 			var attributeImpartationName = attributeName;
 
 			var shouldSkip = false;
 			if (shouldSkip) continue;
 
-			var customizedImpartationMethod = usedImpartationProfile[attributeName];
+			var customizedImpartationMethod = usedImpartationProfileOfClass[attributeName];
 
 			if (typeof customizedImpartationMethod === 'function') {
-				customizedImpartationMethod(theSourceObject, granteeOfMethods);
+				customizedImpartationMethod(theSourceObjectToImpartThingsFrom, granteeOfMethods);
 				continue;
 			}
 
@@ -811,7 +852,7 @@ function WulechuanImpartationOperator() {
 
 			if (attributeIsAMethod) {
 				_impartOneMethodTheDefaultWay(
-					theSourceObject,
+					theSourceObjectToImpartThingsFrom,
 					attributeName,
 					granteeOfMethods,
 					attributeImpartationName
@@ -821,7 +862,7 @@ function WulechuanImpartationOperator() {
 
 			if (attributeIsAProperty) {
 				_impartOnePropertyTheDefaultWay(
-					theSourceObject,
+					theSourceObjectToImpartThingsFrom,
 					attributeName,
 					granteeOfProperties,
 					attributeImpartationName
@@ -830,7 +871,7 @@ function WulechuanImpartationOperator() {
 			}
 		}
 
-		return theSourceObject;
+		return theSourceObjectToImpartThingsFrom;
 	}
 
 	function _impartOneMethodTheDefaultWay(objectToImpart, oldName, granteeOfMethod, newName) {
