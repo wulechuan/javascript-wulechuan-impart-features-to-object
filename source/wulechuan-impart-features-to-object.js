@@ -2,9 +2,7 @@
 	WulechuanApplyOneStageOneMethodProgrammingPatternTo
 */
 
-window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsInMultipleLanguages();
-
-
+window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
 
 
 /**
@@ -13,9 +11,6 @@ window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsIn
  * -	<https://github.com/wulechuan/javascript-wulechuan-apply-one-stage-one-method-pattern>
  * 
  * @description
- * 
- * @returns {object} - The object that hosts basically the same methods but
- *                     in different language versions. {@link ~wulechuanImpartationFunctionsHost}
  * 
  * 
  * ----- readme start -----
@@ -284,19 +279,43 @@ window.wulechuanImpartationFunctionsHost = createWulechuanImpartationFunctionsIn
  * 
  * ----- readme end -----
  * 
+ * 
+ * A class, instance of which is the operator
+ * that remembers several key factors and does the impartation job
+ * for a given class(a.k.a. a function) or an object.
+ *
+ * Each time the entrance method is invoked,
+ * a new instance object of this operator class is created,
+ * which then takes over the impartation process afterwards.
+ * 
+ * If the operator is used through its class impartation route,
+ * an instance object of the provided class is created
+ * via the javascript "new" operator, and this instance is
+ * the object to impart properties from;
+ * 
+ * if otherwise the object route is taken,
+ * the provided input object itself it the one to impart properties from.
+ *
+ * @class
+ * 
+ * @param {!string} usingLanguage
+ * 
+ * @returns
+ * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定为“简体中文”。
+ * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
  */
-function createWulechuanImpartationFunctionsInMultipleLanguages() {
+function WulechuanImpartationOperator() {
 	var languageCode_zhCN = 'zh-CN';
 	var languageCode_enUS = 'en-US';
 
 
-	var nameOfEntranceMethod_zhCN = '传授';
-	var nameOfEntranceMethod_enUS = 'impart';
+	var nameOfEntranceProperty_zhCN = '传授';
+	var nameOfEntranceProperty_enUS = 'impart';
 
 
 	// This method name below, which is the first method to invoke,
 	// will NOT be public.
-	// Because we are wrapping it with an outer function,
+	// Because we are wrapping it with getter functions,
 	// so that we can easily decide the using langugae.
 	// Thus, only one alias is enough for it to use inside this scope.
 	var methodName_startToImpart = 'startToImpart';
@@ -372,24 +391,6 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 
 
 
-	/**
-	 * @namespace <wulechuanImpartationFunctionsHost>
-	 * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定位“简体中文”。
-	 * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
-	 */
-	var wulechuanImpartationOperator = {};
-
-	wulechuanImpartationOperator[nameOfEntranceMethod_zhCN] =
-		function() {
-			return impart(languageCode_zhCN);
-		};
-
-	wulechuanImpartationOperator[nameOfEntranceMethod_enUS] =
-		function() {
-			return impart(languageCode_enUS);
-		};
-
-	return wulechuanImpartationOperator;
 
 
 
@@ -397,66 +398,73 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 
 
 
-	/**
-	 * The function, the wrapped versions of which are exposed.
-	 * Wrapping is essentially for providing this function
-	 * in multiple human languages.
-	 *
-	 * Each wrapped version creates an instance of
-	 * the class "_WulechuanImpartationOperator",
-	 * and then calls the "startToImpart" method of the instance
-	 * to complete desired impartation process.
-	 */
-	function impart(usingLanguage) {
-		var operator = new _WulechuanImpartationOperator(usingLanguage);
-		return operator[methodName_startToImpart]();
+
+
+
+	var thisOperator = this;
+
+	var errorAlreadyOcurred = false;
+	var currentErrorMessage;
+	var shouldThrowErrors;
+
+	var theConstructor;
+	var theConstructionOptions;
+	var allImpartationProfiles;
+	var usedImpartationProfile;
+
+	var theSourceObject;
+	var usedPropertyNamesCustomization = {};
+	var directlyAccessiblePropertiesToAdd = {};
+
+
+
+
+	var stagesOfClassRoute  = _defineExecutionRouteForImpartingClassInstance();
+	var stagesOfObjectRoute = _defineExecutionRouteForImpartingObject();
+
+
+
+	_defineEntranceGettersInLanguage('zh-CN', nameOfEntranceProperty_zhCN);
+	_defineEntranceGettersInLanguage('en-US', nameOfEntranceProperty_enUS);
+
+
+
+	// Hide(remove) the "startToImpart" method, because we only want to expose
+	// the entrance getters defined above.
+	var backupOfStartToImpartMethod = thisOperator[methodName_startToImpart];
+	delete thisOperator[methodName_startToImpart];
+
+
+
+
+
+
+
+
+
+	function _defineEntranceGettersInLanguage(languageCode, entrancePropertyName) {
+		Object.defineProperty(thisOperator, entrancePropertyName, {
+			enumerable: true,
+			get: function () {
+				_forAllRoutesSetPreferredNaturalLanguageTo(languageCode);
+
+
+				// Execute first stage to automatically hide methods in other languages.
+				// Note that in face, the returned value is still "thisOperator" itself.
+				return backupOfStartToImpartMethod();
+			}
+		});
 	}
 
+	function _forAllRoutesSetPreferredNaturalLanguageTo(languageCode) {
+		stagesOfClassRoute.setPreferredNaturalLanguageTo(languageCode);
+		stagesOfObjectRoute.setPreferredNaturalLanguageTo(languageCode);
+	}
 
-
-
-
-	/**
-	 * @author 吴乐川 <wulechuan@live.com>
-	 * 
-	 * A class, instance of which is the operator
-	 * that remembers several key factors and does the impartation job
-	 * for a given class(a.k.a. a function) or an object.
-	 *
-	 * Each time the entrance method is invoked,
-	 * a new instance object of this operator class is created,
-	 * which then takes over the impartation process afterwards.
-	 * 
-	 * If the operator is used through its class impartation route,
-	 * an instance object of the provided class is created
-	 * via the javascript "new" operator, and this instance is
-	 * the object to impart properties from;
-	 * 
-	 * if otherwise the object route is taken,
-	 * the provided input object itself it the one to impart properties from.
-	 *
-	 * @class
-	 * 
-	 * @param {!string} usingLanguage
-	 */
-	function _WulechuanImpartationOperator(usingLanguage) {
-		var thisOperator = this;
-
-		var errorAlreadyOcurred = false;
-		var currentErrorMessage;
-		var shouldThrowErrors;
-
-		var theConstructor;
-		var theConstructionOptions;
-		var allImpartationProfiles;
-
-		var theSourceObject;
-		var usedProfile;
-		var usedPropertyNamesCustomization = {};
-
-
-		var stagesOfClassRoute = new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
-
+	function _defineExecutionRouteForImpartingClassInstance() {
+		var stagesOfClassRoute =
+			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
+		
 		stagesOfClassRoute.addStage(startToImpart, {
 			'zh-CN': [methodName_startToImpart],
 			'en-US': [methodName_startToImpart]
@@ -492,11 +500,10 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 			'en-US': methodNames_towards_enUS
 		});
 
-		stagesOfClassRoute.setPreferredNaturalLanguageTo(usingLanguage);
+		return stagesOfClassRoute;
+	}
 
-
-
-
+	function _defineExecutionRouteForImpartingObject() {
 		var stagesOfObjectRoute = new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
 
 		stagesOfObjectRoute.addStage(startToImpart, {
@@ -524,338 +531,331 @@ function createWulechuanImpartationFunctionsInMultipleLanguages() {
 			'en-US': methodNames_towards_enUS
 		});
 
-		stagesOfObjectRoute.setPreferredNaturalLanguageTo(usingLanguage);
+		return stagesOfClassRoute;
+	}
 
 
 
+	function _the(subject) {
+		return {
+			isNeitherAnObjectNorAnArray: function() {
+				return !subject || typeof subject !== 'object';
+			},
+
+			isAValidObject: function() {
+				return !!subject && typeof subject === 'object' && !Array.isArray(subject);
+			},
+
+			isNotAValidObject: function() {
+				return !_the(subject).isAValidObject();
+			},
+
+			isAValidArray: function() {
+				return Array.isArray(subject);
+			},
+
+			isAnInvalidArray: function() {
+				return !Array.isArray(subject);
+			},
+
+			isAValidKey: function() {
+				return !!subject && typeof subject === 'string';
+			},
+
+			isAnInvalidKey: function(subject) {
+				return !_the(subject).isAnValidKey(subject);
+			},
+
+			isAValidProfile: function() {
+				var isValid =
+						_the(subject).isAValidObject(subject)
+					&&	_the(subject).isAValidKey(subject[propertyName_instanceChiefName])
+					;
+
+				return isValid;
+			}
+		};
+	}
+
+	function _dealWithCurrentError() {
+		errorAlreadyOcurred = true;
+		
+		if (shouldThrowErrors) {
+			throw TypeError('\n'+currentErrorMessage);
+		} else {
+			console.error(TypeError('\n'+currentErrorMessage));
+		}
+	}
 
 
+	/**
+	 * This stage simply provides two possible routes:
+	 * the object route and the class route.
+	 */
+	function startToImpart() {
+		// shouldThrowErrors = !shouldNotThrowErrors;
+	}
 
 
-
-		function _the(subject) {
-			return {
-				isNeitherAnObjectNorAnArray: function() {
-					return !subject || typeof subject !== 'object';
-				},
-
-				isAValidObject: function() {
-					return !!subject && typeof subject === 'object' && !Array.isArray(subject);
-				},
-
-				isNotAValidObject: function() {
-					return !_the(subject).isAValidObject();
-				},
-
-				isAValidArray: function() {
-					return Array.isArray(subject);
-				},
-
-				isAnInvalidArray: function() {
-					return !Array.isArray(subject);
-				},
-
-				isAValidKey: function() {
-					return !!subject && typeof subject === 'string';
-				},
-
-				isAnInvalidKey: function(subject) {
-					return !_the(subject).isAnValidKey(subject);
-				},
-
-				isAValidProfile: function() {
-					var isValid =
-							_the(subject).isAValidObject(subject)
-						&&	_the(subject).isAValidKey(subject[propertyName_instanceChiefName])
+	/**
+	 * To accept the function treated as a class, instances of which will be imparted.
+	 *
+	 * @param {!function} theGivenFunction
+	 */
+	function theClass(theGivenFunction) {
+		if (typeof theGivenFunction !== 'function') {
+			switch (usingLanguage) {
+				case languageCode_zhCN:
+					currentErrorMessage =
+						'首个参数必须为一个函数。其将被视为一个构造函数以构造一个对象。'+
+						'该对象之属性和方法将被传授给受封者。'+
+						'\n而实际提供的首个参数是一个'+typeof theGivenFunction + '。'
 						;
+					break;
 
-					return isValid;
-				}
-			};
+				case languageCode_enUS:
+					currentErrorMessage =
+						'The provided source must be a function, '+
+						'which will be used as a constructor '+
+						'to create the object to impart to a grantee.'+
+						'\nWhat\'s actually provided was of type: '+
+						typeof theGivenFunction + '.'
+						;
+					break;
+			}
+
+			_dealWithCurrentError();
+		} else {
+			theConstructor = theGivenFunction;
 		}
 
-		function _dealWithCurrentError() {
+
+		var _allImpartationProfiles = theConstructor[propertyName_wulechuanImpartationProfiles];
+		if (_the(_allImpartationProfiles).isNotAValidObject()) {
+			_allImpartationProfiles = {};
+			_allImpartationProfiles[propertyName_defaultProfile] = {};
+		}
+
+
+		allImpartationProfiles = _allImpartationProfiles;
+
+
+		var _defaultProfile = allImpartationProfiles[propertyName_defaultProfile];
+		if (_the(_defaultProfile).isAValidProfile()) {
+			usedImpartationProfile = _defaultProfile;
+		}
+	}
+
+	/**
+	 * To accept the function treated as a class, instances of which will be imparted.
+	 *
+	 * @param {!object} theSourceObject
+	 */
+	function theObject(sourceObject) {
+		if (_the(sourceObject).isNeitherAnObjectNorAnArray()) {
+			switch (usingLanguage) {
+				case languageCode_zhCN:
+					currentErrorMessage =
+						'首个参数必须为一个非空对象，可以为数组对象。'+
+						'\n而实际提供的首个参数是一个'+typeof sourceObject + '。'
+						;
+					break;
+
+				case languageCode_enUS:
+					currentErrorMessage =
+						'The provided source must be an object that is not a null. '+
+						'An array object is allowed. '+
+						'\nWhat\'s actually provided was of type: '+
+						typeof theGivenFunction + '.'
+						;
+					break;
+			}
+
+			_dealWithCurrentError();
+		} else {
+			theSourceObject = sourceObject;
+		}
+
+
+		allImpartationProfiles = {};
+		// allImpartationProfiles[propertyName_defaultProfile] = null;
+	}
+
+	/**
+	 * To accept the name of the desired variant to use.
+	 *
+	 * @param {!string} variantName
+	 */
+	function usingThisProfile(profileName) {
+		if (errorAlreadyOcurred) return;
+
+		var _foundProfile;
+		var _theFoundProfileIsInvalid = true;
+
+		if (_the(profileName).isAValidKey()) {
+			_foundProfile = allImpartationProfiles[profileName];
+
+			if (_the(_foundProfile).isAValidProfile()) {
+				usedImpartationProfile = _foundProfile;
+				_theFoundProfileIsInvalid = false;
+			}
+		}
+
+		if (_theFoundProfileIsInvalid) {
+			if (typeof profileName !== 'string') {
+				profileName = typeof profileName;
+			}
+
+			switch (usingLanguage) {
+				case languageCode_zhCN:
+					currentErrorMessage =
+						'未找到指定的变体。'+
+						'输入参数为：“'+profileName+'”。';
+					break;
+
+				case languageCode_enUS:
+					currentErrorMessage =
+						'The desired profile name was invalid. '+
+						'No profile was matched by that name. '+
+						'\nThe input was "'+profileName+'".';
+					break;
+			}
+
+			_dealWithCurrentError();
+		}
+	}
+
+	/**
+	 * Step 3 - to accept the options for construction of an instance that is to impart.
+	 *
+	 * @param {?object} constructionOptions
+	 */
+	function buildAccordingTo(constructionOptions) {
+		if (errorAlreadyOcurred) return;
+
+		theConstructionOptions = constructionOptions;
+	}
+
+	function withCustomizedPropertyNames(propertyNamesCustomization) {
+		if (errorAlreadyOcurred) return;
+
+		if (_the(propertyNamesCustomization).isNotAValidObject()) {
 			errorAlreadyOcurred = true;
-			
-			if (shouldThrowErrors) {
-				throw TypeError('\n'+currentErrorMessage);
-			} else {
-				console.error(TypeError('\n'+currentErrorMessage));
+		} else {
+			usedPropertyNamesCustomization = propertyNamesCustomization;
+		}
+	}
+
+	function addDirectAccessingProperties(directAccessingPropertyDefinitions) {
+		if (errorAlreadyOcurred) return;
+		
+	}
+
+	function towards(granteeOfMethods, granteeOfProperties) {
+		if (errorAlreadyOcurred) return;
+
+		if (_the(granteeOfMethods).isNeitherAnObjectNorAnArray()) {
+			switch (usingLanguage) {
+				case languageCode_zhCN:
+					currentErrorMessage = '受封者必须是一个标准对象或数组，且不可为空对象（null）。';
+					break;
+
+				case languageCode_enUS:
+					currentErrorMessage =
+						'The grantee to impart methods and properties to '+
+						'must be an object or an array, and not a null.'
+						;
+					break;
+			}
+
+			_dealWithCurrentError();
+		}
+
+		if (_the(granteeOfProperties).isNeitherAnObjectNorAnArray()) {
+			granteeOfProperties = granteeOfMethods;
+		}
+
+
+
+
+		if (errorAlreadyOcurred) {
+			// return nothing if any error occurs.
+			return;
+		}
+
+
+
+		var theInstanceThatHasBeenImparted =  _impartIt(granteeOfMethods, granteeOfProperties);
+		// return the instance for the grantee to store a variable within its scope.
+		return theInstanceThatHasBeenImparted;
+	}
+
+
+	function _impartIt(granteeOfMethods, granteeOfProperties) {
+		for (var attributeName in theSourceObject) {
+			var attribute = theSourceObject[attributeName];
+			var attributeImpartationName = attributeName;
+
+			var shouldSkip = false;
+			if (shouldSkip) continue;
+
+			var customizedImpartationMethod = usedImpartationProfile[attributeName];
+
+			if (typeof customizedImpartationMethod === 'function') {
+				customizedImpartationMethod(theSourceObject, granteeOfMethods);
+				continue;
+			}
+
+			var attributeIsAMethod = typeof attribute === 'function';
+			var attributeIsAProperty = typeof attribute !== 'function';
+
+			if (attributeIsAMethod) {
+				_impartOneMethodTheDefaultWay(
+					theSourceObject,
+					attributeName,
+					granteeOfMethods,
+					attributeImpartationName
+				);
+				continue;
+			}
+
+			if (attributeIsAProperty) {
+				_impartOnePropertyTheDefaultWay(
+					theSourceObject,
+					attributeName,
+					granteeOfProperties,
+					attributeImpartationName
+				);
+				continue;
 			}
 		}
 
+		return theSourceObject;
+	}
 
-		/**
-		 * This stage simply provides two possible routes:
-		 * the object route and the class route.
-		 */
-		function startToImpart(shouldNotThrowErrors) {
-			shouldThrowErrors = !shouldNotThrowErrors;
-		}
-
-
-		/**
-		 * To accept the function treated as a class, instances of which will be imparted.
-		 *
-		 * @param {!function} theGivenFunction
-		 */
-		function theClass(theGivenFunction) {
-			if (typeof theGivenFunction !== 'function') {
-				switch (usingLanguage) {
-					case languageCode_zhCN:
-						currentErrorMessage =
-							'首个参数必须为一个函数。其将被视为一个构造函数以构造一个对象。'+
-							'该对象之属性和方法将被传授给受封者。'+
-							'\n而实际提供的首个参数是一个'+typeof theGivenFunction + '。'
-							;
-						break;
-
-					case languageCode_enUS:
-						currentErrorMessage =
-							'The provided source must be a function, '+
-							'which will be used as a constructor '+
-							'to create the object to impart to a grantee.'+
-							'\nWhat\'s actually provided was of type: '+
-							typeof theGivenFunction + '.'
-							;
-						break;
+	function _impartOneMethodTheDefaultWay(objectToImpart, oldName, granteeOfMethod, newName) {
+		Object.defineProperty(objectToImpart, newName,
+			{
+				enumerable: true,
+				get: function () {
+					return objectToImpart[oldName];
 				}
-
-				_dealWithCurrentError();
-			} else {
-				theConstructor = theGivenFunction;
+				// method should have no setter
 			}
+		);
+	}
 
-
-			var _allImpartationProfiles = theConstructor[propertyName_wulechuanImpartationProfiles];
-			if (_the(_allImpartationProfiles).isNotAValidObject()) {
-				_allImpartationProfiles = {};
-				_allImpartationProfiles[propertyName_defaultProfile] = {};
-			}
-
-
-			allImpartationProfiles = _allImpartationProfiles;
-
-
-			var _defaultProfile = allImpartationProfiles[propertyName_defaultProfile];
-			if (_the(_defaultProfile).isAValidProfile()) {
-				usedProfile = _defaultProfile;
-			}
-		}
-
-		/**
-		 * To accept the function treated as a class, instances of which will be imparted.
-		 *
-		 * @param {!object} theSourceObject
-		 */
-		function theObject(sourceObject) {
-			if (_the(sourceObject).isNeitherAnObjectNorAnArray()) {
-				switch (usingLanguage) {
-					case languageCode_zhCN:
-						currentErrorMessage =
-							'首个参数必须为一个非空对象，可以为数组对象。'+
-							'\n而实际提供的首个参数是一个'+typeof sourceObject + '。'
-							;
-						break;
-
-					case languageCode_enUS:
-						currentErrorMessage =
-							'The provided source must be an object that is not a null. '+
-							'An array object is allowed. '+
-							'\nWhat\'s actually provided was of type: '+
-							typeof theGivenFunction + '.'
-							;
-						break;
-				}
-
-				_dealWithCurrentError();
-			} else {
-				theSourceObject = sourceObject;
-			}
-
-
-			allImpartationProfiles = {};
-			// allImpartationProfiles[propertyName_defaultProfile] = null;
-		}
-
-		/**
-		 * To accept the name of the desired variant to use.
-		 *
-		 * @param {!string} variantName
-		 */
-		function usingThisProfile(profileName) {
-			if (errorAlreadyOcurred) return;
-
-			var _foundProfile;
-			var _theFoundProfileIsInvalid = true;
-
-			if (_the(profileName).isAValidKey()) {
-				_foundProfile = allImpartationProfiles[profileName];
-
-				if (_the(_foundProfile).isAValidProfile()) {
-					usedProfile = _foundProfile;
-					_theFoundProfileIsInvalid = false;
+	function _impartOnePropertyTheDefaultWay(objectToImpart, propertyOldName, granteeOfProperty, propertyNewName) {
+		Object.defineProperty(objectToImpart, propertyNewName,
+			{
+				enumerable: true,
+				get: function () {
+					return objectToImpart[propertyOldName];
+				},
+				set: function (newValue) {
+					objectToImpart[propertyOldName] = newValue;
 				}
 			}
-
-			if (_theFoundProfileIsInvalid) {
-				if (typeof profileName !== 'string') {
-					profileName = typeof profileName;
-				}
-
-				switch (usingLanguage) {
-					case languageCode_zhCN:
-						currentErrorMessage =
-							'未找到指定的变体。'+
-							'输入参数为：“'+profileName+'”。';
-						break;
-
-					case languageCode_enUS:
-						currentErrorMessage =
-							'The desired profile name was invalid. '+
-							'No profile was matched by that name. '+
-							'\nThe input was "'+profileName+'".';
-						break;
-				}
-
-				_dealWithCurrentError();
-			}
-		}
-
-		/**
-		 * Step 3 - to accept the options for construction of an instance that is to impart.
-		 *
-		 * @param {?object} constructionOptions
-		 */
-		function buildAccordingTo(constructionOptions) {
-			if (errorAlreadyOcurred) return;
-
-			theConstructionOptions = constructionOptions;
-		}
-
-		function withCustomizedPropertyNames(propertyNamesCustomization) {
-			if (errorAlreadyOcurred) return;
-
-			if (_the(propertyNamesCustomization).isNotAValidObject()) {
-				errorAlreadyOcurred = true;
-			} else {
-				usedPropertyNamesCustomization = propertyNamesCustomization;
-			}
-		}
-
-		function addDirectAccessingProperties(directAccessingPropertyDefinitions) {
-			if (errorAlreadyOcurred) return;
-			
-		}
-
-		function towards(granteeOfMethods, granteeOfProperties) {
-			if (errorAlreadyOcurred) return;
-
-			if (_the(granteeOfMethods).isNeitherAnObjectNorAnArray()) {
-				switch (usingLanguage) {
-					case languageCode_zhCN:
-						currentErrorMessage = '受封者必须是一个标准对象或数组，且不可为空对象（null）。';
-						break;
-
-					case languageCode_enUS:
-						currentErrorMessage =
-							'The grantee to impart methods and properties to '+
-							'must be an object or an array, and not a null.'
-							;
-						break;
-				}
-
-				_dealWithCurrentError();
-			}
-
-			if (_the(granteeOfProperties).isNeitherAnObjectNorAnArray()) {
-				granteeOfProperties = granteeOfMethods;
-			}
-
-
-
-
-			if (errorAlreadyOcurred) {
-				// return nothing if any error occurs.
-				return;
-			}
-
-
-
-			var theInstanceThatHasBeenImparted =  _impartIt(granteeOfMethods, granteeOfProperties);
-			// return the instance for the grantee to store a variable within its scope.
-			return theInstanceThatHasBeenImparted;
-		}
-
-
-		function _impartIt(granteeOfMethods, granteeOfProperties) {
-			var intanceObjectToImpart = new theConstructor;
-
-			for (var attributeName in intanceObjectToImpart) {
-				var attribute = intanceObjectToImpart[attributeName];
-				var attributeImpartationName = attributeName;
-
-				var shouldSkip = false;
-				if (shouldSkip) continue;
-
-				var customizedImpartationMethod = usedProfile[attributeName];
-
-				if (typeof customizedImpartationMethod === 'function') {
-					customizedImpartationMethod(intanceObjectToImpart, granteeOfMethods);
-					continue;
-				}
-
-				var attributeIsAMethod = typeof attribute === 'function';
-				var attributeIsAProperty = typeof attribute !== 'function';
-
-				if (attributeIsAMethod) {
-					_impartOneMethodTheDefaultWay(
-						intanceObjectToImpart,
-						attributeName,
-						granteeOfMethods,
-						attributeImpartationName
-					);
-					continue;
-				}
-
-				if (attributeIsAProperty) {
-					_impartOnePropertyTheDefaultWay(
-						intanceObjectToImpart,
-						attributeName,
-						granteeOfProperties,
-						attributeImpartationName
-					);
-					continue;
-				}
-			}
-
-			return intanceObjectToImpart;
-		}
-
-		function _impartOneMethodTheDefaultWay(objectToImpart, oldName, granteeOfMethod, newName) {
-			Object.defineProperty(objectToImpart, newName,
-				{
-					enumerable: true,
-					get: function () {
-						return objectToImpart[oldName];
-					}
-					// method should have no setter
-				}
-			);
-		}
-
-		function _impartOnePropertyTheDefaultWay(objectToImpart, propertyOldName, granteeOfProperty, propertyNewName) {
-			Object.defineProperty(objectToImpart, propertyNewName,
-				{
-					enumerable: true,
-					get: function () {
-						return objectToImpart[propertyOldName];
-					},
-					set: function (newValue) {
-						objectToImpart[propertyOldName] = newValue;
-					}
-				}
-			);
-		}
+		);
 	}
 }
