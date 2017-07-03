@@ -1,0 +1,38 @@
+{
+  "name": "@wulechuan/impart-features-to-object",
+  "author": "吴乐川",
+  "version": "1.0.0",
+  "description": "以所谓“传授（impart）”的程序写法实现所谓“混入（Mixin）”功能，使得“受体”具有被传授的属性和方法函数。并且，这些被传授的属性和方法均被包裹在getter和setter内，受到保护。",
+  "main": "build/wulechuan-impart-features-to-object.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "impartation",
+    "mixin",
+    "getter",
+    "setter",
+    "private",
+    "private-property",
+    "private-method",
+    "natural-language-like"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-change": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sequence": "^0.4.6",
+    "gulp-uglify": "^3.0.0",
+    "pump": "^1.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wulechuan/javascript-wulechuan-impart-features-to-object.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wulechuan/javascript-wulechuan-impart-features-to-object/issues"
+  },
+  "homepage": "https://github.com/wulechuan/javascript-wulechuan-impart-features-to-object#readme"
+}
