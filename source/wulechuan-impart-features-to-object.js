@@ -277,6 +277,43 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 		.theObject(myObjectAsImpartationSource)
  * 		.to(myObjectLiteralAsGrantee);
  * 
+ * 
+ * 
+ * 
+ * # Random thoughts on API:
+ * 
+ * A profile can itself be named 'default', thus it will be taken by default.
+ * Any profile **might** but not must provide two objects, named:
+ * 	'renamingRules'
+ * and
+ * 	'attributesToAddToGranteeDirectly'
+ * .
+ * A valid renamingRules object **might** but not must contain
+ * an attribute named '__theObjectItself__',
+ * value of whom is to decide the new name of the instance to impart.
+ * If the '__theObjectItself__' is absent,
+ * or if even the entire 'renamingRules' object is absent,
+ * Then the name of the profile is taken to be the name of the instance to impart.
+ * 
+ * For example, the minimum definition of the 'force2D' profile
+ * for the 'Vector2D' class should look like this:
+ * @example
+ * 	Vector2D.wulechuanImpartationProfiles = {
+ * 		force2D: {} // All instances will by default be named 'force2D'.
+ * 	};
+ * 
+ * The 'attributesToAddToGranteeDirectly' is optional.
+ * Take another example for this:
+ * @example
+ * 	Vector2D.wulechuanImpartationProfiles = {
+ * 		velocity2D: {
+ * 			renamingRules: {
+ * 				__theObjectItself__: 'velocity' // All instances will by default be named 'velocity', instead of 'velocity2D'.
+ * 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
+ * 			}
+ * 		}
+ * 	}
+ * 
  * ----- readme end -----
  * 
  * 
@@ -303,6 +340,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * @returns
  * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定为“简体中文”。
  * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
+ * 
  */
 function WulechuanImpartationOperator() {
 	var nameOfEntranceProperty_zhCN = '传授';
@@ -402,7 +440,9 @@ function WulechuanImpartationOperator() {
 
 	var propertyName_wulechuanImpartationProfiles = 'wulechuanImpartationProfiles';
 	var propertyName_defaultProfile = 'default';
-	var propertyName_objectItself = '__theObjectItself__';
+	var propertyName_renamingRules = 'renamingRules';
+	var propertyName_attributesToAddToGranteeDirectly = 'attributesToAddToGranteeDirectly';
+	var propertyName_theObjectItself = '__theObjectItself__';
 
 
 
@@ -579,7 +619,7 @@ function WulechuanImpartationOperator() {
 				return Array.isArray(subject);
 			},
 
-			isAnInvalidArray: function() {
+			isNotAValidArray: function() {
 				return !Array.isArray(subject);
 			},
 
@@ -587,17 +627,8 @@ function WulechuanImpartationOperator() {
 				return !!subject && typeof subject === 'string';
 			},
 
-			isAnInvalidKey: function(subject) {
+			isNotAValidKey: function(subject) {
 				return !_the(subject).isAnValidKey(subject);
-			},
-
-			isAValidProfile: function() {
-				var isValid =
-						_the(subject).isAValidObject(subject)
-					&&	_the(subject).isAValidKey(subject[propertyName_objectItself])
-					;
-
-				return isValid;
 			}
 		};
 	}
@@ -705,7 +736,12 @@ function WulechuanImpartationOperator() {
 
 
 		var _defaultProfile = allImpartationProfilesOfClass[propertyName_defaultProfile];
-		if (_the(_defaultProfile).isAValidProfile()) {
+		if (_the(_defaultProfile).isNotAValidObject()) {
+			_defaultProfile = {};
+			_defaultProfile[propertyName_renamingRules] = {};
+			_defaultProfile[propertyName_attributesToAddToGranteeDirectly] = {};
+		}
+		if (_the(_defaultProfile).isAValidRenamingProfile()) {
 			usedImpartationProfileOfClass = _defaultProfile;
 		}
 	}
@@ -744,7 +780,7 @@ function WulechuanImpartationOperator() {
 		if (_the(profileName).isAValidKey()) {
 			_foundProfile = allImpartationProfilesOfClass[profileName];
 
-			if (_the(_foundProfile).isAValidProfile()) {
+			if (_the(_foundProfile).isAValidRenamingProfile()) {
 				usedImpartationProfileOfClass = _foundProfile;
 				usedImpartationProfileNameOfClass = profileName;
 				_theFoundProfileIsInvalid = false;

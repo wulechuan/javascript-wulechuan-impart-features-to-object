@@ -260,6 +260,43 @@ be it an instance, or another object literal.
 		.theObject(myObjectAsImpartationSource)
 		.to(myObjectLiteralAsGrantee);
 
+
+
+
+# Random thoughts on API:
+
+A profile can itself be named 'default', thus it will be taken by default.
+Any profile **might** but not must provide two objects, named:
+	'renamingRules'
+and
+	'attributesToAddToGranteeDirectly'
+.
+A valid renamingRules object **might** but not must contain
+an attribute named '__theObjectItself__',
+value of whom is to decide the new name of the instance to impart.
+If the '__theObjectItself__' is absent,
+or if even the entire 'renamingRules' object is absent,
+Then the name of the profile is taken to be the name of the instance to impart.
+
+For example, the minimum definition of the 'force2D' profile
+for the 'Vector2D' class should look like this:
+
+	Vector2D.wulechuanImpartationProfiles = {
+		force2D: {} // All instances will by default be named 'force2D'.
+	};
+
+The 'attributesToAddToGranteeDirectly' is optional.
+Take another example for this:
+
+	Vector2D.wulechuanImpartationProfiles = {
+		velocity2D: {
+			renamingRules: {
+				__theObjectItself__: 'velocity' // All instances will by default be named 'velocity', instead of 'velocity2D'.
+				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
+			}
+		}
+	}
+
  
 
 
