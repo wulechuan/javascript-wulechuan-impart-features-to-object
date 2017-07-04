@@ -290,7 +290,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * and
  * 
- * 	'attributesToAddToGranteeDirectly'
+ * 	'attributesToAddDirectlyUnderGrantee'
  * 
  * .
  * 
@@ -321,13 +321,13 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 		}
  * 	};
  * 
- * The 'attributesToAddToGranteeDirectly' property of a profile is optional.
+ * The 'attributesToAddDirectlyUnderGrantee' property of a profile is optional.
  * When present, it looks like this:
  * @example
  * 	Vector2D.wulechuanImpartationProfiles = {
  * 		velocity2D: {
  * 			propertyNameForTheObjectItself: 'v',
- * 			attributesToAddToGranteeDirectly: {
+ * 			attributesToAddDirectlyUnderGrantee: {
  * 				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
  * 				x: 'speedX',
  * 				y: 'speedY'
@@ -429,7 +429,7 @@ function WulechuanImpartationOperator() {
 
 
 
-	var methodNames_withCustomizedPropertyNamesaddAliasesForAttributes
+	var methodNames_addAliasesForAttributes_zhCN = [
 		'且定名为',     // 用于仅更改主名称（propertyNameForTheObjectItself）时较为符合汉语习惯。
 		'并添加以下别名' // 用于更改多种属性名称时，较为符合汉语习惯。
 	];
@@ -442,11 +442,11 @@ function WulechuanImpartationOperator() {
 
 
 
-	var methodNames_addDirectlyAccessibleProperties_zhCN = [
+	var methodNames_addAttributesDirectlyUnderGrantee_zhCN = [
 		'且设以下直接可用之属性',
 	];
-	var methodNames_addDirectlyAccessibleProperties_enUS = [
-		'addingDirectlyAccessibleProperties'
+	var methodNames_addAttributesDirectlyUnderGrantee_enUS = [
+		'addAttributesDirectlyUnderGrantee'
 	];
 
 
@@ -462,7 +462,7 @@ function WulechuanImpartationOperator() {
 	var propertyName_wulechuanImpartationProfiles = 'wulechuanImpartationProfiles';
 	var propertyName_defaultProfile = 'default';
 	var propertyName_attributesAliasesToAdd = 'attributesAliasesToAdd';
-	var propertyName_attributesToAddToGranteeDirectly = 'attributesToAddToGranteeDirectly';
+	var propertyName_attributesToAddDirectlyUnderGrantee = 'attributesToAddDirectlyUnderGrantee';
 	var propertyName_nameToUseForTheObjectItself = 'propertyNameForTheObjectItself';
 
 
@@ -494,9 +494,9 @@ function WulechuanImpartationOperator() {
 	var theSourceObjectToImpartThingsFrom;
 
 	var usedChiefName;
-	var attributesAliasesToAdd;
+	var attributesAliasesToAdd = {};
 	var allAvailableAliasesForAllAttributes;
-	var directlyAccessibleAttributesToAdd;
+	var attributesToAddDirectlyUnderGrantee = {};
 
 
 
@@ -577,9 +577,9 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
-		stagesOfClassRoute.addStage(addDirectlyAccessibleProperties, true, {
-			'zh-CN': methodNames_addDirectlyAccessibleProperties_zhCN,
-			'en-US': methodNames_addDirectlyAccessibleProperties_enUS
+		stagesOfClassRoute.addStage(addAttributesDirectlyUnderGrantee, true, {
+			'zh-CN': methodNames_addAttributesDirectlyUnderGrantee_zhCN,
+			'en-US': methodNames_addAttributesDirectlyUnderGrantee_enUS
 		});
 
 		stagesOfClassRoute.addStage(towards, {
@@ -608,9 +608,9 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
-		stagesOfObjectRoute.addStage(addDirectlyAccessibleProperties, true, {
-			'zh-CN': methodNames_addDirectlyAccessibleProperties_zhCN,
-			'en-US': methodNames_addDirectlyAccessibleProperties_enUS
+		stagesOfObjectRoute.addStage(addAttributesDirectlyUnderGrantee, true, {
+			'zh-CN': methodNames_addAttributesDirectlyUnderGrantee_zhCN,
+			'en-US': methodNames_addAttributesDirectlyUnderGrantee_enUS
 		});
 
 		stagesOfObjectRoute.addStage(towards, {
@@ -681,6 +681,16 @@ function WulechuanImpartationOperator() {
 		} else {
 			console.error(TypeError('\n'+errorMessage));
 		}
+	}
+
+	function _mergeAttributesFromBToA(a, b) {
+		if (_the(a).isAValidObject() && _the(b).isAValidObject()) {
+			for (var key in b) {
+				a[key] = b[key];
+			}
+		}
+
+		return a;
 	}
 
 
@@ -755,16 +765,7 @@ function WulechuanImpartationOperator() {
 			allImpartationProfilesOfClass[propertyName_defaultProfile] = {};
 		}
 
-
-		var _defaultProfile = allImpartationProfilesOfClass[propertyName_defaultProfile];
-		if (_the(_defaultProfile).isNotAValidObject()) {
-			_defaultProfile = {};
-			_defaultProfile[propertyName_attributesAliasesToAdd] = {};
-			_defaultProfile[propertyName_attributesToAddToGranteeDirectly] = {};
-		}
-		if (_the(_defaultProfile).isAValidObject()) {
-			usedImpartationProfileOfClass = _defaultProfile;
-		}
+		_processAProfileOfTheClass(propertyName_defaultProfile);
 	}
 
 	/**
@@ -789,22 +790,13 @@ function WulechuanImpartationOperator() {
 	 * @param {!string} variantName
 	 */
 	function useThisProfileOfTheClass(profileName) {
-		var _foundProfile;
-		var _theFoundProfileIsInvalid = true;
+		var _succeeded = _processAProfileOfTheClass(profileName);
 
-		if (_the(profileName).isAValidKey()) {
-			_foundProfile = allImpartationProfilesOfClass[profileName];
-
-			if (_the(_foundProfile).isAValidObject()) {
-				usedImpartationProfileNameOfClass = profileName;
-				usedChiefName = profileName;
-				usedImpartationProfileOfClass = _foundProfile;
-				isUsingDefaultProfileOfClass = false;
-				_theFoundProfileIsInvalid = false;
-			}
-		}
-
-		if (_theFoundProfileIsInvalid) {
+		if (_succeeded) {
+			usedImpartationProfileNameOfClass = profileName;
+			usedChiefName = profileName;
+			isUsingDefaultProfileOfClass = false;
+		} else {
 			if (typeof profileName !== 'string') {
 				profileName = typeof profileName;
 			}
@@ -824,25 +816,49 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
+	function _processAProfileOfTheClass(profileName) {
+		if (_the(profileName).isANotValidKey()) {
+			return false; // failed
+		}
+
+		var _theProfile = allImpartationProfilesOfClass[profileName];
+
+		if (_the(_theProfile).isANotValidObject()) {
+			return false; // failed
+		}
+
+		_mergeAttributesFromBToA(
+			attributesAliasesToAdd,
+			_theProfile[propertyName_attributesAliasesToAdd]
+		);
+
+		_mergeAttributesFromBToA(
+			attributesToAddDirectlyUnderGrantee,
+			_theProfile[propertyName_attributesToAddDirectlyUnderGrantee]
+		);
+
+		return true; // succeeded
+	}
+
 
 
 
 
 	function addAliasesForAttributes(_attributesAliasesToAdd) {
 		if (_the(_attributesAliasesToAdd).isAValidObject()) {
-			attributesAliasesToAdd = _attributesAliasesToAdd;
+			_mergeAttributesFromBToA(attributesAliasesToAdd, _attributesAliasesToAdd);
 		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
 		}
 	}
 
-	function addDirectlyAccessibleProperties(_directlyAccessiblePropertiesToAdd) {
-		if (_the(_directlyAccessiblePropertiesToAdd).isNotAValidObject()) {
+	function addAttributesDirectlyUnderGrantee(_attributesToAddDirectlyUnderGrantee) {
+		if (_the(_attributesToAddDirectlyUnderGrantee).isAValidObject()) {
+			attributesToAddDirectlyUnderGrantee = _attributesToAddDirectlyUnderGrantee;
+		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
-		} else {
-			directlyAccessibleAttributesToAdd = _directlyAccessiblePropertiesToAdd;
 		}
 	}
 
@@ -873,7 +889,6 @@ function WulechuanImpartationOperator() {
 
 	function _impartIt(granteeOfMethods, granteeOfProperties) {
 		_mergeRenamingConfigurationsIntoTheImpartationProfile();
-
 
 		for (var attributeName in finallyUsedImpartationProfile) {
 			var attribute = theSourceObjectToImpartThingsFrom[attributeName];

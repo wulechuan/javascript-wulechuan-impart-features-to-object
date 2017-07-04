@@ -273,7 +273,7 @@ Any profile **might** but is not forced to provide two objects, named:
 
 and
 
-	'attributesToAddToGranteeDirectly'
+	'attributesToAddDirectlyUnderGrantee'
 
 .
 
@@ -304,13 +304,13 @@ Take another example for this:
 		}
 	};
 
-The 'attributesToAddToGranteeDirectly' property of a profile is optional.
+The 'attributesToAddDirectlyUnderGrantee' property of a profile is optional.
 When present, it looks like this:
 
 	Vector2D.wulechuanImpartationProfiles = {
 		velocity2D: {
 			propertyNameForTheObjectItself: 'v',
-			attributesToAddToGranteeDirectly: {
+			attributesToAddDirectlyUnderGrantee: {
 				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
 				x: 'speedX',
 				y: 'speedY'
