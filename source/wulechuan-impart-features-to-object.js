@@ -902,33 +902,75 @@ function WulechuanImpartationOperator() {
 		_decideAllAliaesToUseFinally();
 
 		if (!usedChiefName) {
+
+			var _methodSuggestionsForNamingObjectItself = '\n\t"'+
+				[
+					methodNames_addAliasesForAttributes_zhCN[0],
+					methodNames_addAliasesForAttributes_enUS[0]
+				].join('\n\t"')
+				+'"\n'
+				;
+
+			var reusableWords_zhCN = 
+				'而每欲传授对象至它物，该对象本身作为受封物之属性，亦须定名。'+
+				'请采用以下任意方法函数为其定名：'+
+				_methodSuggestionsForNamingObjectItself
+				;
+
+			var reusableWords_enUS =
+				'Note that an object to impart, '+
+				'as it would be an attribute of the grantee, '+
+				'needs a name itself.'+
+				'\nPlease use any of these methods below to give it a name:'+
+				_methodSuggestionsForNamingObjectItself
+				;
+
+
 			if (isUsingImplicitProfileOfClass) {
+
 				_reportMultilingualErrors({
 					'zh-CN':
-						'',
+						'所给出的“类”没有名为“'+propertyName_defaultProfile+'”的默认变体。'+
+						'程序亦未指定采用其它变体。现欲传授该类之实例对象至它物，其传授后之名称却未知。'+
+						reusableWords_zhCN
+						,
 
 					'en-US':
-						''
+						'The class doesn\'t have the default profile, '+
+						'which should have been named "'+propertyName_defaultProfile+'". '+
+						'You are allowed not to use the default profile. But... '+
+						reusableWords_enUS
 				});
 
 			} else if (isUsingDefaultProfileOfClass) {
 
 				_reportMultilingualErrors({
 					'zh-CN':
-						'',
+						'所给出的“类”的默认变体（即，“'+propertyName_defaultProfile+'”）被采用，'+
+						'但该变体未指明奖被传授之实例对象所应采用之名称。'+
+						reusableWords_zhCN
+						,
 
 					'en-US':
-						''
+						'For the given class, '+
+						'the "'+propertyName_defaultProfile+'" profile is used, '+
+						'while the profile does not provide the attribute name for '+
+						'the instance object. '+
+						reusableWords_enUS
 				});
 
 			} else {
 
 				_reportMultilingualErrors({
 					'zh-CN':
-						'',
+						'行将传授所给出“对象”之属性至它物，其传授后之名称却未知。'+
+						reusableWords_zhCN
+						,
 
 					'en-US':
-						''
+						'The given object is about to impart to the grantee, '+
+						'but the attribute name is not provided yet.'+
+						reusableWords_enUS
 				});
 
 			}
@@ -1000,6 +1042,7 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _addAliasesOfAttributesToImpartationSourceObject() {
+		var _granteeForCurrentAttribute;
 		for (var attributeName in finallyUsedImpartationProfile) {
 			var attribute = theSourceObjectToImpartAttributesFrom[attributeName];
 			var attributeImpartationName = finallyUsedImpartationProfile[attributeName];
@@ -1010,7 +1053,10 @@ function WulechuanImpartationOperator() {
 			var customizedImpartationMethod = usedImpartationProfileOfClass[attributeName];
 
 			if (typeof customizedImpartationMethod === 'function') {
-				customizedImpartationMethod(theSourceObjectToImpartAttributesFrom, granteeOfMethods);
+				customizedImpartationMethod(
+					theSourceObjectToImpartAttributesFrom,
+					_granteeForCurrentAttribute
+				);
 				continue;
 			}
 
@@ -1021,7 +1067,7 @@ function WulechuanImpartationOperator() {
 				_impartOneMethodTheDefaultWay(
 					theSourceObjectToImpartAttributesFrom,
 					attributeName,
-					granteeOfMethods,
+					_granteeForCurrentAttribute,
 					attributeImpartationName
 				);
 				continue;
@@ -1031,7 +1077,7 @@ function WulechuanImpartationOperator() {
 				_impartOnePropertyTheDefaultWay(
 					theSourceObjectToImpartAttributesFrom,
 					attributeName,
-					granteeOfProperties,
+					_granteeForCurrentAttribute,
 					attributeImpartationName
 				);
 				continue;
