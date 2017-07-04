@@ -495,10 +495,14 @@ function WulechuanImpartationOperator() {
 
 	var theSourceObjectToImpartThingsFrom;
 
+	var attributesAliasesToAddAdditionalToProfileDefined = {};
+	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
+
 	var usedChiefName;
-	var attributesAliasesToAdd = {};
 	var allAvailableAliasesForAllAttributes;
-	var attributesToAddDirectlyUnderGrantee = {};
+	var allAttributesToAddDirectlyUnderGrantee;
+
+	var grantee;
 
 
 
@@ -574,7 +578,7 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_useThisProfileOfTheClass_enUS
 		});
 
-		stagesOfClassRoute.addStage(addAliasesForAttributes, true, {
+		stagesOfClassRoute.addStage(addAliasesForAttributesAdditionalToProfileDefinedAliases, true, {
 			'zh-CN': methodNames_addAliasesForAttributes_zhCN,
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
@@ -605,7 +609,7 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_theObject_enUS
 		});
 
-		stagesOfObjectRoute.addStage(addAliasesForAttributes, true, {
+		stagesOfObjectRoute.addStage(addAliasesForAttributesAdditionalToProfileDefinedAliases, true, {
 			'zh-CN': methodNames_addAliasesForAttributes_zhCN,
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
@@ -647,8 +651,12 @@ function WulechuanImpartationOperator() {
 				return !Array.isArray(subject);
 			},
 
-			isAValidKey: function() {
+			isANonEmptyString: function() {
 				return !!subject && typeof subject === 'string';
+			},
+
+			isAValidKey: function() {
+				return _the(subject).isANonEmptyString();
 			},
 
 			isNotAValidKey: function(subject) {
@@ -658,19 +666,23 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _reportMultilingualErrors(errors) {
-		var errorMessage = 'Unkown error occurred.';
+		var _isUsingANonPreferredLanguage;
+		var _usedLanguageForErrorMessage;
+		var _errorMessage = 'Unkown error occurred.';
 		if (errors) {
 			if (typeof errors === 'string') {
-				errorMessage = errors;
+				_errorMessage = errors;
 			} else if (typeof errors === 'object' && !Array.isArray(errors)) {
-				var foundError = errors[usingLanguage];
-				if (foundError && typeof foundError === 'string') {
-					errorMessage = foundError;
+				var _foundErrorMessage = errors[usingLanguage];
+				if (_the(_foundErrorMessage).isANonEmptyString()) {
+					_errorMessage = _foundErrorMessage;
 				} else {
 					for (var language in errors) {
-						foundError = errors[language];
-						if (foundError && typeof foundError === 'string') {
-							errorMessage = foundError;
+						_foundErrorMessage = errors[language];
+						if (_the(_foundErrorMessage).isANonEmptyString()) {
+							_isUsingANonPreferredLanguage = true;
+							_usedLanguageForErrorMessage = language;
+							_errorMessage = _foundErrorMessage;
 							break;
 						}
 					}
@@ -678,14 +690,18 @@ function WulechuanImpartationOperator() {
 			}
 		}
 
+		if (_isUsingANonPreferredLanguage) {
+			_errorMessage = '['+_usedLanguageForErrorMessage+'] '+_errorMessage;
+		}
+
 		if (shouldThrowErrors) {
-			throw TypeError('\n'+errorMessage);
+			throw TypeError('\n'+_errorMessage);
 		} else {
-			console.error(TypeError('\n'+errorMessage));
+			console.error(TypeError('\n'+_errorMessage));
 		}
 	}
 
-	function _mergeAttributesFromBToA(a, b) {
+	function _mergeAttributesWhichMightBeArraysFromBToA(a, b) {
 		if (_the(a).isAValidObject() && _the(b).isAValidObject()) {
 			for (var key in b) {
 				a[key] = b[key];
@@ -829,25 +845,13 @@ function WulechuanImpartationOperator() {
 		return _the(allImpartationProfilesOfClass[profileName]).isAValidObject();
 	}
 
-	function _takeConfigurationsFromUsedProfile() {
-		_mergeAttributesFromBToA(
-			attributesAliasesToAdd,
-			usedImpartationProfileOfClass[propertyName_attributesAliasesToAdd]
-		);
-
-		_mergeAttributesFromBToA(
-			attributesToAddDirectlyUnderGrantee,
-			usedImpartationProfileOfClass[propertyName_attributesToAddDirectlyUnderGrantee]
-		);
-	}
 
 
 
 
-
-	function addAliasesForAttributes(_attributesAliasesToAdd) {
+	function addAliasesForAttributesAdditionalToProfileDefinedAliases(_attributesAliasesToAdd) {
 		if (_the(_attributesAliasesToAdd).isAValidObject()) {
-			_mergeAttributesFromBToA(attributesAliasesToAdd, _attributesAliasesToAdd);
+			attributesAliasesToAddAdditionalToProfileDefined = _attributesAliasesToAdd;
 		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
@@ -856,15 +860,16 @@ function WulechuanImpartationOperator() {
 
 	function addAttributesDirectlyUnderGrantee(_attributesToAddDirectlyUnderGrantee) {
 		if (_the(_attributesToAddDirectlyUnderGrantee).isAValidObject()) {
-			attributesToAddDirectlyUnderGrantee = _attributesToAddDirectlyUnderGrantee;
+			attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined =
+				_attributesToAddDirectlyUnderGrantee;
 		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
 		}
 	}
 
-	function towards(granteeOfMethods, granteeOfProperties) {
-		if (_the(granteeOfMethods).isNeitherAnObjectNorAnArray()) {
+	function towards(_grantee) {
+		if (_the(_grantee).isNeitherAnObjectNorAnArray()) {
 			_reportMultilingualErrors({
 				'zh-CN':
 					'受封者必须是一个标准对象或数组，且不可为空对象（null）。',
@@ -874,23 +879,100 @@ function WulechuanImpartationOperator() {
 					'must be an object or an array, and not a null.'
 			});
 
-			stagesOfClassRoute.stop();
-			stagesOfObjectRoute.stop();
+			return;
 		}
 
-		if (_the(granteeOfProperties).isNeitherAnObjectNorAnArray()) {
-			granteeOfProperties = granteeOfMethods;
-		}
 
-		var theInstanceThatHasBeenImparted =  _impartIt(granteeOfMethods, granteeOfProperties);
-		// return the instance for the grantee to store a variable within its scope.
-		return theInstanceThatHasBeenImparted;
+		grantee = _grantee;
+
+
+		var _succeeded = _impartIt();
+
+		if (_succeeded) {
+			// return the object that has been imparted to the scope of the grantee,
+			// so that the grantee has a chance to store a local variable for the imparted object.
+			return theSourceObjectToImpartThingsFrom;
+		} else {
+			return;
+		}
 	}
 
 
-	function _impartIt(granteeOfMethods, granteeOfProperties) {
-		_mergeRenamingConfigurationsIntoTheImpartationProfile();
+	function _impartIt() {
+		_decideAllAliaesToUseFinally();
 
+		if (isUsingImplicitProfileOfClass || !usedChiefName) {
+			_reportMultilingualErrors({
+				'zh-CN':
+					'',
+
+				'en-US':
+					''
+			});
+		}
+
+		_impartAddAliasesOfAttributesToImpartationSourceObject();
+		_impartAttributesDirectlyToGrantee();
+	}
+
+	function _decideAllAliaesToUseFinally() {
+		allAvailableAliasesForAllAttributes = {};
+		allAttributesToAddDirectlyUnderGrantee = {};
+
+
+
+
+		var attributeName;
+
+		if (usedImpartationProfileOfClass) {
+			for (attributeName in usedImpartationProfileOfClass) {
+				if (!theSourceObjectToImpartThingsFrom.hasOwnProperty(attributeName)) {
+					_reportMultilingualErrors({
+						'zh-CN':
+							'对象或实例没有名为“'+attributeName+'”的属性或方法函数。',
+
+						'en-US':
+							''
+					});
+
+					stagesOfClassRoute.stop();
+					stagesOfObjectRoute.stop();
+
+					continue;
+				}
+
+				finallyUsedImpartationProfile[attributeName] = usedImpartationProfileOfClass[attributeName];
+			}
+		} else {
+			for (attributeName in theSourceObjectToImpartThingsFrom) {
+				finallyUsedImpartationProfile[attributeName] = theSourceObjectToImpartThingsFrom[attributeName];
+			}
+		}
+
+		if (attributesAliasesToAddAdditionalToProfileDefined) {
+			for (attributeName in attributesAliasesToAddAdditionalToProfileDefined) {
+				if (!finallyUsedImpartationProfile.hasOwnProperty(attributeName)) {
+					_reportMultilingualErrors({
+						'zh-CN':
+							'视为“'+usedImpartationProfileNameOfClass+
+							'”变体的实例，没有名为“'+attributeName+'”的属性或方法函数。',
+
+						'en-US':
+							''
+					});
+
+					stagesOfClassRoute.stop();
+					stagesOfObjectRoute.stop();
+
+					continue;
+				}
+
+				finallyUsedImpartationProfile[attributeName] = attributesAliasesToAddAdditionalToProfileDefined[attributeName];
+			}
+		}
+	}
+
+	function _impartAddAliasesOfAttributesToImpartationSourceObject() {
 		for (var attributeName in finallyUsedImpartationProfile) {
 			var attribute = theSourceObjectToImpartThingsFrom[attributeName];
 			var attributeImpartationName = finallyUsedImpartationProfile[attributeName];
@@ -928,69 +1010,10 @@ function WulechuanImpartationOperator() {
 				continue;
 			}
 		}
-
-		return theSourceObjectToImpartThingsFrom;
-	}
-
-	function _impartAddRenamedAttributesToImpartationSourceObject() {
-
 	}
 
 	function _impartAttributesDirectlyToGrantee() {
 
-	}
-
-	function _mergeRenamingConfigurationsIntoTheImpartationProfile() {
-		finallyUsedImpartationProfile = {};
-
-		var attributeName;
-
-		if (usedImpartationProfileOfClass) {
-			for (attributeName in usedImpartationProfileOfClass) {
-				if (!theSourceObjectToImpartThingsFrom.hasOwnProperty(attributeName)) {
-					_reportMultilingualErrors({
-						'zh-CN':
-							'对象或实例没有名为“'+attributeName+'”的属性或方法函数。',
-
-						'en-US':
-							''
-					});
-
-					stagesOfClassRoute.stop();
-					stagesOfObjectRoute.stop();
-
-					continue;
-				}
-
-				finallyUsedImpartationProfile[attributeName] = usedImpartationProfileOfClass[attributeName];
-			}
-		} else {
-			for (attributeName in theSourceObjectToImpartThingsFrom) {
-				finallyUsedImpartationProfile[attributeName] = theSourceObjectToImpartThingsFrom[attributeName];
-			}
-		}
-
-		if (attributesAliasesToAdd) {
-			for (attributeName in attributesAliasesToAdd) {
-				if (!finallyUsedImpartationProfile.hasOwnProperty(attributeName)) {
-					_reportMultilingualErrors({
-						'zh-CN':
-							'视为“'+usedImpartationProfileNameOfClass+
-							'”变体的实例，没有名为“'+attributeName+'”的属性或方法函数。',
-
-						'en-US':
-							''
-					});
-
-					stagesOfClassRoute.stop();
-					stagesOfObjectRoute.stop();
-
-					continue;
-				}
-
-				finallyUsedImpartationProfile[attributeName] = attributesAliasesToAdd[attributeName];
-			}
-		}
 	}
 
 	function _impartOneMethodTheDefaultWay(objectToImpart, oldName, granteeOfMethod, newName) {
