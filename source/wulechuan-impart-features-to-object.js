@@ -493,7 +493,7 @@ function WulechuanImpartationOperator() {
 	var isUsingDefaultProfileOfClass = false;
 	var usedImpartationProfileOfClass;
 
-	var theSourceObjectToImpartThingsFrom;
+	var theSourceObjectToImpartAttributesFrom;
 
 	var attributesAliasesToAddAdditionalToProfileDefined = {};
 	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
@@ -743,7 +743,7 @@ function WulechuanImpartationOperator() {
 
 			stagesOfObjectRoute.stop();
 		} else {
-			theSourceObjectToImpartThingsFrom = sourceObject;
+			theSourceObjectToImpartAttributesFrom = sourceObject;
 		}
 	}
 
@@ -803,7 +803,7 @@ function WulechuanImpartationOperator() {
 	 * Contruct an instance for the provided class
 	 */
 	function buildInstanceObject() {
-		theSourceObjectToImpartThingsFrom = new theClassConstructor(theClassConstructionOptions);
+		theSourceObjectToImpartAttributesFrom = new theClassConstructor(theClassConstructionOptions);
 	}
 
 	/**
@@ -891,7 +891,7 @@ function WulechuanImpartationOperator() {
 		if (_succeeded) {
 			// return the object that has been imparted to the scope of the grantee,
 			// so that the grantee has a chance to store a local variable for the imparted object.
-			return theSourceObjectToImpartThingsFrom;
+			return theSourceObjectToImpartAttributesFrom;
 		} else {
 			return;
 		}
@@ -901,18 +901,45 @@ function WulechuanImpartationOperator() {
 	function _impartIt() {
 		_decideAllAliaesToUseFinally();
 
-		if (isUsingImplicitProfileOfClass || !usedChiefName) {
-			_reportMultilingualErrors({
-				'zh-CN':
-					'',
+		if (!usedChiefName) {
+			if (isUsingImplicitProfileOfClass) {
+				_reportMultilingualErrors({
+					'zh-CN':
+						'',
 
-				'en-US':
-					''
-			});
+					'en-US':
+						''
+				});
+
+			} else if (isUsingDefaultProfileOfClass) {
+
+				_reportMultilingualErrors({
+					'zh-CN':
+						'',
+
+					'en-US':
+						''
+				});
+
+			} else {
+
+				_reportMultilingualErrors({
+					'zh-CN':
+						'',
+
+					'en-US':
+						''
+				});
+
+			}
+
+			return false;
 		}
 
-		_impartAddAliasesOfAttributesToImpartationSourceObject();
-		_impartAttributesDirectlyToGrantee();
+		_addAliasesOfAttributesToImpartationSourceObject();
+		_addAttributesDirectlyToGrantee();
+
+		return true;
 	}
 
 	function _decideAllAliaesToUseFinally() {
@@ -926,7 +953,7 @@ function WulechuanImpartationOperator() {
 
 		if (usedImpartationProfileOfClass) {
 			for (attributeName in usedImpartationProfileOfClass) {
-				if (!theSourceObjectToImpartThingsFrom.hasOwnProperty(attributeName)) {
+				if (!theSourceObjectToImpartAttributesFrom.hasOwnProperty(attributeName)) {
 					_reportMultilingualErrors({
 						'zh-CN':
 							'对象或实例没有名为“'+attributeName+'”的属性或方法函数。',
@@ -944,8 +971,8 @@ function WulechuanImpartationOperator() {
 				finallyUsedImpartationProfile[attributeName] = usedImpartationProfileOfClass[attributeName];
 			}
 		} else {
-			for (attributeName in theSourceObjectToImpartThingsFrom) {
-				finallyUsedImpartationProfile[attributeName] = theSourceObjectToImpartThingsFrom[attributeName];
+			for (attributeName in theSourceObjectToImpartAttributesFrom) {
+				finallyUsedImpartationProfile[attributeName] = theSourceObjectToImpartAttributesFrom[attributeName];
 			}
 		}
 
@@ -972,9 +999,9 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _impartAddAliasesOfAttributesToImpartationSourceObject() {
+	function _addAliasesOfAttributesToImpartationSourceObject() {
 		for (var attributeName in finallyUsedImpartationProfile) {
-			var attribute = theSourceObjectToImpartThingsFrom[attributeName];
+			var attribute = theSourceObjectToImpartAttributesFrom[attributeName];
 			var attributeImpartationName = finallyUsedImpartationProfile[attributeName];
 
 			var shouldSkip = false;
@@ -983,7 +1010,7 @@ function WulechuanImpartationOperator() {
 			var customizedImpartationMethod = usedImpartationProfileOfClass[attributeName];
 
 			if (typeof customizedImpartationMethod === 'function') {
-				customizedImpartationMethod(theSourceObjectToImpartThingsFrom, granteeOfMethods);
+				customizedImpartationMethod(theSourceObjectToImpartAttributesFrom, granteeOfMethods);
 				continue;
 			}
 
@@ -992,7 +1019,7 @@ function WulechuanImpartationOperator() {
 
 			if (attributeIsAMethod) {
 				_impartOneMethodTheDefaultWay(
-					theSourceObjectToImpartThingsFrom,
+					theSourceObjectToImpartAttributesFrom,
 					attributeName,
 					granteeOfMethods,
 					attributeImpartationName
@@ -1002,7 +1029,7 @@ function WulechuanImpartationOperator() {
 
 			if (attributeIsAProperty) {
 				_impartOnePropertyTheDefaultWay(
-					theSourceObjectToImpartThingsFrom,
+					theSourceObjectToImpartAttributesFrom,
 					attributeName,
 					granteeOfProperties,
 					attributeImpartationName
@@ -1012,7 +1039,7 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _impartAttributesDirectlyToGrantee() {
+	function _addAttributesDirectlyToGrantee() {
 
 	}
 
