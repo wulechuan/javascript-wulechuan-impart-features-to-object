@@ -305,10 +305,6 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
  */
 function WulechuanImpartationOperator() {
-	var languageCode_zhCN = 'zh-CN';
-	var languageCode_enUS = 'en-US';
-
-
 	var nameOfEntranceProperty_zhCN = '传授';
 	var nameOfEntranceProperty_enUS = 'impart';
 
@@ -362,10 +358,10 @@ function WulechuanImpartationOperator() {
 
 
 
-	var methodNames_useThisProfile_zhCN = [
+	var methodNames_useThisProfileOfTheClass_zhCN = [
 		'视作'
 	];
-	var methodNames_useThisProfile_enUS = [
+	var methodNames_useThisProfileOfTheClass_enUS = [
 		'as',
 		'treatAs',
 		'usingThisProfile'
@@ -380,6 +376,7 @@ function WulechuanImpartationOperator() {
 	];
 	var methodNames_withCustomizedPropertyNames_enUS = [
 		'renamedAs',
+		'withTheseAttributesRenamed',
 		'withCustomizedPropertyNames'
 	];
 
@@ -423,7 +420,6 @@ function WulechuanImpartationOperator() {
 	var thisOperator = this;
 
 	var errorAlreadyOcurred = false;
-	var currentErrorMessage;
 	var shouldThrowErrors;
 
 	var usingLanguage = '';
@@ -432,16 +428,18 @@ function WulechuanImpartationOperator() {
 	var theClassConstructionOptions;
 	var allImpartationProfilesOfClass;
 	var usedImpartationProfileOfClass;
+	var usedImpartationProfileNameOfClass;
 
 	var theSourceObjectToImpartThingsFrom;
-	var usedPropertyNamesCustomization = {};
-	var directlyAccessiblePropertiesToAdd = {};
+	var usedPropertyNamesCustomization;
+	var finallyUsedImpartationProfile;
+	var directlyAccessiblePropertiesToAdd;
 
 
 
 
-	var stagesOfClassRoute  = _defineExecutionRouteForImpartingClassInstance();
-	var stagesOfObjectRoute = _defineExecutionRouteForImpartingObject();
+	var stagesOfClassRoute  = _defineExecutionRouteForImpartingFromAClassInstance();
+	var stagesOfObjectRoute = _defineExecutionRouteForImpartingFromAnObject();
 
 	// Hide(remove) the "startToImpart" method, because we only want to expose
 	// the entrance getters defined below.
@@ -483,7 +481,7 @@ function WulechuanImpartationOperator() {
 		stagesOfObjectRoute.setPreferredNaturalLanguageTo(languageCode);
 	}
 
-	function _defineExecutionRouteForImpartingClassInstance() {
+	function _defineExecutionRouteForImpartingFromAClassInstance() {
 		var stagesOfClassRoute =
 			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
 		
@@ -502,14 +500,14 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_useTheseOptionsWhenConstructInstance_enUS
 		});
 
-		stagesOfClassRoute.addStage(buildInstanceObject, true, {
+		stagesOfClassRoute.addStage(buildInstanceObject, {
 			'zh-CN': methodNames_buildInstanceObject_zhCN,
 			'en-US': methodNames_buildInstanceObject_enUS
 		});
 
-		stagesOfClassRoute.addStage(useThisProfile, true, {
-			'zh-CN': methodNames_useThisProfile_zhCN,
-			'en-US': methodNames_useThisProfile_enUS
+		stagesOfClassRoute.addStage(useThisProfileOfTheClass, true, {
+			'zh-CN': methodNames_useThisProfileOfTheClass_zhCN,
+			'en-US': methodNames_useThisProfileOfTheClass_enUS
 		});
 
 		stagesOfClassRoute.addStage(withCustomizedPropertyNames, true, {
@@ -530,7 +528,7 @@ function WulechuanImpartationOperator() {
 		return stagesOfClassRoute;
 	}
 
-	function _defineExecutionRouteForImpartingObject() {
+	function _defineExecutionRouteForImpartingFromAnObject() {
 		var stagesOfObjectRoute = new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
 
 		stagesOfObjectRoute.addStage(startToImpart, {
@@ -604,15 +602,36 @@ function WulechuanImpartationOperator() {
 		};
 	}
 
-	function _dealWithCurrentError() {
+	function _reportMultilingualErrors(errors) {
 		errorAlreadyOcurred = true;
-		
+
+		var errorMessage = 'Unkown error occurred.';
+		if (errors) {
+			if (typeof errors === 'string') {
+				errorMessage = errors;
+			} else if (typeof errors === 'object' && !Array.isArray(errors)) {
+				var foundError = errors[usingLanguage];
+				if (foundError && typeof foundError === 'string') {
+					errorMessage = foundError;
+				} else {
+					for (var language in errors) {
+						foundError = errors[language];
+						if (foundError && typeof foundError === 'string') {
+							errorMessage = foundError;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		if (shouldThrowErrors) {
-			throw TypeError('\n'+currentErrorMessage);
+			throw TypeError('\n'+errorMessage);
 		} else {
-			console.error(TypeError('\n'+currentErrorMessage));
+			console.error(TypeError('\n'+errorMessage));
 		}
 	}
+
 
 
 	/**
@@ -627,78 +646,21 @@ function WulechuanImpartationOperator() {
 	/**
 	 * To accept the function treated as a class, instances of which will be imparted.
 	 *
-	 * @param {!function} theGivenFunction
-	 */
-	function theClass(theGivenFunction) {
-		if (typeof theGivenFunction !== 'function') {
-			switch (usingLanguage) {
-				case languageCode_zhCN:
-					currentErrorMessage =
-						'首个参数必须为一个函数。其将被视为一个构造函数以构造一个对象。'+
-						'该对象之属性和方法将被传授给受封者。'+
-						'\n而实际提供的首个参数是一个'+typeof theGivenFunction + '。'
-						;
-					break;
-
-				case languageCode_enUS:
-					currentErrorMessage =
-						'The provided source must be a function, '+
-						'which will be used as a constructor '+
-						'to create the object to impart to a grantee.'+
-						'\nWhat\'s actually provided was of type: '+
-						typeof theGivenFunction + '.'
-						;
-					break;
-			}
-
-			_dealWithCurrentError();
-		} else {
-			theClassConstructor = theGivenFunction;
-		}
-
-
-		var _allImpartationProfiles = theClassConstructor[propertyName_wulechuanImpartationProfiles];
-		if (_the(_allImpartationProfiles).isNotAValidObject()) {
-			_allImpartationProfiles = {};
-			_allImpartationProfiles[propertyName_defaultProfile] = {};
-		}
-
-
-		allImpartationProfilesOfClass = _allImpartationProfiles;
-
-
-		var _defaultProfile = allImpartationProfilesOfClass[propertyName_defaultProfile];
-		if (_the(_defaultProfile).isAValidProfile()) {
-			usedImpartationProfileOfClass = _defaultProfile;
-		}
-	}
-
-	/**
-	 * To accept the function treated as a class, instances of which will be imparted.
-	 *
-	 * @param {!object} theSourceObject
+	 * @param {!object} sourceObject
 	 */
 	function theObject(sourceObject) {
 		if (_the(sourceObject).isNeitherAnObjectNorAnArray()) {
-			switch (usingLanguage) {
-				case languageCode_zhCN:
-					currentErrorMessage =
-						'首个参数必须为一个非空对象，可以为数组对象。'+
-						'\n而实际提供的首个参数是一个'+typeof sourceObject + '。'
-						;
-					break;
+			_reportMultilingualErrors({
+				'zh-CN':
+					'首个参数必须为一个非空对象，可以为数组对象。'+
+					'\n而实际提供的首个参数是一个'+typeof sourceObject + '。',
 
-				case languageCode_enUS:
-					currentErrorMessage =
-						'The provided source must be an object that is not a null. '+
-						'An array object is allowed. '+
-						'\nWhat\'s actually provided was of type: '+
-						typeof theGivenFunction + '.'
-						;
-					break;
-			}
-
-			_dealWithCurrentError();
+				'en-US':
+					'The provided source must be an object that is not a null. '+
+					'An array object is allowed. '+
+					'\nWhat\'s actually provided was of type: '+
+					typeof sourceObject + '.'
+			});
 		} else {
 			theSourceObjectToImpartThingsFrom = sourceObject;
 		}
@@ -708,47 +670,43 @@ function WulechuanImpartationOperator() {
 		// allImpartationProfiles[propertyName_defaultProfile] = null;
 	}
 
+
+
+
 	/**
-	 * To accept the name of the desired variant to use.
+	 * To accept the function treated as a class, instances of which will be imparted.
 	 *
-	 * @param {!string} variantName
+	 * @param {!function} theGivenFunction
 	 */
-	function useThisProfile(profileName) {
-		if (errorAlreadyOcurred) return;
-
-		var _foundProfile;
-		var _theFoundProfileIsInvalid = true;
-
-		if (_the(profileName).isAValidKey()) {
-			_foundProfile = allImpartationProfilesOfClass[profileName];
-
-			if (_the(_foundProfile).isAValidProfile()) {
-				usedImpartationProfileOfClass = _foundProfile;
-				_theFoundProfileIsInvalid = false;
-			}
+	function theClass(theGivenFunction) {
+		if (typeof theGivenFunction !== 'function') {
+			_reportMultilingualErrors({
+				'zh-CN':
+					'首个参数必须为一个函数。其将被视为一个构造函数以构造一个对象。'+
+					'该对象之属性和方法将被传授给受封者。'+
+					'\n而实际提供的首个参数是一个'+typeof theGivenFunction + '。',
+				'en-US':
+					'The provided source must be a function, '+
+					'which will be used as a constructor '+
+					'to create the object to impart to a grantee.'+
+					'\nWhat\'s actually provided was of type: '+
+					typeof theGivenFunction + '.'
+			});
+		} else {
+			theClassConstructor = theGivenFunction;
 		}
 
-		if (_theFoundProfileIsInvalid) {
-			if (typeof profileName !== 'string') {
-				profileName = typeof profileName;
-			}
 
-			switch (usingLanguage) {
-				case languageCode_zhCN:
-					currentErrorMessage =
-						'未找到指定的变体。'+
-						'输入参数为：“'+profileName+'”。';
-					break;
+		allImpartationProfilesOfClass = theClassConstructor[propertyName_wulechuanImpartationProfiles];
+		if (_the(allImpartationProfilesOfClass).isNotAValidObject()) {
+			allImpartationProfilesOfClass = {};
+			allImpartationProfilesOfClass[propertyName_defaultProfile] = {};
+		}
 
-				case languageCode_enUS:
-					currentErrorMessage =
-						'The desired profile name was invalid. '+
-						'No profile was matched by that name. '+
-						'\nThe input was "'+profileName+'".';
-					break;
-			}
 
-			_dealWithCurrentError();
+		var _defaultProfile = allImpartationProfilesOfClass[propertyName_defaultProfile];
+		if (_the(_defaultProfile).isAValidProfile()) {
+			usedImpartationProfileOfClass = _defaultProfile;
 		}
 	}
 
@@ -763,11 +721,53 @@ function WulechuanImpartationOperator() {
 		theClassConstructionOptions = constructionOptions;
 	}
 
+	/**
+	 * Contruct an instance for the provided class
+	 */
 	function buildInstanceObject() {
 		if (errorAlreadyOcurred) return;
 
 		theSourceObjectToImpartThingsFrom = new theClassConstructor(theClassConstructionOptions);
 	}
+
+	/**
+	 * To accept the name of the desired variant to use.
+	 *
+	 * @param {!string} variantName
+	 */
+	function useThisProfileOfTheClass(profileName) {
+		if (errorAlreadyOcurred) return;
+
+		var _foundProfile;
+		var _theFoundProfileIsInvalid = true;
+
+		if (_the(profileName).isAValidKey()) {
+			_foundProfile = allImpartationProfilesOfClass[profileName];
+
+			if (_the(_foundProfile).isAValidProfile()) {
+				usedImpartationProfileOfClass = _foundProfile;
+				usedImpartationProfileNameOfClass = profileName;
+				_theFoundProfileIsInvalid = false;
+			}
+		}
+
+		if (_theFoundProfileIsInvalid) {
+			if (typeof profileName !== 'string') {
+				profileName = typeof profileName;
+			}
+
+			_reportMultilingualErrors({
+				'zh-CN':
+					'未找到指定的变体。'+
+					'输入参数为：“'+profileName+'”。',
+				'en-US':
+					'The desired profile name was invalid. '+
+					'No profile was matched by that name. '+
+					'\nThe input was "'+profileName+'".'
+			});
+		}
+	}
+
 
 
 
@@ -796,35 +796,18 @@ function WulechuanImpartationOperator() {
 		if (errorAlreadyOcurred) return;
 
 		if (_the(granteeOfMethods).isNeitherAnObjectNorAnArray()) {
-			switch (usingLanguage) {
-				case languageCode_zhCN:
-					currentErrorMessage = '受封者必须是一个标准对象或数组，且不可为空对象（null）。';
-					break;
-
-				case languageCode_enUS:
-					currentErrorMessage =
-						'The grantee to impart methods and properties to '+
-						'must be an object or an array, and not a null.'
-						;
-					break;
-			}
-
-			_dealWithCurrentError();
+			_reportMultilingualErrors({
+				'zh-CN':
+					'受封者必须是一个标准对象或数组，且不可为空对象（null）。',
+				'en-US':
+					'The grantee to impart methods and properties to '+
+					'must be an object or an array, and not a null.'
+			});
 		}
 
 		if (_the(granteeOfProperties).isNeitherAnObjectNorAnArray()) {
 			granteeOfProperties = granteeOfMethods;
 		}
-
-
-
-
-		if (errorAlreadyOcurred) {
-			// return nothing if any error occurs.
-			return;
-		}
-
-
 
 		var theInstanceThatHasBeenImparted =  _impartIt(granteeOfMethods, granteeOfProperties);
 		// return the instance for the grantee to store a variable within its scope.
@@ -833,9 +816,12 @@ function WulechuanImpartationOperator() {
 
 
 	function _impartIt(granteeOfMethods, granteeOfProperties) {
-		for (var attributeName in theSourceObjectToImpartThingsFrom) {
+		_mergeRenamingConfigurationsIntoTheImpartationProfile();
+
+
+		for (var attributeName in finallyUsedImpartationProfile) {
 			var attribute = theSourceObjectToImpartThingsFrom[attributeName];
-			var attributeImpartationName = attributeName;
+			var attributeImpartationName = finallyUsedImpartationProfile[attributeName];
 
 			var shouldSkip = false;
 			if (shouldSkip) continue;
@@ -872,6 +858,59 @@ function WulechuanImpartationOperator() {
 		}
 
 		return theSourceObjectToImpartThingsFrom;
+	}
+
+	function _impartAddRenamedAttributesToImpartationSourceObject() {
+
+	}
+
+	function _impartAttributesDirectlyToGrantee() {
+
+	}
+
+	function _mergeRenamingConfigurationsIntoTheImpartationProfile() {
+		finallyUsedImpartationProfile = {};
+
+
+		var attributeName;
+
+		if (usedImpartationProfileOfClass) {
+			for (attributeName in usedImpartationProfileOfClass) {
+				if (!theSourceObjectToImpartThingsFrom.hasOwnProperty(attributeName)) {
+					_reportMultilingualErrors({
+						'zh-CN':
+							'对象或实例没有名为“'+attributeName+'”的属性或方法函数。',
+						'en-US':
+							''
+					});
+					continue;
+				}
+
+				finallyUsedImpartationProfile[attributeName] = usedImpartationProfileOfClass[attributeName];
+			}
+		} else {
+			for (attributeName in theSourceObjectToImpartThingsFrom) {
+				finallyUsedImpartationProfile[attributeName] = theSourceObjectToImpartThingsFrom[attributeName];
+			}
+		}
+
+		if (usedPropertyNamesCustomization) {
+			for (attributeName in usedPropertyNamesCustomization) {
+				if (!finallyUsedImpartationProfile.hasOwnProperty(attributeName)) {
+					_reportMultilingualErrors({
+						'zh-CN':
+							'视为“'+usedImpartationProfileNameOfClass+
+							'”变体的实例，没有名为“'+attributeName+'”的属性或方法函数。',
+						'en-US':
+							''
+					});
+
+					continue;
+				}
+
+				finallyUsedImpartationProfile[attributeName] = usedPropertyNamesCustomization[attributeName];
+			}
+		}
 	}
 
 	function _impartOneMethodTheDefaultWay(objectToImpart, oldName, granteeOfMethod, newName) {
