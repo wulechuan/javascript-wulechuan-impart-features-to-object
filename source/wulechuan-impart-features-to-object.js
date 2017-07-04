@@ -17,7 +17,8 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * # 简介
  * 
- * 以所谓“传授（impart）”的程序写法实现所谓“混入（Mixin）”功能，使得“受体”具有被传授的属性和方法函数。并且，这些被传授的属性和方法均被包裹在getter和setter内，受到保护。
+ * 以所谓“传授（impart）”的程序写法实现所谓“混入（Mixin）”功能，使得“受体”具有被传授的属性和方法函数。
+ * 并且，这些被传授的属性和方法均被包裹在getter和setter内，受到保护。
  * 
  * 主体为一所谓“工厂函数”，用于构建一个对象。该对象包含若干属性，每一属性均为一函数。
  * 这些函数之功能在逻辑上严格等同，但却操持不同人类语言，以便熟悉这些语言之一者采用。
@@ -319,7 +320,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * A class, instance of which is the operator
  * that remembers several key factors and does the impartation job
- * for a given class(a.k.a. a function) or an object.
+ * for a given object, or an instance of a given class(a.k.a. a function).
  *
  * Each time the entrance method is invoked,
  * a new instance object of this operator class is created,
@@ -459,10 +460,9 @@ function WulechuanImpartationOperator() {
 
 	var thisOperator = this;
 
-	var errorAlreadyOcurred = false;
 	var shouldThrowErrors;
 
-	var usingLanguage = '';
+	var usingLanguage;
 
 	var theClassConstructor;
 	var theClassConstructionOptions;
@@ -692,13 +692,11 @@ function WulechuanImpartationOperator() {
 					'\nWhat\'s actually provided was of type: '+
 					typeof sourceObject + '.'
 			});
+
+			stagesOfObjectRoute.stop();
 		} else {
 			theSourceObjectToImpartThingsFrom = sourceObject;
 		}
-
-
-		allImpartationProfilesOfClass = {};
-		// allImpartationProfiles[propertyName_defaultProfile] = null;
 	}
 
 
@@ -716,6 +714,7 @@ function WulechuanImpartationOperator() {
 					'首个参数必须为一个函数。其将被视为一个构造函数以构造一个对象。'+
 					'该对象之属性和方法将被传授给受封者。'+
 					'\n而实际提供的首个参数是一个'+typeof theGivenFunction + '。',
+
 				'en-US':
 					'The provided source must be a function, '+
 					'which will be used as a constructor '+
@@ -723,6 +722,8 @@ function WulechuanImpartationOperator() {
 					'\nWhat\'s actually provided was of type: '+
 					typeof theGivenFunction + '.'
 			});
+
+			stagesOfClassRoute.stop();
 		} else {
 			theClassConstructor = theGivenFunction;
 		}
@@ -752,8 +753,6 @@ function WulechuanImpartationOperator() {
 	 * @param {?object} constructionOptions
 	 */
 	function useTheseOptionsWhenConstructInstance(constructionOptions) {
-		if (errorAlreadyOcurred) return;
-
 		theClassConstructionOptions = constructionOptions;
 	}
 
@@ -761,8 +760,6 @@ function WulechuanImpartationOperator() {
 	 * Contruct an instance for the provided class
 	 */
 	function buildInstanceObject() {
-		if (errorAlreadyOcurred) return;
-
 		theSourceObjectToImpartThingsFrom = new theClassConstructor(theClassConstructionOptions);
 	}
 
@@ -772,8 +769,6 @@ function WulechuanImpartationOperator() {
 	 * @param {!string} variantName
 	 */
 	function useThisProfileOfTheClass(profileName) {
-		if (errorAlreadyOcurred) return;
-
 		var _foundProfile;
 		var _theFoundProfileIsInvalid = true;
 
@@ -796,11 +791,14 @@ function WulechuanImpartationOperator() {
 				'zh-CN':
 					'未找到指定的变体。'+
 					'输入参数为：“'+profileName+'”。',
+
 				'en-US':
 					'The desired profile name was invalid. '+
 					'No profile was matched by that name. '+
 					'\nThe input was "'+profileName+'".'
 			});
+
+			stagesOfClassRoute.stop();			
 		}
 	}
 
@@ -808,37 +806,37 @@ function WulechuanImpartationOperator() {
 
 
 
-	function withCustomizedPropertyNames(propertyNamesCustomization) {
-		if (errorAlreadyOcurred) return;
-
-		if (_the(propertyNamesCustomization).isNotAValidObject()) {
-			errorAlreadyOcurred = true;
+	function withCustomizedPropertyNames(renamingRules) {
+		if (_the(renamingRules).isNotAValidObject()) {
+			stagesOfClassRoute.stop();
+			stagesOfObjectRoute.stop();
 		} else {
-			usedPropertyNamesCustomization = propertyNamesCustomization;
+			usedPropertyNamesCustomization = renamingRules;
 		}
 	}
 
 	function addDirectlyAccessibleProperties(_directlyAccessiblePropertiesToAdd) {
-		if (errorAlreadyOcurred) return;
-
 		if (_the(_directlyAccessiblePropertiesToAdd).isNotAValidObject()) {
-			errorAlreadyOcurred = true;
+			stagesOfClassRoute.stop();
+			stagesOfObjectRoute.stop();
 		} else {
 			directlyAccessiblePropertiesToAdd = _directlyAccessiblePropertiesToAdd;
 		}
 	}
 
 	function towards(granteeOfMethods, granteeOfProperties) {
-		if (errorAlreadyOcurred) return;
-
 		if (_the(granteeOfMethods).isNeitherAnObjectNorAnArray()) {
 			_reportMultilingualErrors({
 				'zh-CN':
 					'受封者必须是一个标准对象或数组，且不可为空对象（null）。',
+
 				'en-US':
 					'The grantee to impart methods and properties to '+
 					'must be an object or an array, and not a null.'
 			});
+
+			stagesOfClassRoute.stop();
+			stagesOfObjectRoute.stop();
 		}
 
 		if (_the(granteeOfProperties).isNeitherAnObjectNorAnArray()) {
@@ -916,9 +914,14 @@ function WulechuanImpartationOperator() {
 					_reportMultilingualErrors({
 						'zh-CN':
 							'对象或实例没有名为“'+attributeName+'”的属性或方法函数。',
+
 						'en-US':
 							''
 					});
+
+					stagesOfClassRoute.stop();
+					stagesOfObjectRoute.stop();
+
 					continue;
 				}
 
@@ -937,9 +940,13 @@ function WulechuanImpartationOperator() {
 						'zh-CN':
 							'视为“'+usedImpartationProfileNameOfClass+
 							'”变体的实例，没有名为“'+attributeName+'”的属性或方法函数。',
+
 						'en-US':
 							''
 					});
+
+					stagesOfClassRoute.stop();
+					stagesOfObjectRoute.stop();
 
 					continue;
 				}
