@@ -64,9 +64,9 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * @example
  * 	二维矢量.wulechuanImpartationProfiles = {
- * 		'二维位置': { __theObjectItself__: '位置', ... },
- * 		'二维力':   { __theObjectItself__: '受力', ... },
- * 		'二维速度': { __theObjectItself__: '速度', ... }
+ * 		'二维位置': { propertyNameForTheObjectItself: '位置', ... },
+ * 		'二维力':   { propertyNameForTheObjectItself: '受力', ... },
+ * 		'二维速度': { propertyNameForTheObjectItself: '速度', ... }
  * 	}
  * 
  * 	function 二维点() {
@@ -98,7 +98,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 				y: -19
  * 			})
  * 			.并更名以下属性({
- * 				__theObjectItself__: '中心点',
+ * 				propertyNameForTheObjectItself: '中心点',
  * 				x: '水平位置',
  * 				y: '垂直位置'
  * 			})
@@ -118,7 +118,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 采用所谓“普通对象”，如“明文对象（一译‘字面量对象’）”，作为“受体”对象亦是可行的。
  * @example
  * 	二维粒子.wulechuanImpartationProfiles = {
- * 		default: { __theObjectItself__: '二维粒子', ... }
+ * 		default: { propertyNameForTheObjectItself: '二维粒子', ... }
  * 	};
  * 
  * 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
@@ -208,9 +208,9 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * @example
  * 	My2DVector.wulechuanImpartationProfiles = {
- * 		position2D: { __theObjectItself__: 'position', ... },
- * 		force2D:    { __theObjectItself__: 'force', ... },
- * 		velocity2D: { __theObjectItself__: 'velocity', ... }
+ * 		position2D: { propertyNameForTheObjectItself: 'position', ... },
+ * 		force2D:    { propertyNameForTheObjectItself: 'force', ... },
+ * 		velocity2D: { propertyNameForTheObjectItself: 'velocity', ... }
  * 	}
  * 
  * 	function My2DPoint() {
@@ -232,8 +232,8 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 				x: 3,
  * 				y: -19
  * 			})
- * 			.withCustomizedPropertyNames({
- * 				__theObjectItself__: 'centerPos',
+ * 			.addAliasesForAttributes({
+ * 				propertyNameForTheObjectItself: 'centerPos',
  * 				x: 'centerX',
  * 				y: 'centerY'
  * 			})
@@ -241,7 +241,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 
  * 		impart().theClass(My2DVector)
  * 			.usingThisProfile('force2D')
- * 			.withCustomizedPropertyNames({
+ * 			.addAliasesForAttributes({
  * 				strength: 's',
  * 				forceDirection: 'forceAngle'
  * 			})
@@ -255,7 +255,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * Thus the object literal gains new properties and methods.
  * @example
  * 	My2DParticle.wulechuanImpartationProfiles = {
- * 		default: { __theObjectItself__: 'particle2D', ... }
+ * 		default: { propertyNameForTheObjectItself: 'particle2D', ... }
  * 	};
  * 
  * 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
@@ -284,36 +284,56 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * # Random thoughts on API:
  * 
  * A profile can itself be named 'default', thus it will be taken by default.
- * Any profile **might** but not must provide two objects, named:
- * 	'renamingRules'
+ * Any profile **might** but is not forced to provide two objects, named:
+ * 
+ * 	'attributesAliasesToAdd'
+ * 
  * and
+ * 
  * 	'attributesToAddToGranteeDirectly'
+ * 
  * .
- * A valid renamingRules object **might** but not must contain
- * an attribute named '__theObjectItself__',
- * value of whom is to decide the new name of the instance to impart.
- * If the '__theObjectItself__' is absent,
- * or if even the entire 'renamingRules' object is absent,
- * Then the name of the profile is taken to be the name of the instance to impart.
+ * 
+ * A profile object **might** also contain a property named
+ * 
+ * 	'propertyNameForTheObjectItself'
+ * 
+ * , value of whom is to decide the new name of the instance to impart.
+ * If the 'propertyNameForTheObjectItself' is absent,
+ * then the name of the profile is taken instead.
  * 
  * For example, the minimum definition of the 'force2D' profile
- * for the 'Vector2D' class should look like this:
+ * for the 'Vector2D' class looks like this:
  * @example
  * 	Vector2D.wulechuanImpartationProfiles = {
  * 		force2D: {} // All instances will by default be named 'force2D'.
  * 	};
  * 
- * The 'attributesToAddToGranteeDirectly' is optional.
+ * 
  * Take another example for this:
  * @example
  * 	Vector2D.wulechuanImpartationProfiles = {
  * 		velocity2D: {
- * 			renamingRules: {
- * 				__theObjectItself__: 'velocity' // All instances will by default be named 'velocity', instead of 'velocity2D'.
+ * 			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
+ * 			attributesAliasesToAdd: {
  * 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
  * 			}
  * 		}
- * 	}
+ * 	};
+ * 
+ * The 'attributesToAddToGranteeDirectly' property of a profile is optional.
+ * When present, it looks like this:
+ * @example
+ * 	Vector2D.wulechuanImpartationProfiles = {
+ * 		velocity2D: {
+ * 			propertyNameForTheObjectItself: 'v',
+ * 			attributesToAddToGranteeDirectly: {
+ * 				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
+ * 				x: 'speedX',
+ * 				y: 'speedY'
+ * 			}
+ * 		}
+ * 	};
  * 
  * ----- readme end -----
  * 
@@ -409,14 +429,14 @@ function WulechuanImpartationOperator() {
 
 
 
-	var methodNames_withCustomizedPropertyNames_zhCN = [
-		'且定名为',     // 用于仅更改主名称（__theObjectItself__）时较为符合汉语习惯。
-		'并更名以下属性' // 用于更改多种属性名称时，较为符合汉语习惯。
+	var methodNames_withCustomizedPropertyNamesaddAliasesForAttributes
+		'且定名为',     // 用于仅更改主名称（propertyNameForTheObjectItself）时较为符合汉语习惯。
+		'并添加以下别名' // 用于更改多种属性名称时，较为符合汉语习惯。
 	];
-	var methodNames_withCustomizedPropertyNames_enUS = [
-		'renamedAs',
-		'withTheseAttributesRenamed',
-		'withCustomizedPropertyNames'
+	var methodNames_addAliasesForAttributes_enUS = [
+		'named',
+		'addAliasesForThese',
+		'addAliasesForAttributes'
 	];
 
 
@@ -441,9 +461,9 @@ function WulechuanImpartationOperator() {
 
 	var propertyName_wulechuanImpartationProfiles = 'wulechuanImpartationProfiles';
 	var propertyName_defaultProfile = 'default';
-	var propertyName_renamingRules = 'renamingRules';
+	var propertyName_attributesAliasesToAdd = 'attributesAliasesToAdd';
 	var propertyName_attributesToAddToGranteeDirectly = 'attributesToAddToGranteeDirectly';
-	var propertyName_theObjectItself = '__theObjectItself__';
+	var propertyName_nameToUseForTheObjectItself = 'propertyNameForTheObjectItself';
 
 
 
@@ -467,13 +487,16 @@ function WulechuanImpartationOperator() {
 	var theClassConstructor;
 	var theClassConstructionOptions;
 	var allImpartationProfilesOfClass;
-	var usedImpartationProfileOfClass;
 	var usedImpartationProfileNameOfClass;
+	var isUsingDefaultProfileOfClass = true;
+	var usedImpartationProfileOfClass;
 
 	var theSourceObjectToImpartThingsFrom;
-	var usedPropertyNamesCustomization;
-	var finallyUsedImpartationProfile;
-	var directlyAccessiblePropertiesToAdd;
+
+	var usedChiefName;
+	var attributesAliasesToAdd;
+	var allAvailableAliasesForAllAttributes;
+	var directlyAccessibleAttributesToAdd;
 
 
 
@@ -534,7 +557,7 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_theClass_enUS
 		});
 
-		stagesOfClassRoute.addStage(useTheseOptionsWhenConstructInstance, true, {
+		stagesOfClassRoute.addStage(useTheseOptionsWhenConstructAnInstance, true, {
 			'zh-CN': methodNames_useTheseOptionsWhenConstructInstance_zhCN,
 			'en-US': methodNames_useTheseOptionsWhenConstructInstance_enUS
 		});
@@ -549,9 +572,9 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_useThisProfileOfTheClass_enUS
 		});
 
-		stagesOfClassRoute.addStage(withCustomizedPropertyNames, true, {
-			'zh-CN': methodNames_withCustomizedPropertyNames_zhCN,
-			'en-US': methodNames_withCustomizedPropertyNames_enUS
+		stagesOfClassRoute.addStage(addAliasesForAttributes, true, {
+			'zh-CN': methodNames_addAliasesForAttributes_zhCN,
+			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
 		stagesOfClassRoute.addStage(addDirectlyAccessibleProperties, true, {
@@ -580,9 +603,9 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_theObject_enUS
 		});
 
-		stagesOfObjectRoute.addStage(withCustomizedPropertyNames, true, {
-			'zh-CN': methodNames_withCustomizedPropertyNames_zhCN,
-			'en-US': methodNames_withCustomizedPropertyNames_enUS
+		stagesOfObjectRoute.addStage(addAliasesForAttributes, true, {
+			'zh-CN': methodNames_addAliasesForAttributes_zhCN,
+			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
 		stagesOfObjectRoute.addStage(addDirectlyAccessibleProperties, true, {
@@ -736,10 +759,10 @@ function WulechuanImpartationOperator() {
 		var _defaultProfile = allImpartationProfilesOfClass[propertyName_defaultProfile];
 		if (_the(_defaultProfile).isNotAValidObject()) {
 			_defaultProfile = {};
-			_defaultProfile[propertyName_renamingRules] = {};
+			_defaultProfile[propertyName_attributesAliasesToAdd] = {};
 			_defaultProfile[propertyName_attributesToAddToGranteeDirectly] = {};
 		}
-		if (_the(_defaultProfile).isAValidRenamingProfile()) {
+		if (_the(_defaultProfile).isAValidObject()) {
 			usedImpartationProfileOfClass = _defaultProfile;
 		}
 	}
@@ -749,7 +772,7 @@ function WulechuanImpartationOperator() {
 	 *
 	 * @param {?object} constructionOptions
 	 */
-	function useTheseOptionsWhenConstructInstance(constructionOptions) {
+	function useTheseOptionsWhenConstructAnInstance(constructionOptions) {
 		theClassConstructionOptions = constructionOptions;
 	}
 
@@ -772,9 +795,11 @@ function WulechuanImpartationOperator() {
 		if (_the(profileName).isAValidKey()) {
 			_foundProfile = allImpartationProfilesOfClass[profileName];
 
-			if (_the(_foundProfile).isAValidRenamingProfile()) {
-				usedImpartationProfileOfClass = _foundProfile;
+			if (_the(_foundProfile).isAValidObject()) {
 				usedImpartationProfileNameOfClass = profileName;
+				usedChiefName = profileName;
+				usedImpartationProfileOfClass = _foundProfile;
+				isUsingDefaultProfileOfClass = false;
 				_theFoundProfileIsInvalid = false;
 			}
 		}
@@ -803,12 +828,12 @@ function WulechuanImpartationOperator() {
 
 
 
-	function withCustomizedPropertyNames(renamingRules) {
-		if (_the(renamingRules).isNotAValidObject()) {
+	function addAliasesForAttributes(_attributesAliasesToAdd) {
+		if (_the(_attributesAliasesToAdd).isAValidObject()) {
+			attributesAliasesToAdd = _attributesAliasesToAdd;
+		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
-		} else {
-			usedPropertyNamesCustomization = renamingRules;
 		}
 	}
 
@@ -817,7 +842,7 @@ function WulechuanImpartationOperator() {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
 		} else {
-			directlyAccessiblePropertiesToAdd = _directlyAccessiblePropertiesToAdd;
+			directlyAccessibleAttributesToAdd = _directlyAccessiblePropertiesToAdd;
 		}
 	}
 
@@ -929,8 +954,8 @@ function WulechuanImpartationOperator() {
 			}
 		}
 
-		if (usedPropertyNamesCustomization) {
-			for (attributeName in usedPropertyNamesCustomization) {
+		if (attributesAliasesToAdd) {
+			for (attributeName in attributesAliasesToAdd) {
 				if (!finallyUsedImpartationProfile.hasOwnProperty(attributeName)) {
 					_reportMultilingualErrors({
 						'zh-CN':
@@ -947,7 +972,7 @@ function WulechuanImpartationOperator() {
 					continue;
 				}
 
-				finallyUsedImpartationProfile[attributeName] = usedPropertyNamesCustomization[attributeName];
+				finallyUsedImpartationProfile[attributeName] = attributesAliasesToAdd[attributeName];
 			}
 		}
 	}

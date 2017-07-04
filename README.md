@@ -47,9 +47,9 @@
 
 
 	二维矢量.wulechuanImpartationProfiles = {
-		'二维位置': { __theObjectItself__: '位置', ... },
-		'二维力':   { __theObjectItself__: '受力', ... },
-		'二维速度': { __theObjectItself__: '速度', ... }
+		'二维位置': { propertyNameForTheObjectItself: '位置', ... },
+		'二维力':   { propertyNameForTheObjectItself: '受力', ... },
+		'二维速度': { propertyNameForTheObjectItself: '速度', ... }
 	}
 
 	function 二维点() {
@@ -81,7 +81,7 @@
 				y: -19
 			})
 			.并更名以下属性({
-				__theObjectItself__: '中心点',
+				propertyNameForTheObjectItself: '中心点',
 				x: '水平位置',
 				y: '垂直位置'
 			})
@@ -101,7 +101,7 @@
 采用所谓“普通对象”，如“明文对象（一译‘字面量对象’）”，作为“受体”对象亦是可行的。
 
 	二维粒子.wulechuanImpartationProfiles = {
-		default: { __theObjectItself__: '二维粒子', ... }
+		default: { propertyNameForTheObjectItself: '二维粒子', ... }
 	};
 
 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
@@ -191,9 +191,9 @@ So we need a solution, hopefully a slightly better one.
 
 
 	My2DVector.wulechuanImpartationProfiles = {
-		position2D: { __theObjectItself__: 'position', ... },
-		force2D:    { __theObjectItself__: 'force', ... },
-		velocity2D: { __theObjectItself__: 'velocity', ... }
+		position2D: { propertyNameForTheObjectItself: 'position', ... },
+		force2D:    { propertyNameForTheObjectItself: 'force', ... },
+		velocity2D: { propertyNameForTheObjectItself: 'velocity', ... }
 	}
 
 	function My2DPoint() {
@@ -215,8 +215,8 @@ So we need a solution, hopefully a slightly better one.
 				x: 3,
 				y: -19
 			})
-			.withCustomizedPropertyNames({
-				__theObjectItself__: 'centerPos',
+			.addAliasesForAttributes({
+				propertyNameForTheObjectItself: 'centerPos',
 				x: 'centerX',
 				y: 'centerY'
 			})
@@ -224,7 +224,7 @@ So we need a solution, hopefully a slightly better one.
 
 		impart().theClass(My2DVector)
 			.usingThisProfile('force2D')
-			.withCustomizedPropertyNames({
+			.addAliasesForAttributes({
 				strength: 's',
 				forceDirection: 'forceAngle'
 			})
@@ -238,7 +238,7 @@ can impart things into an object literal as well.
 Thus the object literal gains new properties and methods.
 
 	My2DParticle.wulechuanImpartationProfiles = {
-		default: { __theObjectItself__: 'particle2D', ... }
+		default: { propertyNameForTheObjectItself: 'particle2D', ... }
 	};
 
 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
@@ -267,36 +267,56 @@ be it an instance, or another object literal.
 # Random thoughts on API:
 
 A profile can itself be named 'default', thus it will be taken by default.
-Any profile **might** but not must provide two objects, named:
-	'renamingRules'
+Any profile **might** but is not forced to provide two objects, named:
+
+	'attributesAliasesToAdd'
+
 and
+
 	'attributesToAddToGranteeDirectly'
+
 .
-A valid renamingRules object **might** but not must contain
-an attribute named '__theObjectItself__',
-value of whom is to decide the new name of the instance to impart.
-If the '__theObjectItself__' is absent,
-or if even the entire 'renamingRules' object is absent,
-Then the name of the profile is taken to be the name of the instance to impart.
+
+A profile object **might** also contain a property named
+
+	'propertyNameForTheObjectItself'
+
+, value of whom is to decide the new name of the instance to impart.
+If the 'propertyNameForTheObjectItself' is absent,
+then the name of the profile is taken instead.
 
 For example, the minimum definition of the 'force2D' profile
-for the 'Vector2D' class should look like this:
+for the 'Vector2D' class looks like this:
 
 	Vector2D.wulechuanImpartationProfiles = {
 		force2D: {} // All instances will by default be named 'force2D'.
 	};
 
-The 'attributesToAddToGranteeDirectly' is optional.
+
 Take another example for this:
 
 	Vector2D.wulechuanImpartationProfiles = {
 		velocity2D: {
-			renamingRules: {
-				__theObjectItself__: 'velocity' // All instances will by default be named 'velocity', instead of 'velocity2D'.
+			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
+			attributesAliasesToAdd: {
 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
 			}
 		}
-	}
+	};
+
+The 'attributesToAddToGranteeDirectly' property of a profile is optional.
+When present, it looks like this:
+
+	Vector2D.wulechuanImpartationProfiles = {
+		velocity2D: {
+			propertyNameForTheObjectItself: 'v',
+			attributesToAddToGranteeDirectly: {
+				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
+				x: 'speedX',
+				y: 'speedY'
+			}
+		}
+	};
 
  
 
