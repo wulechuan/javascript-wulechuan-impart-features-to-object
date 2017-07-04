@@ -505,9 +505,7 @@ function WulechuanImpartationOperator() {
 		Object.defineProperty(thisOperator, entrancePropertyName, {
 			enumerable: true,
 			get: function () {
-				usingLanguage = languageCode;
 				_forAllRoutesSetPreferredNaturalLanguageTo(usingLanguage);
-
 
 				// Execute first stage to automatically hide methods in other languages.
 				// Note that in face, the returned value is still "thisOperator" itself.
@@ -517,6 +515,7 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _forAllRoutesSetPreferredNaturalLanguageTo(languageCode) {
+		usingLanguage = languageCode;
 		stagesOfClassRoute.setPreferredNaturalLanguageTo(languageCode);
 		stagesOfObjectRoute.setPreferredNaturalLanguageTo(languageCode);
 	}
@@ -634,8 +633,6 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _reportMultilingualErrors(errors) {
-		errorAlreadyOcurred = true;
-
 		var errorMessage = 'Unkown error occurred.';
 		if (errors) {
 			if (typeof errors === 'string') {
@@ -904,7 +901,6 @@ function WulechuanImpartationOperator() {
 
 	function _mergeRenamingConfigurationsIntoTheImpartationProfile() {
 		finallyUsedImpartationProfile = {};
-
 
 		var attributeName;
 
