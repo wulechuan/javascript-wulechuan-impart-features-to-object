@@ -317,6 +317,7 @@ window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
  * 			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
  * 			attributesAliasesToAdd: {
  * 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
+ * 				direction: ['dir', '方向', '偏角'] // An array of strings is also allowed
  * 			}
  * 		}
  * 	};
@@ -488,7 +489,8 @@ function WulechuanImpartationOperator() {
 	var theClassConstructionOptions;
 	var allImpartationProfilesOfClass;
 	var usedImpartationProfileNameOfClass;
-	var isUsingDefaultProfileOfClass = true;
+	var isUsingImplicitProfileOfClass = true; // make getter and setter for each and every attribute.
+	var isUsingDefaultProfileOfClass = false;
 	var usedImpartationProfileOfClass;
 
 	var theSourceObjectToImpartThingsFrom;
@@ -762,10 +764,14 @@ function WulechuanImpartationOperator() {
 		allImpartationProfilesOfClass = theClassConstructor[propertyName_wulechuanImpartationProfiles];
 		if (_the(allImpartationProfilesOfClass).isNotAValidObject()) {
 			allImpartationProfilesOfClass = {};
-			allImpartationProfilesOfClass[propertyName_defaultProfile] = {};
 		}
 
-		_processAProfileOfTheClass(propertyName_defaultProfile);
+		if (_classHasAProfileNamed(propertyName_defaultProfile)) {
+			usedImpartationProfileOfClass = allImpartationProfilesOfClass[propertyName_defaultProfile];
+			usedImpartationProfileNameOfClass = propertyName_defaultProfile;
+			isUsingImplicitProfileOfClass = false;
+			isUsingDefaultProfileOfClass = true;
+		}
 	}
 
 	/**
@@ -790,11 +796,10 @@ function WulechuanImpartationOperator() {
 	 * @param {!string} variantName
 	 */
 	function useThisProfileOfTheClass(profileName) {
-		var _succeeded = _processAProfileOfTheClass(profileName);
-
-		if (_succeeded) {
+		if (_classHasAProfileNamed(profileName)) {
+			usedImpartationProfileOfClass = allImpartationProfilesOfClass[profileName];
 			usedImpartationProfileNameOfClass = profileName;
-			usedChiefName = profileName;
+			isUsingImplicitProfileOfClass = false;
 			isUsingDefaultProfileOfClass = false;
 		} else {
 			if (typeof profileName !== 'string') {
@@ -816,28 +821,24 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _processAProfileOfTheClass(profileName) {
+	function _classHasAProfileNamed(profileName) {
 		if (_the(profileName).isANotValidKey()) {
 			return false; // failed
 		}
 
-		var _theProfile = allImpartationProfilesOfClass[profileName];
+		return _the(allImpartationProfilesOfClass[profileName]).isAValidObject();
+	}
 
-		if (_the(_theProfile).isANotValidObject()) {
-			return false; // failed
-		}
-
+	function _takeConfigurationsFromUsedProfile() {
 		_mergeAttributesFromBToA(
 			attributesAliasesToAdd,
-			_theProfile[propertyName_attributesAliasesToAdd]
+			usedImpartationProfileOfClass[propertyName_attributesAliasesToAdd]
 		);
 
 		_mergeAttributesFromBToA(
 			attributesToAddDirectlyUnderGrantee,
-			_theProfile[propertyName_attributesToAddDirectlyUnderGrantee]
+			usedImpartationProfileOfClass[propertyName_attributesToAddDirectlyUnderGrantee]
 		);
-
-		return true; // succeeded
 	}
 
 

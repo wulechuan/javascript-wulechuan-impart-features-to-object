@@ -300,6 +300,7 @@ Take another example for this:
 			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
 			attributesAliasesToAdd: {
 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
+				direction: ['dir', '方向', '偏角'] // An array of strings is also allowed
 			}
 		}
 	};
