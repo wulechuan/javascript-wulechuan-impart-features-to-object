@@ -470,15 +470,6 @@ function WulechuanImpartationOperator() {
 
 
 
-	var errorMessageDesiredAttributeNotFound_zhCN =
-		'给定对象或给定类之实例没有名为';
-
-	var errorMessageDesiredAttributeNotFound_enUS =
-		'The provided object, or the instance of the provided class '+
-		'doesn\'t have an attribute named ';
-
-
-
 
 
 
@@ -607,7 +598,8 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _defineExecutionRouteForImpartingFromAnObject() {
-		var stagesOfObjectRoute = new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
+		var stagesOfObjectRoute =
+			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
 
 		stagesOfObjectRoute.addStage(startToImpart, {
 			'zh-CN': [methodName_startToImpart],
@@ -661,6 +653,10 @@ function WulechuanImpartationOperator() {
 				return !Array.isArray(subject);
 			},
 
+			isAnEmptyString: function() {
+				return !subject && typeof subject === 'string';
+			},
+
 			isANonEmptyString: function() {
 				return !!subject && typeof subject === 'string';
 			},
@@ -711,9 +707,10 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _mergeAttributesWhichMightBeArraysFromBToA(a, b) {
+	function _mergeAttribtesFromBToA(a, b) {
 		if (_the(a).isAValidObject() && _the(b).isAValidObject()) {
 			for (var key in b) {
+				if ( ! b[key]) continue;
 				a[key] = b[key];
 			}
 		}
@@ -861,7 +858,10 @@ function WulechuanImpartationOperator() {
 
 	function addAliasesForAttributesAdditionalToProfileDefinedAliases(_attributesAliasesToAdd) {
 		if (_the(_attributesAliasesToAdd).isAValidObject()) {
-			attributesAliasesToAddAdditionalToProfileDefined = _attributesAliasesToAdd;
+			_mergeAttribtesFromBToA(
+				attributesAliasesToAddAdditionalToProfileDefined,
+				_attributesAliasesToAdd
+			);
 		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
@@ -870,8 +870,10 @@ function WulechuanImpartationOperator() {
 
 	function addAttributesDirectlyUnderGrantee(_attributesToAddDirectlyUnderGrantee) {
 		if (_the(_attributesToAddDirectlyUnderGrantee).isAValidObject()) {
-			attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined =
-				_attributesToAddDirectlyUnderGrantee;
+			_mergeAttribtesFromBToA(
+				attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined,
+				_attributesToAddDirectlyUnderGrantee
+			);
 		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
@@ -918,80 +920,8 @@ function WulechuanImpartationOperator() {
 	function _impartIt() {
 		_decideAllAliasesToUseFinally();
 
-		if (!usedChiefName) {
-
-			var _methodSuggestionsForNamingObjectItself = '\n\t"'+
-				[
-					methodNames_addAliasesForAttributes_zhCN[0],
-					methodNames_addAliasesForAttributes_enUS[0]
-				].join('\n\t"')
-				+'"\n'
-				;
-
-			var reusableWords_zhCN = 
-				'而每欲传授对象至它物，该对象本身作为受封物之属性，亦须定名。'+
-				'请采用以下任意方法函数为其定名：'+
-				_methodSuggestionsForNamingObjectItself
-				;
-
-			var reusableWords_enUS =
-				'Note that an object to impart, '+
-				'as it would be an attribute of the grantee, '+
-				'needs a name itself.'+
-				'\nPlease use any of these methods below to give it a name:'+
-				_methodSuggestionsForNamingObjectItself
-				;
-
-
-			if (isUsingImplicitProfileOfClass) {
-
-				_reportMultilingualErrors({
-					'zh-CN':
-						'所给出的“类”没有名为“'+propertyName_defaultProfile+'”的默认变体。'+
-						'程序亦未指定采用其它变体。现欲传授该类之实例对象至它物，其传授后之名称却未知。'+
-						reusableWords_zhCN
-						,
-
-					'en-US':
-						'The class doesn\'t have the default profile, '+
-						'which should have been named "'+propertyName_defaultProfile+'". '+
-						'You are allowed not to use the default profile. But... '+
-						reusableWords_enUS
-				});
-
-			} else if (isUsingDefaultProfileOfClass) {
-
-				_reportMultilingualErrors({
-					'zh-CN':
-						'所给出的“类”的默认变体（即，“'+propertyName_defaultProfile+'”）被采用，'+
-						'但该变体未指明奖被传授之实例对象所应采用之名称。'+
-						reusableWords_zhCN
-						,
-
-					'en-US':
-						'For the given class, '+
-						'the "'+propertyName_defaultProfile+'" profile is used, '+
-						'while the profile does not provide the attribute name for '+
-						'the instance object. '+
-						reusableWords_enUS
-				});
-
-			} else {
-
-				_reportMultilingualErrors({
-					'zh-CN':
-						'行将传授所给出“对象”之属性至它物，其传授后之名称却未知。'+
-						reusableWords_zhCN
-						,
-
-					'en-US':
-						'The given object is about to impart to the grantee, '+
-						'but the attribute name is not provided yet.'+
-						reusableWords_enUS
-				});
-
-			}
-
+		if ( ! usedChiefName) {
+			_dealWithTheAbsentOfTheChiefName();
 			return false;
 		}
 
@@ -1001,67 +931,280 @@ function WulechuanImpartationOperator() {
 		return true;
 	}
 
-	function _decideAllAliasesToUseFinally() {
-		if (usedImpartationProfileOfClass) {
-			_decideAllAliasesToUseAccordingToProfileOfClass();
+	function _dealWithTheAbsentOfTheChiefName() {
+		var _methodSuggestionsForNamingObjectItself = '\n\t"'+
+			[
+				methodNames_addAliasesForAttributes_zhCN[0],
+				methodNames_addAliasesForAttributes_enUS[0]
+			].join('\n\t"')
+			+'"\n'
+			;
+
+		var reusableWords_zhCN = 
+			'而每欲传授对象至它物，该对象本身作为受封物之属性，亦须定名。'+
+			'请采用以下任意方法函数为其定名：'+
+			_methodSuggestionsForNamingObjectItself
+			;
+
+		var reusableWords_enUS =
+			'Note that an object to impart, '+
+			'as it would be an attribute of the grantee, '+
+			'needs a name itself.'+
+			'\nPlease use any of these methods below to give it a name:'+
+			_methodSuggestionsForNamingObjectItself
+			;
+
+
+		if (isUsingImplicitProfileOfClass) {
+
+			_reportMultilingualErrors({
+				'zh-CN':
+					'所给出的“类”没有名为“'+propertyName_defaultProfile+'”的默认变体。'+
+					'程序亦未指定采用其它变体。现欲传授该类之实例对象至它物，其传授后之名称却未知。'+
+					reusableWords_zhCN
+					,
+
+				'en-US':
+					'The class doesn\'t have the default profile, '+
+					'which should have been named "'+propertyName_defaultProfile+'". '+
+					'You are allowed not to use the default profile. But... '+
+					reusableWords_enUS
+			});
+
+		} else if (isUsingDefaultProfileOfClass) {
+
+			_reportMultilingualErrors({
+				'zh-CN':
+					'所给出的“类”的默认变体（即，“'+propertyName_defaultProfile+'”）被采用，'+
+					'但该变体未指明奖被传授之实例对象所应采用之名称。'+
+					reusableWords_zhCN
+					,
+
+				'en-US':
+					'For the given class, '+
+					'the "'+propertyName_defaultProfile+'" profile is used, '+
+					'while the profile does not provide the attribute name for '+
+					'the instance object. '+
+					reusableWords_enUS
+			});
+
 		} else {
-			_collectAllAttributesFromTheObjectToImpart();
-		}
 
-		if () {
+			_reportMultilingualErrors({
+				'zh-CN':
+					'行将传授所给出“对象”之属性至它物，其传授后之名称却未知。'+
+					reusableWords_zhCN
+					,
 
-		}
-	}
+				'en-US':
+					'The given object is about to impart to the grantee, '+
+					'but the attribute name is not provided yet.'+
+					reusableWords_enUS
+			});
 
-	function _collectAllAttributesFromTheObjectToImpart() {
-		for (var _attributeName in theSourceObjectToImpartAttributesFrom) {
-			allAvailableAliasesForAllAttributes[_attributeName] =
-				_attributeName;
-
-			allAvailableAliasesForAllAttributesFlattenedBackwardsMapping[_attributeName] =
-				_attributeName;
 		}
 	}
 
-	function _decideAllAliasesToUseAccordingToProfileOfClass() {
-		var _chiefNameAccordingToProfileAttibute =
-			usedImpartationProfileOfClass[propertyName_nameToUseForTheObjectItself];
+	function _decideAllAliasesToUseFinally() {
+		var _theseAreForAliasesToAddToImpartationSourceObject;
 
-		if (_the(_chiefNameAccordingToProfileAttibute).isANonEmptyString()) {
-			usedChiefName = _chiefNameAccordingToProfileAttibute;
+
+		if (usedImpartationProfileOfClass) {
+
+			// Try to take chief name according to class profile.
+			_tryUpdatingChiefName(
+				usedImpartationProfileOfClass[propertyName_nameToUseForTheObjectItself]
+			);
+
+
+
+
+			// Try to add aliases according to class profile.
+			var _aliasesToAddToImpartationSourceObjectAccordingToProfile =
+				usedImpartationProfileNameOfClass[propertyName_attributesAliasesToAdd]
+				;
+			_theseAreForAliasesToAddToImpartationSourceObject = true;
+			_decideAliasesAccordingTo(
+				_aliasesToAddToImpartationSourceObjectAccordingToProfile,
+				_theseAreForAliasesToAddToImpartationSourceObject
+			);
+
+
+
+			// Try to add attributes directly under grantee according to class profile.
+			var _attributesToAddDirectlyUnderGranteeAccordingToProfile =
+				usedImpartationProfileNameOfClass[propertyName_attributesToAddDirectlyUnderGrantee]
+				;
+			_theseAreForAliasesToAddToImpartationSourceObject = false;
+			_decideAliasesAccordingTo(
+				_attributesToAddDirectlyUnderGranteeAccordingToProfile,
+				_theseAreForAliasesToAddToImpartationSourceObject
+			);
+
 		}
 
-		_decideAllAliasesToAddToImpartationSourceObject();
-		_decideAllAttributesToAddToGranteeDirectly();
+
+
+
+		// Try to take chief name according to user options.
+		_tryUpdatingChiefName(
+			attributesAliasesToAddAdditionalToProfileDefined[
+				propertyName_nameToUseForTheObjectItself
+			]
+		);
+
+		// Remove chief name attribute to prevent it from
+		// being treated as an alias of some attribute.
+		delete attributesAliasesToAddAdditionalToProfileDefined[
+			propertyName_nameToUseForTheObjectItself
+		];
+
+
+
+
+
+		// Try to add aliases according to user options.
+		_theseAreForAliasesToAddToImpartationSourceObject = true;
+		_decideAliasesAccordingTo(
+			attributesAliasesToAddAdditionalToProfileDefined,
+			_theseAreForAliasesToAddToImpartationSourceObject
+		);
+
+
+
+
+
+		// Try to add attributes directly under grantee according to user options.
+		_theseAreForAliasesToAddToImpartationSourceObject = false;
+		_decideAliasesAccordingTo(
+			attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined,
+			_theseAreForAliasesToAddToImpartationSourceObject
+		);
 	}
 
-	function _decideAllAliasesToAddToImpartationSourceObject() {
-		var _attributesAliasesToAddAccordingToProfile =
-			usedImpartationProfileNameOfClass[propertyName_attributesAliasesToAdd];
+	function _tryUpdatingChiefName(_chiefName) {
+		if (_the(_chiefName).isAValidKey()) {
+			usedChiefName = _chiefName;
+		}
+	}
+
+	function _decideAliasesAccordingTo(_aliases, _theseAreForAliasesToAddToImpartationSourceObject) {
+		var _recordsForMappingArrays;
+		var _flatternedRecordsForBackwardsMapping;
+
+
+		if (_the(_aliases).isNotAValidObject()) {
+			// Although aliases according to the user options are always an object,
+			// Since its a copy of the raw options,
+			// A profile might not provide an object for aliases.
+			return;
+		}
+
+
+		if (_theseAreForAliasesToAddToImpartationSourceObject) {
+			_recordsForMappingArrays =
+				allAvailableAliasesForAllAttributes;
+
+			_flatternedRecordsForBackwardsMapping =
+				allAvailableAliasesForAllAttributesFlattenedBackwardsMapping;
+		} else {
+			_recordsForMappingArrays =
+				allAttributesToAddDirectlyUnderGrantee;
+
+			_flatternedRecordsForBackwardsMapping =
+				allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping;
+		}
+
 
 		var _i;
-		var _attributeIsFound;
+		var _keyAsEitherAttributeNameOrAlias;
+
+		var _keyIsAnAttributeName;
+		var _keyIsAnAlias;
+
 		var _attributeName;
-		var _attributeAlias;
-		var _attributeAliases;
-		var _nonDuplicatedAliases;
+		var _aliasesArrayOfCurrentKey;
+		var _nonDuplicatedAliasesForCurrentAttributeName;
+		var _alias;
+		var _theAliasIsActuallyAnAttribute;
 
 
-		if (_the(_attributesAliasesToAddAccordingToProfile).isAValidObject()) {
-			for (_attributeName in _attributesAliasesToAddAccordingToProfile) {
-				_attributeIsFound =
-					theSourceObjectToImpartAttributesFrom.hasOwnProperty(_attributeName);
 
-				if ( ! _attributeIsFound) {
+		for (_keyAsEitherAttributeNameOrAlias in _aliases) {
+			if (_the(_keyAsEitherAttributeNameOrAlias).isNotAValidKey()) {
+				continue;
+			}
+
+			_keyIsAnAttributeName =
+				theSourceObjectToImpartAttributesFrom.hasOwnProperty(
+					_keyAsEitherAttributeNameOrAlias
+				);
+
+			if (_keyIsAnAttributeName) {
+				_attributeName = _keyAsEitherAttributeNameOrAlias;
+				_keyIsAnAlias = false;
+			} else {
+				_attributeName =
+					_flatternedRecordsForBackwardsMapping[
+						_keyAsEitherAttributeNameOrAlias
+					];
+				
+				if (_attributeName) {
+					_keyIsAnAlias = true;
+				}
+			}
+
+			if ( ! _keyIsAnAttributeName && ! _keyIsAnAlias) {
+				_reportMultilingualErrors({
+					'zh-CN':
+						'给定对象或给定类之实例没有名为'+
+						'“'+_keyAsEitherAttributeNameOrAlias+'”的属性;'+
+						'同时也没有此别名。'
+						,
+
+					'en-US':
+						'The provided object, or the instance of the provided class '+
+						'doesn\'t have an attribute named '+
+						'"'+_keyAsEitherAttributeNameOrAlias+'".'+
+						'Nor does an alias match this caption.'
+				});
+
+				// Although at present the "stop" method does nothing
+				// if it's invoked within the last stage.
+				// But what if this piece of code were settled
+				// into another non-ending stage in the future?
+				stagesOfClassRoute.stop();
+				stagesOfObjectRoute.stop();
+
+				continue;
+			}
+
+			_aliasesArrayOfCurrentKey =
+				_aliases[_keyAsEitherAttributeNameOrAlias];
+
+			if (_the(_aliasesArrayOfCurrentKey).isNotAnArray()) {
+				_aliasesArrayOfCurrentKey = [_aliasesArrayOfCurrentKey];
+			}
+
+			// Use an object instead of an array to avoid duplications easily.
+			_nonDuplicatedAliasesForCurrentAttributeName = {};
+			_recordsForMappingArrays[_attributeName] = _nonDuplicatedAliasesForCurrentAttributeName;
+
+			for (_i=0; _i<_aliasesArrayOfCurrentKey.length; _i++) {
+				_alias = _aliasesArrayOfCurrentKey[_i];
+				_theAliasIsActuallyAnAttribute =
+					theSourceObjectToImpartAttributesFrom.hasOwnProperty(
+						_alias
+					);
+
+				if (_theAliasIsActuallyAnAttribute) {
 					_reportMultilingualErrors({
 						'zh-CN':
-							errorMessageDesiredAttributeNotFound_zhCN+
-							'“'+_attributeName+'”的属性。'
+							'所选别名“‘'+_alias+'”与属性重名。'
 							,
 
 						'en-US':
-							errorMessageDesiredAttributeNotFound_enUS+
-							'"'+_attributeName+'".'
+							'The alias "'+_alias+'" is actually an attribute.'
 					});
 
 					// Although at present the "stop" method does nothing
@@ -1070,99 +1213,14 @@ function WulechuanImpartationOperator() {
 					// into another non-ending stage in the future?
 					stagesOfClassRoute.stop();
 					stagesOfObjectRoute.stop();
-
+					
 					continue;
 				}
 
-				_attributeAliases =
-					_attributesAliasesToAddAccordingToProfile[_attributeName];
-
-				if (_the(_attributeAliases).isNotAnArray()) {
-					_attributeAliases = [_attributeAliases];
-				}
-
-				// Use an object instead of an array to avoid duplications easily.
-				_nonDuplicatedAliases = {};
-				allAvailableAliasesForAllAttributes[_attributeName] = _nonDuplicatedAliases;
-
-				for (_i=0; _i<_attributeAliases.length; _i++) {
-					_attributeAlias = _attributeAliases[_i];
-					_nonDuplicatedAliases[_attributeAlias] = true;
-					allAvailableAliasesForAllAttributesFlattenedBackwardsMapping[_attributeAlias] =
-						_attributeName;
-				}
+				_nonDuplicatedAliasesForCurrentAttributeName[_alias] = true;
+				_flatternedRecordsForBackwardsMapping[_alias] =
+					_attributeName;
 			}
-
-		}
-	}
-
-	function _decideAllAttributesToAddToGranteeDirectly() {
-		var _attributesToAddDirectlyUnderGranteeAccordingToProfile =
-			usedImpartationProfileNameOfClass[propertyName_attributesToAddDirectlyUnderGrantee];
-
-		var _i;
-		var _attributeIsFound;
-		var _attributeName;
-		var _attributeAlias;
-		var _attributeAliases;
-		var _nonDuplicatedAliases;
-
-		if (_the(_attributesToAddDirectlyUnderGranteeAccordingToProfile).isAValidObject()) {
-
-			var _attributeNameOrAlias, _attributeMatchesAnAliase;
-
-			for (_attributeNameOrAlias in _attributesToAddDirectlyUnderGranteeAccordingToProfile) {
-				_attributeIsFound =
-					theSourceObjectToImpartAttributesFrom.hasOwnProperty(_attributeNameOrAlias);
-
-				if ( ! _attributeIsFound) {
-					_attributeMatchesAnAliase =
-						allAvailableAliasesForAllAttributesFlattenedBackwardsMapping[_attributeNameOrAlias];
-				}
-
-				if ( ! _attributeIsFound && ! _attributeMatchesAnAliase) {
-					_reportMultilingualErrors({
-						'zh-CN':
-							errorMessageDesiredAttributeNotFound_zhCN+
-							'“'+_attributeName+'”的属性;'+
-							'同时也没有此别名。'
-							,
-
-						'en-US':
-							errorMessageDesiredAttributeNotFound_enUS+
-							'"'+_attributeName+'".'+
-							'Nor does an alias match this caption.'
-					});
-
-					// Although at present the "stop" method does nothing
-					// if it's invoked within the last stage.
-					// But what if this piece of code were settled
-					// into another non-ending stage in the future?
-					stagesOfClassRoute.stop();
-					stagesOfObjectRoute.stop();
-
-					continue;
-				}
-
-				_attributeAliases =
-					_attributesToAddDirectlyUnderGranteeAccordingToProfile[_attributeNameOrAlias];
-
-				if (_the(_attributeAliases).isNotAnArray()) {
-					_attributeAliases = [_attributeAliases];
-				}
-
-				// Use an object instead of an array to avoid duplications easily.
-				_nonDuplicatedAliases = {};
-				allAttributesToAddDirectlyUnderGrantee[_attributeName] = _nonDuplicatedAliases;
-
-				for (_i=0; _i<_attributeAliases.length; _i++) {
-					_attributeAlias = _attributeAliases[_i];
-					_nonDuplicatedAliases[_attributeAlias] = true;
-					allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping[_attributeAlias] =
-						_attributeName;
-				}
-			}
-
 		}
 	}
 
