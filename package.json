@@ -32,6 +32,7 @@
     "gulp-uglify": "^3.0.0",
     "minimist": "^1.2.0",
     "pump": "^1.0.2",
+    "source-map-loader": "^0.2.1",
     "webpack": "^3.0.0",
     "webpack-stream": "^3.2.0"
   },

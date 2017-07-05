@@ -9,7 +9,8 @@ const allSourceGlobsToWatch = productionSourceGlobJs;
 
 const globsToClearBeforeRebuilding = [
 	productionBuildFolder,
-	examplesFolder + '/*.js'
+	examplesFolder + '/*.js',
+	examplesFolder + '/**/*.js.map'
 ];
 
 
