@@ -363,7 +363,8 @@ module.exports = wulechuanImpartationOperator;
  */
 function WulechuanImpartationOperator() {
 	var WulechuanApplyOneStageOneMethodProgrammingPatternTo =
-		require('@wulechuan/apply-one-stage-one-method-pattern');
+		require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
+		// require('@wulechuan/apply-one-stage-one-method-pattern');
 
 	var nameOfEntranceProperty_zhCN = '传授';
 	var nameOfEntranceProperty_enUS = 'impart';
@@ -511,10 +512,6 @@ function WulechuanImpartationOperator() {
 	var stagesOfClassRoute  = _defineExecutionRouteForImpartingFromAClassInstance();
 	var stagesOfObjectRoute = _defineExecutionRouteForImpartingFromAnObject();
 
-	// Hide(remove) the "startToImpart" method, because we only want to expose
-	// the entrance getters defined below.
-	var backupOfStartToImpartMethod = thisOperator[methodName_startToImpart];
-	delete thisOperator[methodName_startToImpart];
 
 
 
@@ -531,15 +528,14 @@ function WulechuanImpartationOperator() {
 
 
 
-	function _defineEntranceGettersInLanguage(languageCode, entrancePropertyName) {
+	function _defineEntranceGettersInLanguage(usingLanguage, entrancePropertyName) {
 		Object.defineProperty(thisOperator, entrancePropertyName, {
 			enumerable: true,
 			get: function () {
 				_forAllRoutesSetPreferredNaturalLanguageTo(usingLanguage);
-
-				// Execute first stage to automatically hide methods in other languages.
-				// Note that in face, the returned value is still "thisOperator" itself.
-				return backupOfStartToImpartMethod();
+				stagesOfClassRoute.startFromFirstStage();
+				stagesOfObjectRoute.startFromFirstStage();
+				return thisOperator;
 			}
 		});
 	}
@@ -666,7 +662,7 @@ function WulechuanImpartationOperator() {
 			},
 
 			isNotAValidKey: function(subject) {
-				return !_the(subject).isAnValidKey(subject);
+				return !_the(subject).isAValidKey(subject);
 			}
 		};
 	}
@@ -845,8 +841,8 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _classHasAProfileNamed(profileName) {
-		if (_the(profileName).isANotValidKey()) {
-			return false; // failed
+		if (_the(profileName).isNotAValidKey()) {
+			return false;
 		}
 
 		return _the(allImpartationProfilesOfClass[profileName]).isAValidObject();

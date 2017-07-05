@@ -5,7 +5,9 @@ const productionBuildFolder = 'build';
 const readMeStartRegExp = new RegExp('(\\* \\s*\\-{3,} readme start \\-{3,}\\s*)\\n', 'i');
 const readMeEndRegExp   = new RegExp('(\\* \\s*\\-{3,} readme end \\-{3,}\\s*)\\n', 'i');
 
-const allSourceGlobsToWatch = productionSourceGlobJs;
+const allSourceGlobsToWatch = productionSourceGlobJs.concat(
+	[examplesFolder + '**/index.*']
+);
 
 const globsToClearBeforeRebuilding = [
 	productionBuildFolder,

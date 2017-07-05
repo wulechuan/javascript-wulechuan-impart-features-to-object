@@ -1,2 +1,2 @@
-var wulechuanImpartationOperator = require('../../build/wulechuan-impart-features-to-object.min');
-console.log(wulechuanImpartationOperator);
+window.wulechuanImpartationOperator = require('../../source/wulechuan-impart-features-to-object');
+console.log(window.wulechuanImpartationOperator);
