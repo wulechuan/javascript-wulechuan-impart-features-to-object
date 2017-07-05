@@ -60,9 +60,9 @@ module.exports = WulechuanImpartationOperator;
  * 
  * @example
  * 	二维矢量.wulechuanImpartationProfiles = {
- * 		'二维位置': { propertyNameForTheObjectItself: '位置', ... },
- * 		'二维力':   { propertyNameForTheObjectItself: '受力', ... },
- * 		'二维速度': { propertyNameForTheObjectItself: '速度', ... }
+ * 		'二维位置': { chiefPropertyNameForTheObjectItself: '位置', ... },
+ * 		'二维力':   { chiefPropertyNameForTheObjectItself: '受力', ... },
+ * 		'二维速度': { chiefPropertyNameForTheObjectItself: '速度', ... }
  * 	}
  * 
  * 	function 二维点() {
@@ -94,7 +94,7 @@ module.exports = WulechuanImpartationOperator;
  * 				y: -19
  * 			})
  * 			.并更名以下属性({
- * 				propertyNameForTheObjectItself: '中心点',
+ * 				chiefPropertyNameForTheObjectItself: '中心点',
  * 				x: '水平位置',
  * 				y: '垂直位置'
  * 			})
@@ -114,7 +114,7 @@ module.exports = WulechuanImpartationOperator;
  * 采用所谓“普通对象”，如“明文对象（一译‘字面量对象’）”，作为“受体”对象亦是可行的。
  * @example
  * 	二维粒子.wulechuanImpartationProfiles = {
- * 		default: { propertyNameForTheObjectItself: '二维粒子', ... }
+ * 		default: { chiefPropertyNameForTheObjectItself: '二维粒子', ... }
  * 	};
  * 
  * 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
@@ -204,9 +204,9 @@ module.exports = WulechuanImpartationOperator;
  * 
  * @example
  * 	My2DVector.wulechuanImpartationProfiles = {
- * 		position2D: { propertyNameForTheObjectItself: 'position', ... },
- * 		force2D:    { propertyNameForTheObjectItself: 'force', ... },
- * 		velocity2D: { propertyNameForTheObjectItself: 'velocity', ... }
+ * 		position2D: { chiefPropertyNameForTheObjectItself: 'position', ... },
+ * 		force2D:    { chiefPropertyNameForTheObjectItself: 'force', ... },
+ * 		velocity2D: { chiefPropertyNameForTheObjectItself: 'velocity', ... }
  * 	}
  * 
  * 	function My2DPoint() {
@@ -229,7 +229,7 @@ module.exports = WulechuanImpartationOperator;
  * 				y: -19
  * 			})
  * 			.addAliasesForAttributes({
- * 				propertyNameForTheObjectItself: 'centerPos',
+ * 				chiefPropertyNameForTheObjectItself: 'centerPos',
  * 				x: 'centerX',
  * 				y: 'centerY'
  * 			})
@@ -251,7 +251,7 @@ module.exports = WulechuanImpartationOperator;
  * Thus the object literal gains new properties and methods.
  * @example
  * 	My2DParticle.wulechuanImpartationProfiles = {
- * 		default: { propertyNameForTheObjectItself: 'particle2D', ... }
+ * 		default: { chiefPropertyNameForTheObjectItself: 'particle2D', ... }
  * 	};
  * 
  * 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
@@ -292,10 +292,10 @@ module.exports = WulechuanImpartationOperator;
  * 
  * A profile object **might** also contain a property named
  * 
- * 	'propertyNameForTheObjectItself'
+ * 	'chiefPropertyNameForTheObjectItself'
  * 
  * , value of whom is to decide the new name of the instance to impart.
- * If the 'propertyNameForTheObjectItself' is absent,
+ * If the 'chiefPropertyNameForTheObjectItself' is absent,
  * then the name of the profile is taken instead.
  * 
  * For example, the minimum definition of the 'force2D' profile
@@ -310,7 +310,7 @@ module.exports = WulechuanImpartationOperator;
  * @example
  * 	Vector2D.wulechuanImpartationProfiles = {
  * 		velocity2D: {
- * 			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
+ * 			chiefPropertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
  * 			attributesAliasesToAdd: {
  * 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
  * 				direction: ['dir', '方向', '偏角'] // An array of strings is also allowed
@@ -323,7 +323,7 @@ module.exports = WulechuanImpartationOperator;
  * @example
  * 	Vector2D.wulechuanImpartationProfiles = {
  * 		velocity2D: {
- * 			propertyNameForTheObjectItself: 'v',
+ * 			chiefPropertyNameForTheObjectItself: 'v',
  * 			attributesToAddDirectlyUnderGrantee: {
  * 				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
  * 				x: 'speedX',
@@ -360,8 +360,8 @@ module.exports = WulechuanImpartationOperator;
  */
 function WulechuanImpartationOperator() {
 	var WulechuanApplyOneStageOneMethodProgrammingPatternTo =
-		require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
-		// require('@wulechuan/apply-one-stage-one-method-pattern');
+		// require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
+		require('@wulechuan/apply-one-stage-one-method-pattern');
 
 	var nameOfEntranceMethodInAllLanguages = {
 		'zh-CN': '传授',
@@ -423,7 +423,7 @@ function WulechuanImpartationOperator() {
 
 
 	var methodNames_addAliasesForAttributes_zhCN = [
-		'且定名为',     // 用于仅更改主名称（propertyNameForTheObjectItself）时较为符合汉语习惯。
+		'且定名为',     // 用于仅更改主名称（chiefPropertyNameForTheObjectItself）时较为符合汉语习惯。
 		'并添加以下别名' // 用于更改多种属性名称时，较为符合汉语习惯。
 	];
 	var methodNames_addAliasesForAttributes_enUS = [
@@ -431,6 +431,19 @@ function WulechuanImpartationOperator() {
 		'nameItself',
 		'addAliasesForThese',
 		'addAliasesForAttributes'
+	];
+
+
+
+
+	var methodNames_withASetterForTheChiefProperty_zhCN = [
+		'并以此函数为主属性之setter',
+		'主属性之赋值器为'
+	];
+	var methodNames_withASetterForTheChiefProperty_enUS = [
+		'withASetterForTheChiefProperty',
+		'useThisSetterForTheChiefProperty',
+		'theChiefPropertySetterBeing'
 	];
 
 
@@ -457,7 +470,7 @@ function WulechuanImpartationOperator() {
 	var propertyName_defaultProfile = 'default';
 	var propertyName_attributesAliasesToAdd = 'attributesAliasesToAdd';
 	var propertyName_attributesToAddDirectlyUnderGrantee = 'attributesToAddDirectlyUnderGrantee';
-	var propertyName_nameToUseForTheObjectItself = 'propertyNameForTheObjectItself';
+	var propertyName_nameToUseForTheObjectItself = 'chiefPropertyNameForTheObjectItself';
 	var chiefNameRegExps = [
 		new RegExp('\\$\\{主名称\\}', 'g'),
 		new RegExp('\\$\\{ChiefName\\}', 'g')
@@ -491,7 +504,7 @@ function WulechuanImpartationOperator() {
 
 	var theSourceObjectToImpartAttributesFrom;
 
-	var chiefAttributeCustomizedSetter;
+	var chiefPropertyCustomizedSetter;
 	var attributesAliasesToAddAdditionalToProfileDefined = {};
 	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
 
@@ -596,6 +609,11 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
+		stagesOfClassRoute.addStage(withASetterForTheChiefProperty, true, {
+			'zh-CN': methodNames_withASetterForTheChiefProperty_zhCN,
+			'en-US': methodNames_withASetterForTheChiefProperty_enUS
+		});
+
 		stagesOfClassRoute.addStage(addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions, true, {
 			'zh-CN': methodNames_addAttributesDirectlyUnderGrantee_zhCN,
 			'en-US': methodNames_addAttributesDirectlyUnderGrantee_enUS
@@ -623,6 +641,11 @@ function WulechuanImpartationOperator() {
 		stagesOfObjectRoute.addStage(addAliasesForAttributesAdditionalToProfileDefinedAliases, true, {
 			'zh-CN': methodNames_addAliasesForAttributes_zhCN,
 			'en-US': methodNames_addAliasesForAttributes_enUS
+		});
+
+		stagesOfClassRoute.addStage(withASetterForTheChiefProperty, true, {
+			'zh-CN': methodNames_withASetterForTheChiefProperty_zhCN,
+			'en-US': methodNames_withASetterForTheChiefProperty_enUS
 		});
 
 		stagesOfObjectRoute.addStage(addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions, true, {
@@ -729,13 +752,6 @@ function WulechuanImpartationOperator() {
 
 
 
-	/**
-	 * This stage simply provides two possible routes:
-	 * the object route and the class route.
-	 */
-	function startToImpart() {
-		// nothing explicitly
-	}
 
 
 	/**
@@ -882,6 +898,12 @@ function WulechuanImpartationOperator() {
 		} else {
 			stagesOfClassRoute.stop();
 			stagesOfObjectRoute.stop();
+		}
+	}
+
+	function withASetterForTheChiefProperty(_setterFunction) {
+		if (typeof _setterFunction === 'function') {
+			chiefPropertyCustomizedSetter = _setterFunction;
 		}
 	}
 
@@ -1197,8 +1219,10 @@ function WulechuanImpartationOperator() {
 			}
 		};
 
-		if (typeof chiefAttributeCustomizedSetter === 'function') {
-			_configuration.set = chiefAttributeCustomizedSetter;
+		if (typeof chiefPropertyCustomizedSetter === 'function') {
+			_configuration.set = function (newValue) {
+				chiefPropertyCustomizedSetter(theSourceObjectToImpartAttributesFrom, newValue);
+			};
 		}
 
 		Object.defineProperty(grantee, usedChiefName, _configuration);
@@ -1318,7 +1342,6 @@ function WulechuanImpartationOperator() {
 		}
 
 		for (var _i=0; _i<chiefNameRegExps.length; _i++) {
-			console.log(chiefNameRegExps[_i]);
 			_alias = _alias.replace(chiefNameRegExps[_i], usedChiefName);
 		}
 

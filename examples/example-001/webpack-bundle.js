@@ -113,9 +113,9 @@
 	 * 
 	 * @example
 	 * 	二维矢量.wulechuanImpartationProfiles = {
-	 * 		'二维位置': { propertyNameForTheObjectItself: '位置', ... },
-	 * 		'二维力':   { propertyNameForTheObjectItself: '受力', ... },
-	 * 		'二维速度': { propertyNameForTheObjectItself: '速度', ... }
+	 * 		'二维位置': { chiefPropertyNameForTheObjectItself: '位置', ... },
+	 * 		'二维力':   { chiefPropertyNameForTheObjectItself: '受力', ... },
+	 * 		'二维速度': { chiefPropertyNameForTheObjectItself: '速度', ... }
 	 * 	}
 	 * 
 	 * 	function 二维点() {
@@ -147,7 +147,7 @@
 	 * 				y: -19
 	 * 			})
 	 * 			.并更名以下属性({
-	 * 				propertyNameForTheObjectItself: '中心点',
+	 * 				chiefPropertyNameForTheObjectItself: '中心点',
 	 * 				x: '水平位置',
 	 * 				y: '垂直位置'
 	 * 			})
@@ -167,7 +167,7 @@
 	 * 采用所谓“普通对象”，如“明文对象（一译‘字面量对象’）”，作为“受体”对象亦是可行的。
 	 * @example
 	 * 	二维粒子.wulechuanImpartationProfiles = {
-	 * 		default: { propertyNameForTheObjectItself: '二维粒子', ... }
+	 * 		default: { chiefPropertyNameForTheObjectItself: '二维粒子', ... }
 	 * 	};
 	 * 
 	 * 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
@@ -257,9 +257,9 @@
 	 * 
 	 * @example
 	 * 	My2DVector.wulechuanImpartationProfiles = {
-	 * 		position2D: { propertyNameForTheObjectItself: 'position', ... },
-	 * 		force2D:    { propertyNameForTheObjectItself: 'force', ... },
-	 * 		velocity2D: { propertyNameForTheObjectItself: 'velocity', ... }
+	 * 		position2D: { chiefPropertyNameForTheObjectItself: 'position', ... },
+	 * 		force2D:    { chiefPropertyNameForTheObjectItself: 'force', ... },
+	 * 		velocity2D: { chiefPropertyNameForTheObjectItself: 'velocity', ... }
 	 * 	}
 	 * 
 	 * 	function My2DPoint() {
@@ -282,7 +282,7 @@
 	 * 				y: -19
 	 * 			})
 	 * 			.addAliasesForAttributes({
-	 * 				propertyNameForTheObjectItself: 'centerPos',
+	 * 				chiefPropertyNameForTheObjectItself: 'centerPos',
 	 * 				x: 'centerX',
 	 * 				y: 'centerY'
 	 * 			})
@@ -304,7 +304,7 @@
 	 * Thus the object literal gains new properties and methods.
 	 * @example
 	 * 	My2DParticle.wulechuanImpartationProfiles = {
-	 * 		default: { propertyNameForTheObjectItself: 'particle2D', ... }
+	 * 		default: { chiefPropertyNameForTheObjectItself: 'particle2D', ... }
 	 * 	};
 	 * 
 	 * 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
@@ -345,10 +345,10 @@
 	 * 
 	 * A profile object **might** also contain a property named
 	 * 
-	 * 	'propertyNameForTheObjectItself'
+	 * 	'chiefPropertyNameForTheObjectItself'
 	 * 
 	 * , value of whom is to decide the new name of the instance to impart.
-	 * If the 'propertyNameForTheObjectItself' is absent,
+	 * If the 'chiefPropertyNameForTheObjectItself' is absent,
 	 * then the name of the profile is taken instead.
 	 * 
 	 * For example, the minimum definition of the 'force2D' profile
@@ -363,7 +363,7 @@
 	 * @example
 	 * 	Vector2D.wulechuanImpartationProfiles = {
 	 * 		velocity2D: {
-	 * 			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
+	 * 			chiefPropertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
 	 * 			attributesAliasesToAdd: {
 	 * 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
 	 * 				direction: ['dir', '方向', '偏角'] // An array of strings is also allowed
@@ -376,7 +376,7 @@
 	 * @example
 	 * 	Vector2D.wulechuanImpartationProfiles = {
 	 * 		velocity2D: {
-	 * 			propertyNameForTheObjectItself: 'v',
+	 * 			chiefPropertyNameForTheObjectItself: 'v',
 	 * 			attributesToAddDirectlyUnderGrantee: {
 	 * 				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
 	 * 				x: 'speedX',
@@ -413,8 +413,8 @@
 	 */
 	function WulechuanImpartationOperator() {
 		var WulechuanApplyOneStageOneMethodProgrammingPatternTo =
+			// require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
 			__webpack_require__(2);
-			// require('@wulechuan/apply-one-stage-one-method-pattern');
 
 		var nameOfEntranceMethodInAllLanguages = {
 			'zh-CN': '传授',
@@ -476,7 +476,7 @@
 
 
 		var methodNames_addAliasesForAttributes_zhCN = [
-			'且定名为',     // 用于仅更改主名称（propertyNameForTheObjectItself）时较为符合汉语习惯。
+			'且定名为',     // 用于仅更改主名称（chiefPropertyNameForTheObjectItself）时较为符合汉语习惯。
 			'并添加以下别名' // 用于更改多种属性名称时，较为符合汉语习惯。
 		];
 		var methodNames_addAliasesForAttributes_enUS = [
@@ -484,6 +484,19 @@
 			'nameItself',
 			'addAliasesForThese',
 			'addAliasesForAttributes'
+		];
+
+
+
+
+		var methodNames_withASetterForTheChiefProperty_zhCN = [
+			'并以此函数为主属性之setter',
+			'主属性之赋值器为'
+		];
+		var methodNames_withASetterForTheChiefProperty_enUS = [
+			'withASetterForTheChiefProperty',
+			'useThisSetterForTheChiefProperty',
+			'theChiefPropertySetterBeing'
 		];
 
 
@@ -510,7 +523,7 @@
 		var propertyName_defaultProfile = 'default';
 		var propertyName_attributesAliasesToAdd = 'attributesAliasesToAdd';
 		var propertyName_attributesToAddDirectlyUnderGrantee = 'attributesToAddDirectlyUnderGrantee';
-		var propertyName_nameToUseForTheObjectItself = 'propertyNameForTheObjectItself';
+		var propertyName_nameToUseForTheObjectItself = 'chiefPropertyNameForTheObjectItself';
 		var chiefNameRegExps = [
 			new RegExp('\\$\\{主名称\\}', 'g'),
 			new RegExp('\\$\\{ChiefName\\}', 'g')
@@ -544,7 +557,7 @@
 
 		var theSourceObjectToImpartAttributesFrom;
 
-		var chiefAttributeCustomizedSetter;
+		var chiefPropertyCustomizedSetter;
 		var attributesAliasesToAddAdditionalToProfileDefined = {};
 		var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
 
@@ -649,6 +662,11 @@
 				'en-US': methodNames_addAliasesForAttributes_enUS
 			});
 
+			stagesOfClassRoute.addStage(withASetterForTheChiefProperty, true, {
+				'zh-CN': methodNames_withASetterForTheChiefProperty_zhCN,
+				'en-US': methodNames_withASetterForTheChiefProperty_enUS
+			});
+
 			stagesOfClassRoute.addStage(addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions, true, {
 				'zh-CN': methodNames_addAttributesDirectlyUnderGrantee_zhCN,
 				'en-US': methodNames_addAttributesDirectlyUnderGrantee_enUS
@@ -676,6 +694,11 @@
 			stagesOfObjectRoute.addStage(addAliasesForAttributesAdditionalToProfileDefinedAliases, true, {
 				'zh-CN': methodNames_addAliasesForAttributes_zhCN,
 				'en-US': methodNames_addAliasesForAttributes_enUS
+			});
+
+			stagesOfClassRoute.addStage(withASetterForTheChiefProperty, true, {
+				'zh-CN': methodNames_withASetterForTheChiefProperty_zhCN,
+				'en-US': methodNames_withASetterForTheChiefProperty_enUS
 			});
 
 			stagesOfObjectRoute.addStage(addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions, true, {
@@ -782,13 +805,6 @@
 
 
 
-		/**
-		 * This stage simply provides two possible routes:
-		 * the object route and the class route.
-		 */
-		function startToImpart() {
-			// nothing explicitly
-		}
 
 
 		/**
@@ -935,6 +951,12 @@
 			} else {
 				stagesOfClassRoute.stop();
 				stagesOfObjectRoute.stop();
+			}
+		}
+
+		function withASetterForTheChiefProperty(_setterFunction) {
+			if (typeof _setterFunction === 'function') {
+				chiefPropertyCustomizedSetter = _setterFunction;
 			}
 		}
 
@@ -1250,8 +1272,10 @@
 				}
 			};
 
-			if (typeof chiefAttributeCustomizedSetter === 'function') {
-				_configuration.set = chiefAttributeCustomizedSetter;
+			if (typeof chiefPropertyCustomizedSetter === 'function') {
+				_configuration.set = function (newValue) {
+					chiefPropertyCustomizedSetter(theSourceObjectToImpartAttributesFrom, newValue);
+				};
 			}
 
 			Object.defineProperty(grantee, usedChiefName, _configuration);
@@ -1371,7 +1395,6 @@
 			}
 
 			for (var _i=0; _i<chiefNameRegExps.length; _i++) {
-				console.log(chiefNameRegExps[_i]);
 				_alias = _alias.replace(chiefNameRegExps[_i], usedChiefName);
 			}
 
@@ -1383,479 +1406,7 @@
 /* 2 */
 /***/ (function(module, exports) {
 
-	module.exports = WulechuanApplyOneStageOneMethodProgrammingPatternTo;
-
-	/**
-	 * @author 吴乐川 <wulechuan@live.com>
-	 * 
-	 * ----- readme start -----
-	 * 
-	 * # 中文介绍
-	 * 
-	 * 凡由本类构建的实例对象，可用于将本人设计的一种程序设计模式应用至另一“受体”对象。
-	 * “受体”因而被改造，其各个所涉及之方法函数均被依次对应于各自的所谓“执行阶段”，亦可称“步骤”，
-	 * 每个方法函数对应一个步骤。
-	 * 自此时起，仅第一个步骤所对应的方法函数被公开（或称“曝露”），
-	 * 其余后续步骤之方法函数均被隐藏，直至各自前导执行阶段完成，这些方法函数才会陆续公开。
-	 * 
-	 * 任何“步骤，凡非最终者，其对应之方法函数均返回“受体”对象本身，以实现对其各个方法函数的链式调用；
-	 * 而最末步骤则负责返回程序作者对执行整个执行链所期望之结果。
-	 * 
-	 * 某些步骤允许被设置为“可省略”，或称“可跳过”。不可省略的步骤则可称为“必经”步骤。
-	 * 每当“执行链”行至这些可省略的步骤的前一步骤时，凡代表这些可省略步骤后第一个必经步骤之方法函数
-	 * 亦被一通曝露，否则，“可跳过”步骤名不副实。
-	 * 最末步骤则为特例，因其负责返回执行链之结果。何况，“曝露其后续步骤”亦无从谈起。
-	 * 例如：
-	 * @example
-	 * 	设有“步骤丙”、“步骤丁”及“步骤戊”三者，其中丁为“可省略”步骤，其余两者为“必经”步骤。
-	 * 	则，当丙结束时，非但代表丁的方法函数会被曝露，戊之对应方法函数亦会一同被曝露。
-	 * 
-	 * 一言以蔽之，大体上，不执行完早期方法函数，则后续方法函数是隐藏的，无从执行。据此，各个方法之调用次序无从违背。
-	 * 
-	 * 此番改造之根本目的在于，将传统的形如：“
-	 * @example
-	 * 	var 结果 = 对象.传统方法函数(参数子, 参数丑, 参数寅);
-	 * 
-	 * ”之调用方式，转变为我之特色方式，形如：“
-	 * @example
-	 * 	var 结果 = 对象.方法函数甲(参数子).方法函数乙(参数丑).方法函数丙(参数寅)；
-	 * 
-	 * ”，并建议（但不强迫）每个阶段仅接受至多一个参数。
-	 * 此方式亦有助于构造更为逼近自然语言之计算机程序语句。
-	 * 例如：
-	 * @example
-	 * 	var 礼物 = 我.掏出钥匙(钥匙实例).解锁自行车(自行车实例).骑行至(目的地).获取礼物自(赠与人);
-	 * 
-	 * 在上例中，依据“不执行完早期方法函数，则后续方法函数无从执行”之规则，
-	 * 客户程序调用对象“我”之方法函数时，不允许违背规定顺序。
-	 * 若不调用“解锁自行车”，或虽调用但有错误抛出，则无法进入“骑行至”方法函数。
-	 * 假定其中“获取礼物自”方法函数，是应用该程序设计模式时最末添加的阶段所对应之方法，
-	 * 那么，该原始方法函数之返回值回被传递并最终返回至“外界”；
-	 * 而其余各阶段则之原始函数的返回值均会被忽略于调用链内部。
-	 * 
-	 * 该模式可应用于所谓“普通对象”，诸如“明文对象（一译‘字面量对象’）”、JSON等。
-	 * 而将该程序设计模式应用于“类”之定义内（针对JavaScript，亦即应用于另一个函数内部），
-	 * 作用于“this”对象，似乎是更为常见、实用之用法。亦即，每一个有此“类”构建之实例对象
-	 * 均会被视为“受体”。见例。
-	 * 
-	 * 另，倘若将整条执行链称为“执行路线”，我认为，对于任何“受体”，
-	 * 完全可以为其构建多条执行路线，而不仅限于一条。
-	 * 由于执行线路不可中断，否则无从返回结果；
-	 * 何况每当从新的“路线”之首个阶段开始执行时，执行“现状”会被重新配置，没有干扰。
-	 * 因此，多条执行线路不会互相干涉，即便它们共用某些方法函数。
-	 * 
-	 * 
-	 * 
-	 * # Introduction
-	 * 
-	 * Instances of this helper class is to apply a programming pattern design by me
-	 * to a given object.
-	 * The object is thus decorated, so that, all involved methods of the object
-	 * are mapped into so-called stages, each method a stage.
-	 * And from then on, only the first method is exposed.
-	 * All other methods are hidden untill the first method gets invoked and not thrown.
-	 * 
-	 * Any stage other than the last one, when invoked,
-	 * returns the instance itself, so that we can chain the invocations.
-	 * This way we can easily design natural-language-like invocation chain.
-	 * 
-	 * All stages might be configured as skippable, a.k.a. optional.
-	 * While for the last stage, this configuration is simply ignored.
-	 * Cause anyway we need to invoke it to return what we want.
-	 * 
-	 * The purpose of applying such a pattern to a given object,
-	 * is to change the traditional statement like:
-	 * @example
-	 * 	var result = anObject.traditionalMethod(arg1, arg2, arg3);
-	 * 
-	 * into another format as:
-	 * @example
-	 * 	var result = anObject.methodA(arg1).methodB(arg2).methodC(arg3);
-	 * 
-	 * I also suggest but not force to take at most only one argument per stage method.
-	 * Besides, this is a good way, I personally think,
-	 * to help making computer programming statements
-	 * look more like natrual language sentences.
-	 * 
-	 * Let''s take another example:
-	 * @example
-	 * 	var gift = I
-	 * 		.drawOutKey(theKeyInstance)
-	 * 		.unlockBike(theBikeInstance)
-	 * 		.driveTo(destination)
-	 * 		.acceptGiftFrom(anotherPerson);
-	 * 
-	 * In the example above, the custom program that consumes the object "I"
-	 * is *NOT* able to invoke methods of the "I" disobeying the pre-designed order.
-	 * Before the invocation of the "unlockBike" method, the subsequence ones
-	 * such as "driveTo" are not even available to the program.
-	 * Also, assuming the "acceptGiftFrom" method happens to be the last one that is
-	 * added as a stage, then the returning value, no matter what it is,
-	 * will be transferred to the "outside world", which is the custom program mentioned above.
-	 * While those returning values of any other methods are simply ignored
-	 * inside of the invokaction chain scopes.
-	 * 
-	 * This pattern can be applied to any object, such as an object literal, a JSON, etc.
-	 * While using it inside the definition of a class(a function), applying it to the "this"
-	 * object might be a more useful use case, I guess.
-	 * Since that way, each and every instance of the class is automatically decorated.
-	 * 
-	 * If we call the execution chain a "route", we can expect that multiple routes being
-	 * applied to a single object at the same time is allowed and safe.
-	 * Because the execution should not exit in the half way, otherwise nothing is able to return.
-	 * Plus each time we start a route, the situation we are in is initialized to be clean.
-	 * So multiple routes will not disturb each other at all, even if they might share same methods.
-	 * 
-	 * 
-	 * 
-	 * 
-	 * # 较完整的范例 (Examples)
-	 * 
-	 * ## 基本用法 (Basics)
-	 * @example
-	 * 	function Soldier() {
-	 * 
-	 * 		var stagesBuilder = new WulechuanApplyOneStageOneMethodProgrammingPatternFor(this);
-	 * 
-	 * 		stagesBuilder.addStage(methodAsStage1, true, {
-	 * 			'zh-CN': [ '第一步', '预备', '准备' ],
-	 * 			'en-US': [ 'prepare', 'getReady', 'methodAsStage1', 'firstOfAll' ]
-	 * 		});
-	 * 
-	 * 		stagesBuilder.addStage(shoot, true, {
-	 * 			'zh-CN': [ '发射子弹', '开火', '开火！' ],
-	 * 			'en-US': [ 'shoot', 'shootThem', 'fire' ]
-	 * 		});
-	 * 
-	 * 
-	 * 
-	 * 		// This line below is essential and required.
-	 * 		stagesBuilder.setPreferredNaturalLanguageTo('zh-CN');
-	 * 
-	 * 
-	 * 
-	 * 		function methodAsStage1() {
-	 * 			// your statements go here
-	 * 		}
-	 * 
-	 * 		function shoot() {
-	 * 			// your statements go here
-	 * 		}
-	 * 	}
-	 * 
-	 * 	var firstSoldier = new Soldier;
-	 * 	
-	 * Now the "firstSoldier" object has only those methods
-	 * which are mapped onto the "methodAsStage1" function,
-	 * in all three Chinese aliases, of course,
-	 * since the usingLanguage has been set to 'zh-CN'.
-	 * Those which are mapped onto the "shoot" function
-	 * is *NOT* available at this time.
-	 * @example
-	 * 	firstSoldier.第一步();
-	 * 	// In English, this should have been:
-	 * 	// firstSoldier.prepare();
-	 * 
-	 * From now on, the three aliases for the "methodAsStage1"
-	 * are hidden (removed from the instance), since the stage1 is now a past stage.
-	 * while the three aliases for the "shoot" function are available now.
-	 * 
-	 * If below were in English: var killedEnemies = firstSoldier.shoot();
-	 * @example
-	 * 	var killedEnemies = firstSoldier.发射子弹();
-	 * 
-	 * 
-	 * ## 链式调用 (Chaining invocations)
-	 * 
-	 * Note that:
-	 * @example
-	 * 	firstSoldier === firstSoldier.第一步() // true
-	 * 	firstSoldier === firstSoldier.prepare() // true
-	 * 	firstSoldier === firstSoldier.getReady() // true
-	 * 	.
-	 * 	.
-	 * 	.
-	 * 
-	 * because non-terminal stage methods return the decorared object itself.
-	 * 
-	 * So we can also do this:
-	 * @example
-	 * 	var secondSoldier = new Soldier;
-	 * 
-	 * 	var 被打死的敌人 = secondSoldier.预备().开火！();
-	 * 	// If above were in English:
-	 * 	// var killedEnemiesBySecondSoldier = secondSoldier.getReady().fire();
-	 * 
-	 * 
-	 * ----- readme end -----
-	 * 
-	 * 
-	 * @param {!object} stagesOperator - The object to apply staged-methods pattern to.
-	 */
-	// eslint-disable-next-line
-	function WulechuanApplyOneStageOneMethodProgrammingPatternTo(stageMethodsOwner, initialPreferredLanguage) {
-		var methodName_addStage = 'addStage';
-		var methodName_setPreferredNaturalLanguageTo = 'setPreferredNaturalLanguageTo';
-		var methodName_startFromFirstStage = 'startFromFirstStage';
-		var methodName_stop = 'stop';
-
-		var thisManagerOfStages = this;
-
-		var allStages = [];
-		var currentStageIndex = NaN;
-		var theExecutionIsStopped; // Maybe it's some errors occurred.
-
-		var knownLanguagesSoFar = [];
-		var knownLanguagesIndicesSoFar = {}; // Simply for easy avoiding duplications
-		var preferredLanguage;
-
-
-		if (initialPreferredLanguage && typeof initialPreferredLanguage === 'string') {
-			preferredLanguage = initialPreferredLanguage;
-		} 
-
-		thisManagerOfStages[methodName_addStage] = addFirstStage;
-		thisManagerOfStages[methodName_setPreferredNaturalLanguageTo] = setPreferredNaturalLanguageTo;
-		thisManagerOfStages[methodName_stop] = stop;
-
-
-
-
-
-		function _isAUsableArray(subject) {
-			return Array.isArray(subject) && subject.length > 0;
-		}
-
-
-		/**
-		 * 
-		 * @param {!object} stageAction - A function that will be added to the operator as its method at correct stage.
-		 * @param {?boolean} isAnOptionalStage - True means the stage being added is an optional stage, so that the method
-		 * 	after this optional stage should also be exposed at the previous stage of this optional stage.
-		 * @param {!object} actionAliases - An object that takes several arrays, each contains aliases in a specific language.
-		 * -	@param {!array} actionAliases[languageCode1] - An array that contains aliases of the method that presenting a stage, in a specific language.
-		 * -	@param {?array} actionAliases[languageCode2] - An array that contains aliases of the method that presenting a stage, in a specific language.
-		 * -	@param {?array} actionAliases['zh-CN'] - An array that contains aliases of the method that presenting a stage, in Chinese.
-		 */
-		function addStage(stageAction, thisStageCanBeSkipped, actionAliasesInAllLanguages) {
-			if (typeof stageAction !== 'function') {
-				throw TypeError(
-					'A so-called stage is basically a function, '+
-					'with some associated aliases just for conveniences, '+
-					'which not only does some demonded work '+
-					'but also exposes subsequence stages '+
-					'and hides past stages for a given stages operator. '+
-					'Among them, the demonded work is provided by you developer via the first argument, '+
-					'So, when defining a stage, the first argument must be a function, '+
-					'\nwhile the provided value was of type "'+typeof stageAction+'".'
-				);
-			}
-
-
-			if (arguments.length === 2) {
-				actionAliasesInAllLanguages = thisStageCanBeSkipped;
-				thisStageCanBeSkipped = false;
-			}
-
-
-			// This line below might throw an error if the provided actionAliases is not valid.
-			_examineProvidedActionAliases(actionAliasesInAllLanguages);
-
-
-			var indexOfThisStage = allStages.length;
-
-			actionAliasesInAllLanguages.stageIndex = indexOfThisStage;
-			actionAliasesInAllLanguages.usingLanguage = '';
-
-			var newStage = {
-				actionAliases: actionAliasesInAllLanguages,
-				allowsToSkip: thisStageCanBeSkipped,
-				action: function () {
-					if (theExecutionIsStopped) {
-						if (indexOfThisStage === allStages.length-1) {
-							return; // Return undefined if errors occured. Need more think.
-						} else {
-							return stageMethodsOwner;
-						}
-					}
-
-					currentStageIndex = indexOfThisStage;
-					var resultOfTheStageAction = stageAction.apply(stageMethodsOwner, arguments);
-
-					_modifyMethodsOwnerByExposingOrHidingSomeMethods();
-
-					if (indexOfThisStage === allStages.length-1) {
-						// The final result of the actions chain is really what we want.
-						return resultOfTheStageAction;
-					} else {
-						// Must return the {stagesOperator} for chaining steps,
-						// even if errors occur inside the action, as long as nothing get thrown.
-						return stageMethodsOwner;
-					}
-				}
-			};
-
-			allStages.push(newStage);
-
-			return newStage;
-		}
-
-		function addFirstStage(/* stageAction, thisStageCanBeSkipped, actionAliasesInAllLanguages */) {
-			theExecutionIsStopped = false;
-			addStage.apply(thisManagerOfStages, arguments);
-			thisManagerOfStages[methodName_addStage] = addStage;
-			thisManagerOfStages[methodName_setPreferredNaturalLanguageTo] = setPreferredNaturalLanguageTo;
-			_tryToExposeFirstStageSoThatTheOperatorIsUsable();
-		}
-
-		function _examineProvidedActionAliases(actionAliasesInAllLanguages) {
-			var errorMessage1 = 'At least one alias is required for a stage action to publish as a method.';
-			var atLeastOneValidAliasIsProvided = false;
-
-			if (!actionAliasesInAllLanguages || typeof actionAliasesInAllLanguages !== 'object') {
-				throw TypeError(
-					'The action aliases argument must be an object, '+
-					'containing at least one alias which is marked as in a specified language.'
-				);
-			}
-
-			for (var language in actionAliasesInAllLanguages) {
-				var actionAliasesInASpecificLanguage = actionAliasesInAllLanguages[language];
-
-				if (actionAliasesInASpecificLanguage && typeof actionAliasesInASpecificLanguage === 'string') {
-					actionAliasesInASpecificLanguage = [actionAliasesInASpecificLanguage];
-					actionAliasesInAllLanguages[language] = actionAliasesInASpecificLanguage;
-				}
-
-				if (!_isAUsableArray(actionAliasesInASpecificLanguage)) continue;
-
-				atLeastOneValidAliasIsProvided = true;
-
-				var isAnUnknownLanguage = !knownLanguagesIndicesSoFar[language];
-				if (isAnUnknownLanguage) {
-					knownLanguagesSoFar.push(language);
-					knownLanguagesIndicesSoFar[language] = true;
-				}
-			}
-
-			if (!atLeastOneValidAliasIsProvided) {
-				throw TypeError(errorMessage1);
-			}
-		}
-
-		function _getActionAliasesBetterInThisLanguage(actionAliasesInAllLanguages, _preferredLanguage) {
-			var foundActionAliases = actionAliasesInAllLanguages[_preferredLanguage];
-			if (_isAUsableArray(foundActionAliases)) {
-				actionAliasesInAllLanguages.usingLanguage = _preferredLanguage;
-				return foundActionAliases;
-			}
-
-			var aValidAlternativeHasBeenFound = false;
-			var language;
-			for (language in actionAliasesInAllLanguages) {
-				foundActionAliases = actionAliasesInAllLanguages[language];
-				if (_isAUsableArray(foundActionAliases)) {
-					aValidAlternativeHasBeenFound = true;
-					actionAliasesInAllLanguages.usingLanguage = language;
-					break;
-				}
-			}
-
-			if ( ! aValidAlternativeHasBeenFound) {
-				throw ReferenceError(
-					'No valid aliases in any language for stage '+
-					actionAliasesInAllLanguages.stageIndex+
-					'!'
-				);
-			}
-
-			console.warn('For stage', actionAliasesInAllLanguages.stageIndex,
-				', none of the aliases is in the preferred language ("'+_preferredLanguage+'").',
-				'\nInstead, aliases in "'+language+'" are exposed as methods.'
-			);
-
-			return foundActionAliases;
-		}
-
-		function setPreferredNaturalLanguageTo(language) {
-			if (!language) {
-				throw TypeError('Must specify the natural language to use.');
-			}
-			preferredLanguage = language;
-			_tryToExposeFirstStageSoThatTheOperatorIsUsable();
-		}
-
-		function startFromFirstStage() {
-			allStages[0].action.apply(stageMethodsOwner, arguments);
-		}
-
-		function stop() {
-			theExecutionIsStopped = true;
-			console.error('The process is stopped at stage', currentStageIndex);
-		}
-
-		function _modifyMethodsOwnerByExposingOrHidingSomeMethods() {
-			_hideMethodsOfAllPastOrSkippedStagesIncludingCurrentStage();
-			_exposeMethodsOfAllStagesTillFirstRequiredStageStartingWithIndex(currentStageIndex+1);
-		}
-
-		function _hideMethodsOfAllPastOrSkippedStagesIncludingCurrentStage() {
-			for (var si = 0; si <= currentStageIndex; si++) {
-				var stage = allStages[si];
-				var actionAliasesInAllLanguages = stage.actionAliases;
-				var actionAliasesInActuallyUsingLanuage =
-					actionAliasesInAllLanguages[actionAliasesInAllLanguages.usingLanguage];
-
-				for (var ai = 0; ai < actionAliasesInActuallyUsingLanuage.length; ai++) {
-					var alias = actionAliasesInActuallyUsingLanuage[ai];
-					delete stageMethodsOwner[alias];
-				}
-			}
-		}
-
-		function _tryToExposeFirstStageSoThatTheOperatorIsUsable() {
-			if (allStages.length < 1) return;
-			if ( ! preferredLanguage) return;
-
-			// Expose the method of the first stage with the common name,
-			// a.k.a. the "startFromFirstStage" according to the default configuration.
-			thisManagerOfStages[methodName_startFromFirstStage] = startFromFirstStage;
-
-			// Also expose it with aliases.
-			_exposeMethodsOfStagesWithIndexBetween(0, 1);
-		}
-
-		function _exposeMethodsOfAllStagesTillFirstRequiredStageStartingWithIndex(startingStageIndex) {
-			var endingExclusiveStageIndex = allStages.length;
-
-			var si, stage;
-			for (si = startingStageIndex; si < allStages.length-1; si++) {
-				stage = allStages[si];
-				if (!stage.allowsToSkip) {
-					endingExclusiveStageIndex = si+1;
-					break;
-				}
-			}
-
-			_exposeMethodsOfStagesWithIndexBetween(startingStageIndex, endingExclusiveStageIndex);
-		}
-
-		function _exposeMethodsOfStagesWithIndexBetween(startingStageIndex, endingExclusiveStageIndex) {
-			for (var si = startingStageIndex; si < endingExclusiveStageIndex; si++) {
-				var stage = allStages[si];
-
-				var actionToExpose = stage.action;
-
-				var actionAliasesInActuallyUsingLanuage =
-					_getActionAliasesBetterInThisLanguage(stage.actionAliases, preferredLanguage);
-
-				for (var ai = 0; ai < actionAliasesInActuallyUsingLanuage.length; ai++) {
-					var alias = actionAliasesInActuallyUsingLanuage[ai];
-					stageMethodsOwner[alias] = actionToExpose;
-				}
-			}
-		}
-	}
+	function WulechuanApplyOneStageOneMethodProgrammingPatternTo(e,a){function n(e){return Array.isArray(e)&&e.length>0}function t(a,n,t){if("function"!=typeof a)throw TypeError('A so-called stage is basically a function, with some associated aliases just for conveniences, which not only does some demonded work but also exposes subsequence stages and hides past stages for a given stages operator. Among them, the demonded work is provided by you developer via the first argument, So, when defining a stage, the first argument must be a function, \nwhile the provided value was of type "'+typeof a+'".');2===arguments.length&&(t=n,n=!1),o(t);var r=w.length;t.stageIndex=r,t.usingLanguage="";var i={actionAliases:t,allowsToSkip:n,action:function(){if(h)return r===w.length-1?void 0:e;b=r;var n=a.apply(e,arguments);return g(),r===w.length-1?n:e}};return w.push(i),i}function o(e){var a=!1;if(!e||"object"!=typeof e)throw TypeError("The action aliases argument must be an object, containing at least one alias which is marked as in a specified language.");for(var t in e){var o=e[t];o&&"string"==typeof o&&(o=[o],e[t]=o),n(o)&&(a=!0,!A[t]&&(T.push(t),A[t]=!0))}if(!a)throw TypeError("At least one alias is required for a stage action to publish as a method.")}function r(e,a){var t=e[a];if(n(t))return e.usingLanguage=a,t;var o,r=!1;for(o in e)if(t=e[o],n(t)){r=!0,e.usingLanguage=o;break}if(!r)throw ReferenceError("No valid aliases in any language for stage "+e.stageIndex+"!");return console.warn("For stage",e.stageIndex,', none of the aliases is in the preferred language ("'+a+'").','\nInstead, aliases in "'+o+'" are exposed as methods.'),t}function i(e){if(!e)throw TypeError("Must specify the natural language to use.");p=e,l()}function s(){w[0].action.apply(e,arguments)}function g(){u(),f(b+1)}function u(){for(var a=0;a<=b;a++)for(var n=w[a].actionAliases,t=n[n.usingLanguage],o=0;o<t.length;o++){var r=t[o];delete e[r]}}function l(){w.length<1||p&&(m[y]=s,c(0,1))}function f(e){var a,n=w.length;for(a=e;a<w.length-1;a++)if(!w[a].allowsToSkip){n=a+1;break}c(e,n)}function c(a,n){for(var t=a;t<n;t++)for(var o=w[t],i=o.action,s=r(o.actionAliases,p),g=0;g<s.length;g++){var u=s[g];e[u]=i}}var h,p,d="addStage",v="setPreferredNaturalLanguageTo",y="startFromFirstStage",m=this,w=[],b=NaN,T=[],A={};a&&"string"==typeof a&&(p=a),m[d]=function(){h=!1,t.apply(m,arguments),m[d]=t,m[v]=i,l()},m[v]=i,m.stop=function(){h=!0,console.error("The process is stopped at stage",b)}}module.exports=WulechuanApplyOneStageOneMethodProgrammingPatternTo;
 
 /***/ })
 /******/ ]);

@@ -47,9 +47,9 @@
 
 
 	二维矢量.wulechuanImpartationProfiles = {
-		'二维位置': { propertyNameForTheObjectItself: '位置', ... },
-		'二维力':   { propertyNameForTheObjectItself: '受力', ... },
-		'二维速度': { propertyNameForTheObjectItself: '速度', ... }
+		'二维位置': { chiefPropertyNameForTheObjectItself: '位置', ... },
+		'二维力':   { chiefPropertyNameForTheObjectItself: '受力', ... },
+		'二维速度': { chiefPropertyNameForTheObjectItself: '速度', ... }
 	}
 
 	function 二维点() {
@@ -81,7 +81,7 @@
 				y: -19
 			})
 			.并更名以下属性({
-				propertyNameForTheObjectItself: '中心点',
+				chiefPropertyNameForTheObjectItself: '中心点',
 				x: '水平位置',
 				y: '垂直位置'
 			})
@@ -101,7 +101,7 @@
 采用所谓“普通对象”，如“明文对象（一译‘字面量对象’）”，作为“受体”对象亦是可行的。
 
 	二维粒子.wulechuanImpartationProfiles = {
-		default: { propertyNameForTheObjectItself: '二维粒子', ... }
+		default: { chiefPropertyNameForTheObjectItself: '二维粒子', ... }
 	};
 
 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
@@ -191,9 +191,9 @@ So we need a solution, hopefully a slightly better one.
 
 
 	My2DVector.wulechuanImpartationProfiles = {
-		position2D: { propertyNameForTheObjectItself: 'position', ... },
-		force2D:    { propertyNameForTheObjectItself: 'force', ... },
-		velocity2D: { propertyNameForTheObjectItself: 'velocity', ... }
+		position2D: { chiefPropertyNameForTheObjectItself: 'position', ... },
+		force2D:    { chiefPropertyNameForTheObjectItself: 'force', ... },
+		velocity2D: { chiefPropertyNameForTheObjectItself: 'velocity', ... }
 	}
 
 	function My2DPoint() {
@@ -216,7 +216,7 @@ So we need a solution, hopefully a slightly better one.
 				y: -19
 			})
 			.addAliasesForAttributes({
-				propertyNameForTheObjectItself: 'centerPos',
+				chiefPropertyNameForTheObjectItself: 'centerPos',
 				x: 'centerX',
 				y: 'centerY'
 			})
@@ -238,7 +238,7 @@ can impart things into an object literal as well.
 Thus the object literal gains new properties and methods.
 
 	My2DParticle.wulechuanImpartationProfiles = {
-		default: { propertyNameForTheObjectItself: 'particle2D', ... }
+		default: { chiefPropertyNameForTheObjectItself: 'particle2D', ... }
 	};
 
 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
@@ -279,10 +279,10 @@ and
 
 A profile object **might** also contain a property named
 
-	'propertyNameForTheObjectItself'
+	'chiefPropertyNameForTheObjectItself'
 
 , value of whom is to decide the new name of the instance to impart.
-If the 'propertyNameForTheObjectItself' is absent,
+If the 'chiefPropertyNameForTheObjectItself' is absent,
 then the name of the profile is taken instead.
 
 For example, the minimum definition of the 'force2D' profile
@@ -297,7 +297,7 @@ Take another example for this:
 
 	Vector2D.wulechuanImpartationProfiles = {
 		velocity2D: {
-			propertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
+			chiefPropertyNameForTheObjectItself: 'v' // All instances will by default be named 'v', instead of 'velocity2D'.
 			attributesAliasesToAdd: {
 				speed: 'rapidness' // A new attribute named 'rapidness' will be added to the intance. While the 'speed' is still available, because we only add attributes with new names, never delete existing ones.
 				direction: ['dir', '方向', '偏角'] // An array of strings is also allowed
@@ -310,7 +310,7 @@ When present, it looks like this:
 
 	Vector2D.wulechuanImpartationProfiles = {
 		velocity2D: {
-			propertyNameForTheObjectItself: 'v',
+			chiefPropertyNameForTheObjectItself: 'v',
 			attributesToAddDirectlyUnderGrantee: {
 				speed: '', // added with the name 'speed', so the name can be omitted, an empty string is used instead
 				x: 'speedX',
