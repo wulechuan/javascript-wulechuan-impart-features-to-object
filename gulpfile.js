@@ -18,15 +18,15 @@ const globsToClearBeforeRebuilding = [
 
 const processArguments = require('minimist')(process.argv.slice(2));
 
-const gulp = require('gulp');
-const pathTool = require('path');
-const webpack = require('webpack-stream');
-const runTasksInSequence = require('gulp-sequence');
-const replaceFileContent = require('gulp-change');
 const deleteFiles = require('del');
+const gulp = require('gulp');
+const replaceFileContent = require('gulp-change');
 const renameFiles = require('gulp-rename');
+const runTasksInSequence = require('gulp-sequence');
 const minifyJs = require('gulp-uglify');
+const pathTool = require('path');
 const pump = require('pump');
+const webpack = require('webpack-stream');
 
 
 const isToBuildForRelease = isRunningInReleasingMode(processArguments);
