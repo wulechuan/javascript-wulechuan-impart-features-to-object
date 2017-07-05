@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@wulechuan/apply-one-stage-one-method-pattern@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@wulechuan/apply-one-stage-one-method-pattern/-/apply-one-stage-one-method-pattern-1.0.5.tgz#61377b32bbe4270e59c8b69b357340cccc67e90f"
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"

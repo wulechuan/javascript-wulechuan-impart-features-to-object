@@ -2,6 +2,8 @@
 	WulechuanApplyOneStageOneMethodProgrammingPatternTo
 */
 
+require('@wulechuan/apply-one-stage-one-method-pattern');
+
 window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
 
 

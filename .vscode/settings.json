@@ -2,15 +2,9 @@
     "eslint.enable": true,
     "files.exclude": {
         "**/.DS_Store": true
-        , "node_modules": true
+        // , "node_modules": true
         // , "build": true
     },
     "express.portNumber": 8787,
-    "express.relativeRoot": "build",
-    "htmlhint.options": {
-        "tagname-lowercase": false,
-        "attr-lowercase": true,
-        "attr-value-double-quotes":  true,
-        "doctype-first": false
-    }
+    "express.relativeRoot": "build"
 }

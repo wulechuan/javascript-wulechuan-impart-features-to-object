@@ -18,6 +18,9 @@
     "natural-language-like"
   ],
   "license": "ISC",
+  "dependencies": {
+    "@wulechuan/apply-one-stage-one-method-pattern": "^1.0.5"
+  },
   "devDependencies": {
     "del": "^3.0.0",
     "gulp": "^3.9.1",
