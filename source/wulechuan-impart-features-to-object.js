@@ -1,5 +1,4 @@
-var wulechuanImpartationOperator = new WulechuanImpartationOperator();
-module.exports = wulechuanImpartationOperator;
+module.exports = WulechuanImpartationOperator;
 
 
 /**
@@ -354,9 +353,7 @@ module.exports = wulechuanImpartationOperator;
  *
  * @class
  * 
- * @param {!string} usingLanguage
- * 
- * @returns
+ * @instance
  * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定为“简体中文”。
  * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
  * 
@@ -366,16 +363,10 @@ function WulechuanImpartationOperator() {
 		require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
 		// require('@wulechuan/apply-one-stage-one-method-pattern');
 
-	var nameOfEntranceProperty_zhCN = '传授';
-	var nameOfEntranceProperty_enUS = 'impart';
-
-
-	// This method name below, which is the first method to invoke,
-	// will NOT be public.
-	// Because we are wrapping it with getter functions,
-	// so that we can easily decide the using langugae.
-	// Thus, only one alias is enough for it to use inside this scope.
-	var methodName_startToImpart = '__startToImpart__';
+	var nameOfEntranceMethodInAllLanguages = {
+		'zh-CN': '传授',
+		'en-US': 'impart'
+	};
 
 
 
@@ -482,7 +473,8 @@ function WulechuanImpartationOperator() {
 
 	var shouldThrowErrors;
 
-	var usingLanguage;
+	var preferredLanguage;
+	var entranceMethodsInAllLanguages = {};
 
 	var theClassConstructor;
 	var theClassConstructionOptions;
@@ -507,53 +499,72 @@ function WulechuanImpartationOperator() {
 	var grantee;
 
 
+	if (preferredLanguage && typeof preferredLanguage === 'string') {
+		preferredLanguage = 'zh-CN';
+	}
 
 
 	var stagesOfClassRoute  = _defineExecutionRouteForImpartingFromAClassInstance();
 	var stagesOfObjectRoute = _defineExecutionRouteForImpartingFromAnObject();
+	console.log(thisOperator);
+
+
+	_buildAllEntranceMethods();
+	_exposeEntranceMethodsInAllLanguages();
 
 
 
+	function _exposeEntranceMethodsInAllLanguages() {
+		for (var language in nameOfEntranceMethodInAllLanguages) {
+			var nameOfEntranceMethodInSpecificLanguage =
+				nameOfEntranceMethodInAllLanguages[language];
 
-	_defineEntranceGettersInLanguage('zh-CN', nameOfEntranceProperty_zhCN);
-	_defineEntranceGettersInLanguage('en-US', nameOfEntranceProperty_enUS);
-
-
-
-
-
-
-
-
-
-
-
-	function _defineEntranceGettersInLanguage(usingLanguage, entrancePropertyName) {
-		Object.defineProperty(thisOperator, entrancePropertyName, {
-			enumerable: true,
-			get: function () {
-				_forAllRoutesSetPreferredNaturalLanguageTo(usingLanguage);
-				stagesOfClassRoute.startFromFirstStage();
-				stagesOfObjectRoute.startFromFirstStage();
-				return thisOperator;
-			}
-		});
+			Object.defineProperty(thisOperator, nameOfEntranceMethodInSpecificLanguage, {
+				configurable: true,
+				enumerable: true,
+				get: entranceMethodsInAllLanguages[language]
+			});
+		}
 	}
 
-	function _forAllRoutesSetPreferredNaturalLanguageTo(languageCode) {
-		usingLanguage = languageCode;
+	function _buildAllEntranceMethods() {
+		for (var language in nameOfEntranceMethodInAllLanguages) {
+			if (entranceMethodsInAllLanguages[language]) continue;
+
+			entranceMethodsInAllLanguages[language] = (function (usingLanguage) {
+				return _entranceMethodCore.bind(thisOperator, usingLanguage);
+			})(language);
+		}
+	}
+
+	function _entranceMethodCore(usingLanguage) {
+		_setPreferredLanguageTo(usingLanguage);
+		_hideEntranceMethodsInLanguagesOtherThan();
+		return thisOperator;
+	}
+
+	function _setPreferredLanguageTo(languageCode) {
+		preferredLanguage = languageCode;
 		stagesOfClassRoute.setPreferredNaturalLanguageTo(languageCode);
 		stagesOfObjectRoute.setPreferredNaturalLanguageTo(languageCode);
 	}
 
+	function _hideEntranceMethodsInLanguagesOtherThan(languageToPreserve) {
+		for (var language in nameOfEntranceMethodInAllLanguages) {
+			if (language === languageToPreserve) continue;
+
+			var nameOfEntranceMethodInSpecificLanguage =
+				nameOfEntranceMethodInAllLanguages[language];
+
+			delete thisOperator[nameOfEntranceMethodInSpecificLanguage];
+		}
+	}
+
 	function _defineExecutionRouteForImpartingFromAClassInstance() {
 		var stagesOfClassRoute =
-			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
-		
-		stagesOfClassRoute.addStage(startToImpart, {
-			'zh-CN': [methodName_startToImpart],
-			'en-US': [methodName_startToImpart]
-		});
+			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(
+				thisOperator, preferredLanguage
+			);
 
 		stagesOfClassRoute.addStage(theClass, {
 			'zh-CN': methodNames_theClass_zhCN,
@@ -595,12 +606,9 @@ function WulechuanImpartationOperator() {
 
 	function _defineExecutionRouteForImpartingFromAnObject() {
 		var stagesOfObjectRoute =
-			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
-
-		stagesOfObjectRoute.addStage(startToImpart, {
-			'zh-CN': [methodName_startToImpart],
-			'en-US': [methodName_startToImpart]
-		});
+			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(
+				thisOperator, preferredLanguage
+			);
 
 		stagesOfObjectRoute.addStage(theObject, {
 			'zh-CN': methodNames_theObject_zhCN,
@@ -675,7 +683,7 @@ function WulechuanImpartationOperator() {
 			if (typeof errors === 'string') {
 				_errorMessage = errors;
 			} else if (typeof errors === 'object' && !Array.isArray(errors)) {
-				var _foundErrorMessage = errors[usingLanguage];
+				var _foundErrorMessage = errors[preferredLanguage];
 				if (_the(_foundErrorMessage).isANonEmptyString()) {
 					_errorMessage = _foundErrorMessage;
 				} else {

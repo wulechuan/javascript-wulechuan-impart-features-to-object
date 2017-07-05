@@ -44,16 +44,14 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	window.wulechuanImpartationOperator = __webpack_require__(1);
-	console.log(window.wulechuanImpartationOperator);
+	window.WulechuanImpartationOperator = __webpack_require__(1);
 
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var wulechuanImpartationOperator = new WulechuanImpartationOperator();
-	module.exports = wulechuanImpartationOperator;
+	module.exports = WulechuanImpartationOperator;
 
 
 	/**
@@ -408,9 +406,7 @@
 	 *
 	 * @class
 	 * 
-	 * @param {!string} usingLanguage
-	 * 
-	 * @returns
+	 * @instance
 	 * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定为“简体中文”。
 	 * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
 	 * 
@@ -420,16 +416,10 @@
 			__webpack_require__(2);
 			// require('@wulechuan/apply-one-stage-one-method-pattern');
 
-		var nameOfEntranceProperty_zhCN = '传授';
-		var nameOfEntranceProperty_enUS = 'impart';
-
-
-		// This method name below, which is the first method to invoke,
-		// will NOT be public.
-		// Because we are wrapping it with getter functions,
-		// so that we can easily decide the using langugae.
-		// Thus, only one alias is enough for it to use inside this scope.
-		var methodName_startToImpart = '__startToImpart__';
+		var nameOfEntranceMethodInAllLanguages = {
+			'zh-CN': '传授',
+			'en-US': 'impart'
+		};
 
 
 
@@ -536,7 +526,8 @@
 
 		var shouldThrowErrors;
 
-		var usingLanguage;
+		var preferredLanguage;
+		var entranceMethodsInAllLanguages = {};
 
 		var theClassConstructor;
 		var theClassConstructionOptions;
@@ -561,53 +552,72 @@
 		var grantee;
 
 
+		if (preferredLanguage && typeof preferredLanguage === 'string') {
+			preferredLanguage = 'zh-CN';
+		}
 
 
 		var stagesOfClassRoute  = _defineExecutionRouteForImpartingFromAClassInstance();
 		var stagesOfObjectRoute = _defineExecutionRouteForImpartingFromAnObject();
+		console.log(thisOperator);
+
+
+		_buildAllEntranceMethods();
+		_exposeEntranceMethodsInAllLanguages();
 
 
 
+		function _exposeEntranceMethodsInAllLanguages() {
+			for (var language in nameOfEntranceMethodInAllLanguages) {
+				var nameOfEntranceMethodInSpecificLanguage =
+					nameOfEntranceMethodInAllLanguages[language];
 
-		_defineEntranceGettersInLanguage('zh-CN', nameOfEntranceProperty_zhCN);
-		_defineEntranceGettersInLanguage('en-US', nameOfEntranceProperty_enUS);
-
-
-
-
-
-
-
-
-
-
-
-		function _defineEntranceGettersInLanguage(usingLanguage, entrancePropertyName) {
-			Object.defineProperty(thisOperator, entrancePropertyName, {
-				enumerable: true,
-				get: function () {
-					_forAllRoutesSetPreferredNaturalLanguageTo(usingLanguage);
-					stagesOfClassRoute.startFromFirstStage();
-					stagesOfObjectRoute.startFromFirstStage();
-					return thisOperator;
-				}
-			});
+				Object.defineProperty(thisOperator, nameOfEntranceMethodInSpecificLanguage, {
+					configurable: true,
+					enumerable: true,
+					get: entranceMethodsInAllLanguages[language]
+				});
+			}
 		}
 
-		function _forAllRoutesSetPreferredNaturalLanguageTo(languageCode) {
-			usingLanguage = languageCode;
+		function _buildAllEntranceMethods() {
+			for (var language in nameOfEntranceMethodInAllLanguages) {
+				if (entranceMethodsInAllLanguages[language]) continue;
+
+				entranceMethodsInAllLanguages[language] = (function (usingLanguage) {
+					return _entranceMethodCore.bind(thisOperator, usingLanguage);
+				})(language);
+			}
+		}
+
+		function _entranceMethodCore(usingLanguage) {
+			_setPreferredLanguageTo(usingLanguage);
+			_hideEntranceMethodsInLanguagesOtherThan();
+			return thisOperator;
+		}
+
+		function _setPreferredLanguageTo(languageCode) {
+			preferredLanguage = languageCode;
 			stagesOfClassRoute.setPreferredNaturalLanguageTo(languageCode);
 			stagesOfObjectRoute.setPreferredNaturalLanguageTo(languageCode);
 		}
 
+		function _hideEntranceMethodsInLanguagesOtherThan(languageToPreserve) {
+			for (var language in nameOfEntranceMethodInAllLanguages) {
+				if (language === languageToPreserve) continue;
+
+				var nameOfEntranceMethodInSpecificLanguage =
+					nameOfEntranceMethodInAllLanguages[language];
+
+				delete thisOperator[nameOfEntranceMethodInSpecificLanguage];
+			}
+		}
+
 		function _defineExecutionRouteForImpartingFromAClassInstance() {
 			var stagesOfClassRoute =
-				new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
-			
-			stagesOfClassRoute.addStage(startToImpart, {
-				'zh-CN': [methodName_startToImpart],
-				'en-US': [methodName_startToImpart]
-			});
+				new WulechuanApplyOneStageOneMethodProgrammingPatternTo(
+					thisOperator, preferredLanguage
+				);
 
 			stagesOfClassRoute.addStage(theClass, {
 				'zh-CN': methodNames_theClass_zhCN,
@@ -649,12 +659,9 @@
 
 		function _defineExecutionRouteForImpartingFromAnObject() {
 			var stagesOfObjectRoute =
-				new WulechuanApplyOneStageOneMethodProgrammingPatternTo(thisOperator);
-
-			stagesOfObjectRoute.addStage(startToImpart, {
-				'zh-CN': [methodName_startToImpart],
-				'en-US': [methodName_startToImpart]
-			});
+				new WulechuanApplyOneStageOneMethodProgrammingPatternTo(
+					thisOperator, preferredLanguage
+				);
 
 			stagesOfObjectRoute.addStage(theObject, {
 				'zh-CN': methodNames_theObject_zhCN,
@@ -729,7 +736,7 @@
 				if (typeof errors === 'string') {
 					_errorMessage = errors;
 				} else if (typeof errors === 'object' && !Array.isArray(errors)) {
-					var _foundErrorMessage = errors[usingLanguage];
+					var _foundErrorMessage = errors[preferredLanguage];
 					if (_the(_foundErrorMessage).isANonEmptyString()) {
 						_errorMessage = _foundErrorMessage;
 					} else {
@@ -1571,7 +1578,7 @@
 	 * @param {!object} stagesOperator - The object to apply staged-methods pattern to.
 	 */
 	// eslint-disable-next-line
-	function WulechuanApplyOneStageOneMethodProgrammingPatternTo(stageMethodsOwner) {
+	function WulechuanApplyOneStageOneMethodProgrammingPatternTo(stageMethodsOwner, initialPreferredLanguage) {
 		var methodName_addStage = 'addStage';
 		var methodName_setPreferredNaturalLanguageTo = 'setPreferredNaturalLanguageTo';
 		var methodName_startFromFirstStage = 'startFromFirstStage';
@@ -1585,7 +1592,12 @@
 
 		var knownLanguagesSoFar = [];
 		var knownLanguagesIndicesSoFar = {}; // Simply for easy avoiding duplications
-		var usingLanguage;
+		var preferredLanguage;
+
+
+		if (initialPreferredLanguage && typeof initialPreferredLanguage === 'string') {
+			preferredLanguage = initialPreferredLanguage;
+		} 
 
 		thisManagerOfStages[methodName_addStage] = addFirstStage;
 		thisManagerOfStages[methodName_setPreferredNaturalLanguageTo] = setPreferredNaturalLanguageTo;
@@ -1716,10 +1728,10 @@
 			}
 		}
 
-		function _getActionAliasesBetterInThisLanguage(actionAliasesInAllLanguages, preferredLanguage) {
-			var foundActionAliases = actionAliasesInAllLanguages[preferredLanguage];
+		function _getActionAliasesBetterInThisLanguage(actionAliasesInAllLanguages, _preferredLanguage) {
+			var foundActionAliases = actionAliasesInAllLanguages[_preferredLanguage];
 			if (_isAUsableArray(foundActionAliases)) {
-				actionAliasesInAllLanguages.usingLanguage = preferredLanguage;
+				actionAliasesInAllLanguages.usingLanguage = _preferredLanguage;
 				return foundActionAliases;
 			}
 
@@ -1743,7 +1755,7 @@
 			}
 
 			console.warn('For stage', actionAliasesInAllLanguages.stageIndex,
-				', none of the aliases is in the preferred language ("'+preferredLanguage+'").',
+				', none of the aliases is in the preferred language ("'+_preferredLanguage+'").',
 				'\nInstead, aliases in "'+language+'" are exposed as methods.'
 			);
 
@@ -1754,7 +1766,7 @@
 			if (!language) {
 				throw TypeError('Must specify the natural language to use.');
 			}
-			usingLanguage = language;
+			preferredLanguage = language;
 			_tryToExposeFirstStageSoThatTheOperatorIsUsable();
 		}
 
@@ -1768,13 +1780,11 @@
 		}
 
 		function _modifyMethodsOwnerByExposingOrHidingSomeMethods() {
-			_hideMethodsOfAllPastOrSkippedStages();
-			if (currentStageIndex === 0) {
-				_exposeMethodsOfAllStagesTillFirstRequiredStageStartingWithIndex(1);
-			}
+			_hideMethodsOfAllPastOrSkippedStagesIncludingCurrentStage();
+			_exposeMethodsOfAllStagesTillFirstRequiredStageStartingWithIndex(currentStageIndex+1);
 		}
 
-		function _hideMethodsOfAllPastOrSkippedStages() {
+		function _hideMethodsOfAllPastOrSkippedStagesIncludingCurrentStage() {
 			for (var si = 0; si <= currentStageIndex; si++) {
 				var stage = allStages[si];
 				var actionAliasesInAllLanguages = stage.actionAliases;
@@ -1790,7 +1800,7 @@
 
 		function _tryToExposeFirstStageSoThatTheOperatorIsUsable() {
 			if (allStages.length < 1) return;
-			if (!usingLanguage) return;
+			if ( ! preferredLanguage) return;
 
 			// Expose the method of the first stage with the common name,
 			// a.k.a. the "startFromFirstStage" according to the default configuration.
@@ -1822,7 +1832,7 @@
 				var actionToExpose = stage.action;
 
 				var actionAliasesInActuallyUsingLanuage =
-					_getActionAliasesBetterInThisLanguage(stage.actionAliases, usingLanguage);
+					_getActionAliasesBetterInThisLanguage(stage.actionAliases, preferredLanguage);
 
 				for (var ai = 0; ai < actionAliasesInActuallyUsingLanuage.length; ai++) {
 					var alias = actionAliasesInActuallyUsingLanuage[ai];
