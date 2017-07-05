@@ -1327,7 +1327,7 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _impartOneAliasTheDefaultWay(_attributeName, _alias, _granteeOfProperty) {
+	function _impartOneAliasTheDefaultWay(_attributeName, _alias, _granteeOfAttribute) {
 		var _configuration = {
 			enumerable: true,
 			get: function () {
@@ -1335,7 +1335,7 @@ function WulechuanImpartationOperator() {
 			}
 		};
 
-		if (typeof theSourceObjectToImpartAttributesFrom[_attributeName] === 'function') {
+		if (typeof theSourceObjectToImpartAttributesFrom[_attributeName] !== 'function') {
 			_configuration.set = function (newValue) {
 				theSourceObjectToImpartAttributesFrom[_attributeName] = newValue;
 			};
@@ -1345,6 +1345,6 @@ function WulechuanImpartationOperator() {
 			_alias = _alias.replace(chiefNameRegExps[_i], usedChiefName);
 		}
 
-		Object.defineProperty(_granteeOfProperty, _alias, _configuration);
+		Object.defineProperty(_granteeOfAttribute, _alias, _configuration);
 	}
 }

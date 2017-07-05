@@ -24,22 +24,26 @@ theOperator.impart
 console.log('\na.newShiningProperty.lovelyName: "'+a.newShiningProperty.lovelyName+'"');
 // 'this is my original name'
 
-console.log('\na.newShiningPropertyDirectlyAccessibleLovelyName: "'+a.newShiningProperty.lovelyName+'"');
+console.log('a.newShiningPropertyDirectlyAccessibleLovelyName: "'+a.newShiningProperty.lovelyName+'"');
 // 'this is my original name'
 
-console.group('Try the customized setter, which simply changes the value of the "lovelyName" property.');
-console.log('a.newShiningProperty = \'wulechuan\';\n');
+console.group('\nTry the customized setter, which simply changes the value of the "lovelyName" property.');
+console.log('');
+console.warn('a.newShiningProperty = \'wulechuan\';\n');
 a.newShiningProperty = 'wulechuan';
 
 console.log('\na.newShiningProperty.lovelyName: "'+a.newShiningProperty.lovelyName+'"\n');
 // 'wulechuan'
 
-console.log('\na.newShiningPropertyDirectlyAccessibleLovelyName: "'+a.newShiningProperty.lovelyName+'"\n');
+console.log('a.newShiningPropertyDirectlyAccessibleLovelyName: "'+a.newShiningProperty.lovelyName+'"\n');
 // 'wulechuan'
 
 console.groupEnd();
 
-console.log('\na.newShiningPropertyDirectlyAccessibleLovelyName = \'Softimage XSI\';');
-console.log('\na.newShiningProperty.lovelyName: "'+a.newShiningProperty.lovelyName+'"\n');
+console.log('');
+console.warn('a.newShiningPropertyDirectlyAccessibleLovelyName = \'Softimage XSI\';');
+a.newShiningPropertyDirectlyAccessibleLovelyName = 'Softimage XSI';
+console.log('a.newShiningProperty.lovelyName: "'+a.newShiningProperty.lovelyName+'"\n');
+// 'Softimage XSI'
 
 window.a = a;
