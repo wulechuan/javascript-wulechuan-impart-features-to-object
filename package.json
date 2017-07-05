@@ -21,7 +21,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@wulechuan/apply-one-stage-one-method-pattern": "^1.0.5"
+    "@wulechuan/apply-one-stage-one-method-pattern": "^1.0.7"
   },
   "devDependencies": {
     "del": "^3.0.0",

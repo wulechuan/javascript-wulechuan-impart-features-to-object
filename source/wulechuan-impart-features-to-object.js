@@ -1,8 +1,3 @@
-/* global
-	WulechuanApplyOneStageOneMethodProgrammingPatternTo
-*/
-
-require('@wulechuan/apply-one-stage-one-method-pattern');
 var wulechuanImpartationOperator = new WulechuanImpartationOperator();
 module.exports = wulechuanImpartationOperator;
 
@@ -367,6 +362,9 @@ module.exports = wulechuanImpartationOperator;
  * 
  */
 function WulechuanImpartationOperator() {
+	var WulechuanApplyOneStageOneMethodProgrammingPatternTo =
+		require('@wulechuan/apply-one-stage-one-method-pattern');
+
 	var nameOfEntranceProperty_zhCN = '传授';
 	var nameOfEntranceProperty_enUS = 'impart';
 
