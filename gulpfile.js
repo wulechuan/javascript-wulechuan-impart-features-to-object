@@ -1,4 +1,6 @@
 const productionSourceGlobJs = ['source/**/*.js'];
+const examplesFolder = 'examples';
+const examplesGlobs = [examplesFolder+'/**/*.js'];
 const productionBuildFolder = 'build';
 const readMeStartRegExp = new RegExp('(\\* \\s*\\-{3,} readme start \\-{3,}\\s*)\\n', 'i');
 const readMeEndRegExp   = new RegExp('(\\* \\s*\\-{3,} readme end \\-{3,}\\s*)\\n', 'i');
@@ -6,14 +8,16 @@ const readMeEndRegExp   = new RegExp('(\\* \\s*\\-{3,} readme end \\-{3,}\\s*)\\
 const allSourceGlobsToWatch = productionSourceGlobJs;
 
 const globsToClearBeforeRebuilding = [
-	productionBuildFolder
+	productionBuildFolder,
+	examplesFolder + '/*.js'
 ];
 
 
-
-
+const processArguments = require('minimist')(process.argv.slice(2));
 
 const gulp = require('gulp');
+const pathTool = require('path');
+const webpack = require('webpack-stream');
 const runTasksInSequence = require('gulp-sequence');
 const replaceFileContent = require('gulp-change');
 const deleteFiles = require('del');
@@ -22,7 +26,32 @@ const minifyJs = require('gulp-uglify');
 const pump = require('pump');
 
 
+const isToBuildForRelease = isRunningInReleasingMode(processArguments);
+const isToDevelopWithWatching = !isToBuildForRelease;
 
+
+function isRunningInReleasingMode(processArguments) {
+	const thoseArgumentsStandForRelease = [
+		'release',
+		'production',
+		'ship',
+		'final',
+		'publish'
+	];
+
+	for (let i = 0; i < thoseArgumentsStandForRelease.length; i++) {
+		let allowedInput = thoseArgumentsStandForRelease[i];
+		if (typeof allowedInput !== 'string' || !allowedInput) {
+			continue;
+		}
+
+		allowedInput = allowedInput.trim();
+
+		if (processArguments[allowedInput]) return true;
+	}
+
+	return false;
+}
 
 (function 构建README() {
 	gulp.task('build: readme', (thisTaskIsDone) => {
@@ -115,13 +144,24 @@ const pump = require('pump');
 		return deleteFiles(globsToClearBeforeRebuilding);
 	});
 
+	gulp.task('webpack: examples', () => {
+		return gulp.src(examplesGlobs)
+			.pipe(webpack(require('./webpack.config.js')))
+			.pipe(gulp.dest(pathTool.join(
+				examplesFolder,
+				'example-001'
+			)))
+			;
+	});
+
 	gulp.task('build: all', (thisTaskIsDone) => {
 		var tasksToRun = [
 			'clear old build',
 			[
 				'build: readme',
 				'build: js: all'
-			]
+			],
+			'webpack: examples'
 		];
 
 		runTasksInSequence.apply(null, tasksToRun)(thisTaskIsDone);
@@ -134,7 +174,15 @@ const pump = require('pump');
 
 
 (function 定义所谓顶级任务() {
+	var tasksToRun = [
+		'build: all'
+	];
+
+	if (isToDevelopWithWatching) {
+		tasksToRun.push('watch');
+	}
+
 	gulp.task('default', (thisTaskIsDone) => {
-		runTasksInSequence('build: all', 'watch')(thisTaskIsDone);
+		runTasksInSequence.apply(this, tasksToRun)(thisTaskIsDone);
 	});
 })();

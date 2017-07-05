@@ -5,6 +5,8 @@
   "description": "以所谓“传授（impart）”的程序写法实现所谓“混入（Mixin）”功能，使得“受体”具有被传授的属性和方法函数。并且，这些被传授的属性和方法均被包裹在getter和setter内，受到保护。",
   "main": "build/wulechuan-impart-features-to-object.min.js",
   "scripts": {
+    "start": "gulp",
+    "release": "gulp --release",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -28,7 +30,10 @@
     "gulp-rename": "^1.2.2",
     "gulp-sequence": "^0.4.6",
     "gulp-uglify": "^3.0.0",
-    "pump": "^1.0.2"
+    "minimist": "^1.2.0",
+    "pump": "^1.0.2",
+    "webpack": "^3.0.0",
+    "webpack-stream": "^3.2.0"
   },
   "repository": {
     "type": "git",

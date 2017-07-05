@@ -3,8 +3,8 @@
 */
 
 require('@wulechuan/apply-one-stage-one-method-pattern');
-
-window.wulechuanImpartationOperator = new WulechuanImpartationOperator();
+var wulechuanImpartationOperator = new WulechuanImpartationOperator();
+module.exports = wulechuanImpartationOperator;
 
 
 /**
