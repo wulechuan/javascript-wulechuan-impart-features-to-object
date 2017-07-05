@@ -427,7 +427,8 @@ function WulechuanImpartationOperator() {
 		'并添加以下别名' // 用于更改多种属性名称时，较为符合汉语习惯。
 	];
 	var methodNames_addAliasesForAttributes_enUS = [
-		'named',
+		'nameIt',
+		'nameItself',
 		'addAliasesForThese',
 		'addAliasesForAttributes'
 	];
@@ -457,7 +458,10 @@ function WulechuanImpartationOperator() {
 	var propertyName_attributesAliasesToAdd = 'attributesAliasesToAdd';
 	var propertyName_attributesToAddDirectlyUnderGrantee = 'attributesToAddDirectlyUnderGrantee';
 	var propertyName_nameToUseForTheObjectItself = 'propertyNameForTheObjectItself';
-
+	var chiefNameRegExps = [
+		new RegExp('\\$\\{主名称\\}', 'g'),
+		new RegExp('\\$\\{ChiefName\\}', 'g')
+	];
 
 
 
@@ -670,8 +674,8 @@ function WulechuanImpartationOperator() {
 				return _the(subject).isANonEmptyString();
 			},
 
-			isNotAValidKey: function(subject) {
-				return !_the(subject).isAValidKey(subject);
+			isNotAValidKey: function() {
+				return !_the(subject).isAValidKey();
 			}
 		};
 	}
@@ -1204,7 +1208,8 @@ function WulechuanImpartationOperator() {
 		var _methodSuggestionsForNamingObjectItself = '\n\t"'+
 			[
 				methodNames_addAliasesForAttributes_zhCN[0],
-				methodNames_addAliasesForAttributes_enUS[0]
+				methodNames_addAliasesForAttributes_enUS[0],
+				methodNames_addAliasesForAttributes_enUS[1]
 			].join('\n\t"')
 			+'"\n'
 			;
@@ -1310,6 +1315,11 @@ function WulechuanImpartationOperator() {
 			_configuration.set = function (newValue) {
 				theSourceObjectToImpartAttributesFrom[_attributeName] = newValue;
 			};
+		}
+
+		for (var _i=0; _i<chiefNameRegExps.length; _i++) {
+			console.log(chiefNameRegExps[_i]);
+			_alias = _alias.replace(chiefNameRegExps[_i], usedChiefName);
 		}
 
 		Object.defineProperty(_granteeOfProperty, _alias, _configuration);
