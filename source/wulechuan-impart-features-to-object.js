@@ -487,6 +487,7 @@ function WulechuanImpartationOperator() {
 
 	var theSourceObjectToImpartAttributesFrom;
 
+	var chiefAttributeCustomizedSetter;
 	var attributesAliasesToAddAdditionalToProfileDefined = {};
 	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
 
@@ -861,6 +862,14 @@ function WulechuanImpartationOperator() {
 
 
 	function addAliasesForAttributesAdditionalToProfileDefinedAliases(_attributesAliasesToAdd) {
+		if (_the(_attributesAliasesToAdd).isANonEmptyString()) {
+			var _tempConfiguration = {};
+			_tempConfiguration[propertyName_nameToUseForTheObjectItself] =
+				_attributesAliasesToAdd;
+
+			_attributesAliasesToAdd = _tempConfiguration;
+		}
+		
 		if (_the(_attributesAliasesToAdd).isAValidObject()) {
 			_mergeAttribtesFromBToA(
 				attributesAliasesToAddAdditionalToProfileDefined,
@@ -923,90 +932,11 @@ function WulechuanImpartationOperator() {
 
 	function _impartIt() {
 		_decideAllAliasesToUseFinally();
-
-		if ( ! usedChiefName) {
-			_dealWithTheAbsentOfTheChiefName();
-			return false;
-		}
-
-		_addAliasesOfAttributesToImpartationSourceObject();
+		_defineAnAttributeForTheImpartedObject();
+		_addAliasesOfAttributesToImpartedObject();
 		_addAttributesDirectlyToGrantee();
 
 		return true;
-	}
-
-	function _dealWithTheAbsentOfTheChiefName() {
-		var _methodSuggestionsForNamingObjectItself = '\n\t"'+
-			[
-				methodNames_addAliasesForAttributes_zhCN[0],
-				methodNames_addAliasesForAttributes_enUS[0]
-			].join('\n\t"')
-			+'"\n'
-			;
-
-		var reusableWords_zhCN = 
-			'而每欲传授对象至它物，该对象本身作为受封物之属性，亦须定名。'+
-			'请采用以下任意方法函数为其定名：'+
-			_methodSuggestionsForNamingObjectItself
-			;
-
-		var reusableWords_enUS =
-			'Note that an object to impart, '+
-			'as it would be an attribute of the grantee, '+
-			'needs a name itself.'+
-			'\nPlease use any of these methods below to give it a name:'+
-			_methodSuggestionsForNamingObjectItself
-			;
-
-
-		if (isUsingImplicitProfileOfClass) {
-
-			_reportMultilingualErrors({
-				'zh-CN':
-					'所给出的“类”没有名为“'+propertyName_defaultProfile+'”的默认变体。'+
-					'程序亦未指定采用其它变体。现欲传授该类之实例对象至它物，其传授后之名称却未知。'+
-					reusableWords_zhCN
-					,
-
-				'en-US':
-					'The class doesn\'t have the default profile, '+
-					'which should have been named "'+propertyName_defaultProfile+'". '+
-					'You are allowed not to use the default profile. But... '+
-					reusableWords_enUS
-			});
-
-		} else if (isUsingDefaultProfileOfClass) {
-
-			_reportMultilingualErrors({
-				'zh-CN':
-					'所给出的“类”的默认变体（即，“'+propertyName_defaultProfile+'”）被采用，'+
-					'但该变体未指明奖被传授之实例对象所应采用之名称。'+
-					reusableWords_zhCN
-					,
-
-				'en-US':
-					'For the given class, '+
-					'the "'+propertyName_defaultProfile+'" profile is used, '+
-					'while the profile does not provide the attribute name for '+
-					'the instance object. '+
-					reusableWords_enUS
-			});
-
-		} else {
-
-			_reportMultilingualErrors({
-				'zh-CN':
-					'行将传授所给出“对象”之属性至它物，其传授后之名称却未知。'+
-					reusableWords_zhCN
-					,
-
-				'en-US':
-					'The given object is about to impart to the grantee, '+
-					'but the attribute name is not provided yet.'+
-					reusableWords_enUS
-			});
-
-		}
 	}
 
 	function _decideAllAliasesToUseFinally() {
@@ -1092,12 +1022,12 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _decideAliasesAccordingTo(_aliases, _aliasesAreToAddToImpartationSourceObject) {
+	function _decideAliasesAccordingTo(_aliasesRules, _aliasesAreToAddToImpartationSourceObject) {
 		var _nonDuplicatedAliasesForAllInvolvedAttributes;
 		var _flatternedRecordsForBackwardsMapping;
 
 
-		if (_the(_aliases).isNotAValidObject()) {
+		if (_the(_aliasesRules).isNotAValidObject()) {
 			// Although aliases according to the user options are always an object,
 			// Since its a copy of the raw options,
 			// A profile might not provide an object for aliases.
@@ -1132,7 +1062,7 @@ function WulechuanImpartationOperator() {
 
 
 
-		for (var _keyAsEitherAttributeNameOrAlias in _aliases) {
+		for (var _keyAsEitherAttributeNameOrAlias in _aliasesRules) {
 			if (_the(_keyAsEitherAttributeNameOrAlias).isNotAValidKey()) {
 				continue;
 			}
@@ -1182,7 +1112,7 @@ function WulechuanImpartationOperator() {
 			}
 
 			_aliasesArrayOfCurrentKey =
-				_aliases[_keyAsEitherAttributeNameOrAlias];
+				_aliasesRules[_keyAsEitherAttributeNameOrAlias];
 
 			if (_the(_aliasesArrayOfCurrentKey).isNotAnArray()) {
 				_aliasesArrayOfCurrentKey = [_aliasesArrayOfCurrentKey];
@@ -1250,63 +1180,138 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _addAliasesOfAttributesToImpartationSourceObject() {
+	function _defineAnAttributeForTheImpartedObject() {
+		if ( ! usedChiefName) {
+			_dealWithTheAbsentOfTheChiefName();
+			return false;
+		}
+
+		var _configuration = {
+			enumerable: true,
+			get: function () {
+				return theSourceObjectToImpartAttributesFrom;
+			}
+		};
+
+		if (typeof chiefAttributeCustomizedSetter === 'function') {
+			_configuration.set = chiefAttributeCustomizedSetter;
+		}
+
+		Object.defineProperty(grantee, usedChiefName, _configuration);
+	}
+
+	function _dealWithTheAbsentOfTheChiefName() {
+		var _methodSuggestionsForNamingObjectItself = '\n\t"'+
+			[
+				methodNames_addAliasesForAttributes_zhCN[0],
+				methodNames_addAliasesForAttributes_enUS[0]
+			].join('\n\t"')
+			+'"\n'
+			;
+
+		var reusableWords_zhCN = 
+			'而每欲传授对象至它物，该对象本身作为受封物之属性，亦须定名。'+
+			'请采用以下任意方法函数为其定名：'+
+			_methodSuggestionsForNamingObjectItself
+			;
+
+		var reusableWords_enUS =
+			'Note that an object to impart, '+
+			'as it would be an attribute of the grantee, '+
+			'needs a name itself.'+
+			'\nPlease use any of these methods below to give it a name:'+
+			_methodSuggestionsForNamingObjectItself
+			;
+
+
+		if (isUsingImplicitProfileOfClass) {
+
+			_reportMultilingualErrors({
+				'zh-CN':
+					'所给出的“类”没有名为“'+propertyName_defaultProfile+'”的默认变体。'+
+					'程序亦未指定采用其它变体。现欲传授该类之实例对象至它物，其传授后之名称却未知。'+
+					reusableWords_zhCN
+					,
+
+				'en-US':
+					'The class doesn\'t have the default profile, '+
+					'which should have been named "'+propertyName_defaultProfile+'". '+
+					'You are allowed not to use the default profile. But... '+
+					reusableWords_enUS
+			});
+
+		} else if (isUsingDefaultProfileOfClass) {
+
+			_reportMultilingualErrors({
+				'zh-CN':
+					'所给出的“类”的默认变体（即，“'+propertyName_defaultProfile+'”）被采用，'+
+					'但该变体未指明奖被传授之实例对象所应采用之名称。'+
+					reusableWords_zhCN
+					,
+
+				'en-US':
+					'For the given class, '+
+					'the "'+propertyName_defaultProfile+'" profile is used, '+
+					'while the profile does not provide the attribute name for '+
+					'the instance object. '+
+					reusableWords_enUS
+			});
+
+		} else {
+
+			_reportMultilingualErrors({
+				'zh-CN':
+					'行将传授所给出“对象”之属性至它物，其传授后之名称却未知。'+
+					reusableWords_zhCN
+					,
+
+				'en-US':
+					'The given object is about to impart to the grantee, '+
+					'but the attribute name is not provided yet.'+
+					reusableWords_enUS
+			});
+
+		}
+	}
+
+	function _addAliasesOfAttributesToImpartedObject() {
 		for (var _alias in allAliasesToAddForAllAttributesFlattenedBackwardsMapping) {
 			var _attributeName = allAliasesToAddForAllAttributesFlattenedBackwardsMapping[_alias];
-			var _attribute = theSourceObjectToImpartAttributesFrom[_attributeName];
 
-			if (typeof _attribute === 'function') {
-				_impartOneMethodTheDefaultWay(
-					_attributeName,
-					_alias,
-					theSourceObjectToImpartAttributesFrom
-				);
-			} else {
-				_impartOnePropertyTheDefaultWay(
-					_attributeName,
-					_alias,
-					theSourceObjectToImpartAttributesFrom
-				);
-			}
+			_impartOneAliasTheDefaultWay(
+				_attributeName,
+				_alias,
+				theSourceObjectToImpartAttributesFrom
+			);
 		}
 	}
 
 	function _addAttributesDirectlyToGrantee() {
 		for (var _alias in allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping) {
 			var _attributeName = allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping[_alias];
-			var _attribute = theSourceObjectToImpartAttributesFrom[_attributeName];
 
-			if (typeof _attribute === 'function') {
-				_impartOneMethodTheDefaultWay(_attributeName, _alias, grantee);
-			} else {
-				_impartOnePropertyTheDefaultWay(_attributeName, _alias, grantee);
-			}
+			_impartOneAliasTheDefaultWay(
+				_attributeName,
+				_alias,
+				grantee
+			);
 		}
 	}
 
-	function _impartOneMethodTheDefaultWay(_methodName, _alias, _granteeOfMethod) {
-		Object.defineProperty(_granteeOfMethod, _alias,
-			{
-				enumerable: true,
-				get: function () {
-					return theSourceObjectToImpartAttributesFrom[_methodName];
-				}
-				// method should have no setter
+	function _impartOneAliasTheDefaultWay(_attributeName, _alias, _granteeOfProperty) {
+		var _configuration = {
+			enumerable: true,
+			get: function () {
+				return theSourceObjectToImpartAttributesFrom[_attributeName];
 			}
-		);
-	}
+		};
 
-	function _impartOnePropertyTheDefaultWay(_propertyName, _alias, _granteeOfProperty) {
-		Object.defineProperty(_granteeOfProperty, _alias,
-			{
-				enumerable: true,
-				get: function () {
-					return theSourceObjectToImpartAttributesFrom[_propertyName];
-				},
-				set: function (newValue) {
-					theSourceObjectToImpartAttributesFrom[_propertyName] = newValue;
-				}
-			}
-		);
+		if (typeof theSourceObjectToImpartAttributesFrom[_attributeName] === 'function') {
+			_configuration.set = function (newValue) {
+				theSourceObjectToImpartAttributesFrom[_attributeName] = newValue;
+			};
+		}
+
+		Object.defineProperty(_granteeOfProperty, _alias, _configuration);
 	}
 }
