@@ -498,8 +498,8 @@ function WulechuanImpartationOperator() {
 	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
 
 	var usedChiefName;
-	var allAvailableAliasesForAllAttributes = {};
-	var allAvailableAliasesForAllAttributesFlattenedBackwardsMapping = {};
+	var allAliasesToAddForAllAttributes = {};
+	var allAliasesToAddForAllAttributesFlattenedBackwardsMapping = {};
 	var allAttributesToAddDirectlyUnderGrantee = {};
 	var allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping = {};
 
@@ -584,7 +584,7 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
-		stagesOfClassRoute.addStage(addAttributesDirectlyUnderGrantee, true, {
+		stagesOfClassRoute.addStage(addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions, true, {
 			'zh-CN': methodNames_addAttributesDirectlyUnderGrantee_zhCN,
 			'en-US': methodNames_addAttributesDirectlyUnderGrantee_enUS
 		});
@@ -616,7 +616,7 @@ function WulechuanImpartationOperator() {
 			'en-US': methodNames_addAliasesForAttributes_enUS
 		});
 
-		stagesOfObjectRoute.addStage(addAttributesDirectlyUnderGrantee, true, {
+		stagesOfObjectRoute.addStage(addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions, true, {
 			'zh-CN': methodNames_addAttributesDirectlyUnderGrantee_zhCN,
 			'en-US': methodNames_addAttributesDirectlyUnderGrantee_enUS
 		});
@@ -868,7 +868,7 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function addAttributesDirectlyUnderGrantee(_attributesToAddDirectlyUnderGrantee) {
+	function addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions(_attributesToAddDirectlyUnderGrantee) {
 		if (_the(_attributesToAddDirectlyUnderGrantee).isAValidObject()) {
 			_mergeAttribtesFromBToA(
 				attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined,
@@ -1006,7 +1006,7 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _decideAllAliasesToUseFinally() {
-		var _theseAreForAliasesToAddToImpartationSourceObject;
+		var _aliasesAreToAddToImpartationSourceObject;
 
 
 		if (usedImpartationProfileOfClass) {
@@ -1023,10 +1023,10 @@ function WulechuanImpartationOperator() {
 			var _aliasesToAddToImpartationSourceObjectAccordingToProfile =
 				usedImpartationProfileNameOfClass[propertyName_attributesAliasesToAdd]
 				;
-			_theseAreForAliasesToAddToImpartationSourceObject = true;
+			_aliasesAreToAddToImpartationSourceObject = true;
 			_decideAliasesAccordingTo(
 				_aliasesToAddToImpartationSourceObjectAccordingToProfile,
-				_theseAreForAliasesToAddToImpartationSourceObject
+				_aliasesAreToAddToImpartationSourceObject
 			);
 
 
@@ -1035,10 +1035,10 @@ function WulechuanImpartationOperator() {
 			var _attributesToAddDirectlyUnderGranteeAccordingToProfile =
 				usedImpartationProfileNameOfClass[propertyName_attributesToAddDirectlyUnderGrantee]
 				;
-			_theseAreForAliasesToAddToImpartationSourceObject = false;
+			_aliasesAreToAddToImpartationSourceObject = false;
 			_decideAliasesAccordingTo(
 				_attributesToAddDirectlyUnderGranteeAccordingToProfile,
-				_theseAreForAliasesToAddToImpartationSourceObject
+				_aliasesAreToAddToImpartationSourceObject
 			);
 
 		}
@@ -1064,10 +1064,10 @@ function WulechuanImpartationOperator() {
 
 
 		// Try to add aliases according to user options.
-		_theseAreForAliasesToAddToImpartationSourceObject = true;
+		_aliasesAreToAddToImpartationSourceObject = true;
 		_decideAliasesAccordingTo(
 			attributesAliasesToAddAdditionalToProfileDefined,
-			_theseAreForAliasesToAddToImpartationSourceObject
+			_aliasesAreToAddToImpartationSourceObject
 		);
 
 
@@ -1075,10 +1075,10 @@ function WulechuanImpartationOperator() {
 
 
 		// Try to add attributes directly under grantee according to user options.
-		_theseAreForAliasesToAddToImpartationSourceObject = false;
+		_aliasesAreToAddToImpartationSourceObject = false;
 		_decideAliasesAccordingTo(
 			attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined,
-			_theseAreForAliasesToAddToImpartationSourceObject
+			_aliasesAreToAddToImpartationSourceObject
 		);
 	}
 
@@ -1088,8 +1088,8 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function _decideAliasesAccordingTo(_aliases, _theseAreForAliasesToAddToImpartationSourceObject) {
-		var _recordsForMappingArrays;
+	function _decideAliasesAccordingTo(_aliases, _aliasesAreToAddToImpartationSourceObject) {
+		var _nonDuplicatedAliasesForAllInvolvedAttributes;
 		var _flatternedRecordsForBackwardsMapping;
 
 
@@ -1101,23 +1101,20 @@ function WulechuanImpartationOperator() {
 		}
 
 
-		if (_theseAreForAliasesToAddToImpartationSourceObject) {
-			_recordsForMappingArrays =
-				allAvailableAliasesForAllAttributes;
+		if (_aliasesAreToAddToImpartationSourceObject) {
+			_nonDuplicatedAliasesForAllInvolvedAttributes =
+				allAliasesToAddForAllAttributes;
 
 			_flatternedRecordsForBackwardsMapping =
-				allAvailableAliasesForAllAttributesFlattenedBackwardsMapping;
+				allAliasesToAddForAllAttributesFlattenedBackwardsMapping;
 		} else {
-			_recordsForMappingArrays =
+			_nonDuplicatedAliasesForAllInvolvedAttributes =
 				allAttributesToAddDirectlyUnderGrantee;
 
 			_flatternedRecordsForBackwardsMapping =
 				allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping;
 		}
 
-
-		var _i;
-		var _keyAsEitherAttributeNameOrAlias;
 
 		var _keyIsAnAttributeName;
 		var _keyIsAnAlias;
@@ -1127,10 +1124,11 @@ function WulechuanImpartationOperator() {
 		var _nonDuplicatedAliasesForCurrentAttributeName;
 		var _alias;
 		var _theAliasIsActuallyAnAttribute;
+		var _theAliasOfAKeyIsTheSameAsTheKeyItself;
 
 
 
-		for (_keyAsEitherAttributeNameOrAlias in _aliases) {
+		for (var _keyAsEitherAttributeNameOrAlias in _aliases) {
 			if (_the(_keyAsEitherAttributeNameOrAlias).isNotAValidKey()) {
 				continue;
 			}
@@ -1186,36 +1184,60 @@ function WulechuanImpartationOperator() {
 				_aliasesArrayOfCurrentKey = [_aliasesArrayOfCurrentKey];
 			}
 
-			// Use an object instead of an array to avoid duplications easily.
-			_nonDuplicatedAliasesForCurrentAttributeName = {};
-			_recordsForMappingArrays[_attributeName] = _nonDuplicatedAliasesForCurrentAttributeName;
 
-			for (_i=0; _i<_aliasesArrayOfCurrentKey.length; _i++) {
+
+
+			// Use an object instead of an array to avoid duplications easily.
+			if (_the(
+					_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName]
+				).isNotAValidObject()
+			) {
+				_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName] = {};
+			}
+
+			_nonDuplicatedAliasesForCurrentAttributeName =
+				_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName];
+
+
+
+
+			for (var _i=0; _i<_aliasesArrayOfCurrentKey.length; _i++) {
 				_alias = _aliasesArrayOfCurrentKey[_i];
 				_theAliasIsActuallyAnAttribute =
-					theSourceObjectToImpartAttributesFrom.hasOwnProperty(
-						_alias
-					);
+					theSourceObjectToImpartAttributesFrom
+						.hasOwnProperty(_alias);
 
 				if (_theAliasIsActuallyAnAttribute) {
-					_reportMultilingualErrors({
-						'zh-CN':
-							'所选别名“‘'+_alias+'”与属性重名。'
-							,
+					if (_alias !== _attributeName) {
+						_reportMultilingualErrors({
+							'zh-CN':
+								'所选别名“‘'+_alias+'”与另一属性重名。'
+								,
 
-						'en-US':
-							'The alias "'+_alias+'" is actually an attribute.'
-					});
+							'en-US':
+								'The alias "'+_alias+'" is actually another existing attribute.'
+						});
 
-					// Although at present the "stop" method does nothing
-					// if it's invoked within the last stage.
-					// But what if this piece of code were settled
-					// into another non-ending stage in the future?
-					stagesOfClassRoute.stop();
-					stagesOfObjectRoute.stop();
+						// Although at present the "stop" method does nothing
+						// if it's invoked within the last stage.
+						// But what if this piece of code were settled
+						// into another non-ending stage in the future?
+						stagesOfClassRoute.stop();
+						stagesOfObjectRoute.stop();
+					}
 					
 					continue;
 				}
+
+
+
+				_theAliasOfAKeyIsTheSameAsTheKeyItself =
+					_alias === _keyAsEitherAttributeNameOrAlias;
+				if (_theAliasOfAKeyIsTheSameAsTheKeyItself) {
+					continue;
+				}
+
+
 
 				_nonDuplicatedAliasesForCurrentAttributeName[_alias] = true;
 				_flatternedRecordsForBackwardsMapping[_alias] =
@@ -1225,74 +1247,60 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _addAliasesOfAttributesToImpartationSourceObject() {
-		var _granteeForCurrentAttribute;
-		for (var attributeName in finallyUsedImpartationProfile) {
-			var attribute = theSourceObjectToImpartAttributesFrom[attributeName];
-			var attributeImpartationName = finallyUsedImpartationProfile[attributeName];
+		for (var _alias in allAliasesToAddForAllAttributesFlattenedBackwardsMapping) {
+			var _attributeName = allAliasesToAddForAllAttributesFlattenedBackwardsMapping[_alias];
+			var _attribute = theSourceObjectToImpartAttributesFrom[_attributeName];
 
-			var shouldSkip = false;
-			if (shouldSkip) continue;
-
-			var customizedImpartationMethod = usedImpartationProfileOfClass[attributeName];
-
-			if (typeof customizedImpartationMethod === 'function') {
-				customizedImpartationMethod(
-					theSourceObjectToImpartAttributesFrom,
-					_granteeForCurrentAttribute
-				);
-				continue;
-			}
-
-			var attributeIsAMethod = typeof attribute === 'function';
-			var attributeIsAProperty = typeof attribute !== 'function';
-
-			if (attributeIsAMethod) {
+			if (typeof _attribute === 'function') {
 				_impartOneMethodTheDefaultWay(
-					theSourceObjectToImpartAttributesFrom,
-					attributeName,
-					_granteeForCurrentAttribute,
-					attributeImpartationName
+					_attributeName,
+					_alias,
+					theSourceObjectToImpartAttributesFrom
 				);
-				continue;
-			}
-
-			if (attributeIsAProperty) {
+			} else {
 				_impartOnePropertyTheDefaultWay(
-					theSourceObjectToImpartAttributesFrom,
-					attributeName,
-					_granteeForCurrentAttribute,
-					attributeImpartationName
+					_attributeName,
+					_alias,
+					theSourceObjectToImpartAttributesFrom
 				);
-				continue;
 			}
 		}
 	}
 
 	function _addAttributesDirectlyToGrantee() {
+		for (var _alias in allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping) {
+			var _attributeName = allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping[_alias];
+			var _attribute = theSourceObjectToImpartAttributesFrom[_attributeName];
 
+			if (typeof _attribute === 'function') {
+				_impartOneMethodTheDefaultWay(_attributeName, _alias, grantee);
+			} else {
+				_impartOnePropertyTheDefaultWay(_attributeName, _alias, grantee);
+			}
+		}
 	}
 
-	function _impartOneMethodTheDefaultWay(objectToImpart, oldName, granteeOfMethod, newName) {
-		Object.defineProperty(objectToImpart, newName,
+	function _impartOneMethodTheDefaultWay(_methodName, _alias, _granteeOfMethod) {
+		Object.defineProperty(_granteeOfMethod, _alias,
 			{
 				enumerable: true,
 				get: function () {
-					return objectToImpart[oldName];
+					return theSourceObjectToImpartAttributesFrom[_methodName];
 				}
 				// method should have no setter
 			}
 		);
 	}
 
-	function _impartOnePropertyTheDefaultWay(objectToImpart, propertyOldName, granteeOfProperty, propertyNewName) {
-		Object.defineProperty(objectToImpart, propertyNewName,
+	function _impartOnePropertyTheDefaultWay(_propertyName, _alias, _granteeOfProperty) {
+		Object.defineProperty(_granteeOfProperty, _alias,
 			{
 				enumerable: true,
 				get: function () {
-					return objectToImpart[propertyOldName];
+					return theSourceObjectToImpartAttributesFrom[_propertyName];
 				},
 				set: function (newValue) {
-					objectToImpart[propertyOldName] = newValue;
+					theSourceObjectToImpartAttributesFrom[_propertyName] = newValue;
 				}
 			}
 		);
