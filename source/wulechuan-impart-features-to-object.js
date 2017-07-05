@@ -470,6 +470,13 @@ function WulechuanImpartationOperator() {
 
 
 
+	var errorMessageDesiredAttributeNotFound_zhCN =
+		'给定对象或给定类之实例没有名为';
+
+	var errorMessageDesiredAttributeNotFound_enUS =
+		'The provided object, or the instance of the provided class '+
+		'doesn\'t have an attribute named ';
+
 
 
 
@@ -491,6 +498,7 @@ function WulechuanImpartationOperator() {
 	var usedImpartationProfileNameOfClass;
 	var isUsingImplicitProfileOfClass = true; // make getter and setter for each and every attribute.
 	var isUsingDefaultProfileOfClass = false;
+
 	var usedImpartationProfileOfClass;
 
 	var theSourceObjectToImpartAttributesFrom;
@@ -499,8 +507,10 @@ function WulechuanImpartationOperator() {
 	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
 
 	var usedChiefName;
-	var allAvailableAliasesForAllAttributes;
-	var allAttributesToAddDirectlyUnderGrantee;
+	var allAvailableAliasesForAllAttributes = {};
+	var allAvailableAliasesForAllAttributesFlattenedBackwardsMapping = {};
+	var allAttributesToAddDirectlyUnderGrantee = {};
+	var allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping = {};
 
 	var grantee;
 
@@ -643,11 +653,11 @@ function WulechuanImpartationOperator() {
 				return !_the(subject).isAValidObject();
 			},
 
-			isAValidArray: function() {
+			isAnArray: function() {
 				return Array.isArray(subject);
 			},
 
-			isNotAValidArray: function() {
+			isNotAnArray: function() {
 				return !Array.isArray(subject);
 			},
 
@@ -879,6 +889,13 @@ function WulechuanImpartationOperator() {
 					'must be an object or an array, and not a null.'
 			});
 
+			// Although at present the "stop" method does nothing
+			// if it's invoked within the last stage.
+			// But what if this piece of code were settled
+			// into another non-ending stage in the future?
+			stagesOfClassRoute.stop();
+			stagesOfObjectRoute.stop();
+
 			return;
 		}
 
@@ -899,7 +916,7 @@ function WulechuanImpartationOperator() {
 
 
 	function _impartIt() {
-		_decideAllAliaesToUseFinally();
+		_decideAllAliasesToUseFinally();
 
 		if (!usedChiefName) {
 
@@ -984,60 +1001,168 @@ function WulechuanImpartationOperator() {
 		return true;
 	}
 
-	function _decideAllAliaesToUseFinally() {
-		allAvailableAliasesForAllAttributes = {};
-		allAttributesToAddDirectlyUnderGrantee = {};
-
-
-
-
-		var attributeName;
-
+	function _decideAllAliasesToUseFinally() {
 		if (usedImpartationProfileOfClass) {
-			for (attributeName in usedImpartationProfileOfClass) {
-				if (!theSourceObjectToImpartAttributesFrom.hasOwnProperty(attributeName)) {
-					_reportMultilingualErrors({
-						'zh-CN':
-							'对象或实例没有名为“'+attributeName+'”的属性或方法函数。',
-
-						'en-US':
-							''
-					});
-
-					stagesOfClassRoute.stop();
-					stagesOfObjectRoute.stop();
-
-					continue;
-				}
-
-				finallyUsedImpartationProfile[attributeName] = usedImpartationProfileOfClass[attributeName];
-			}
+			_decideAllAliasesToUseAccordingToProfileOfClass();
 		} else {
-			for (attributeName in theSourceObjectToImpartAttributesFrom) {
-				finallyUsedImpartationProfile[attributeName] = theSourceObjectToImpartAttributesFrom[attributeName];
-			}
+			_collectAllAttributesFromTheObjectToImpart();
 		}
 
-		if (attributesAliasesToAddAdditionalToProfileDefined) {
-			for (attributeName in attributesAliasesToAddAdditionalToProfileDefined) {
-				if (!finallyUsedImpartationProfile.hasOwnProperty(attributeName)) {
+		if () {
+
+		}
+	}
+
+	function _collectAllAttributesFromTheObjectToImpart() {
+		for (var _attributeName in theSourceObjectToImpartAttributesFrom) {
+			allAvailableAliasesForAllAttributes[_attributeName] =
+				_attributeName;
+
+			allAvailableAliasesForAllAttributesFlattenedBackwardsMapping[_attributeName] =
+				_attributeName;
+		}
+	}
+
+	function _decideAllAliasesToUseAccordingToProfileOfClass() {
+		var _chiefNameAccordingToProfileAttibute =
+			usedImpartationProfileOfClass[propertyName_nameToUseForTheObjectItself];
+
+		if (_the(_chiefNameAccordingToProfileAttibute).isANonEmptyString()) {
+			usedChiefName = _chiefNameAccordingToProfileAttibute;
+		}
+
+		_decideAllAliasesToAddToImpartationSourceObject();
+		_decideAllAttributesToAddToGranteeDirectly();
+	}
+
+	function _decideAllAliasesToAddToImpartationSourceObject() {
+		var _attributesAliasesToAddAccordingToProfile =
+			usedImpartationProfileNameOfClass[propertyName_attributesAliasesToAdd];
+
+		var _i;
+		var _attributeIsFound;
+		var _attributeName;
+		var _attributeAlias;
+		var _attributeAliases;
+		var _nonDuplicatedAliases;
+
+
+		if (_the(_attributesAliasesToAddAccordingToProfile).isAValidObject()) {
+			for (_attributeName in _attributesAliasesToAddAccordingToProfile) {
+				_attributeIsFound =
+					theSourceObjectToImpartAttributesFrom.hasOwnProperty(_attributeName);
+
+				if ( ! _attributeIsFound) {
 					_reportMultilingualErrors({
 						'zh-CN':
-							'视为“'+usedImpartationProfileNameOfClass+
-							'”变体的实例，没有名为“'+attributeName+'”的属性或方法函数。',
+							errorMessageDesiredAttributeNotFound_zhCN+
+							'“'+_attributeName+'”的属性。'
+							,
 
 						'en-US':
-							''
+							errorMessageDesiredAttributeNotFound_enUS+
+							'"'+_attributeName+'".'
 					});
 
+					// Although at present the "stop" method does nothing
+					// if it's invoked within the last stage.
+					// But what if this piece of code were settled
+					// into another non-ending stage in the future?
 					stagesOfClassRoute.stop();
 					stagesOfObjectRoute.stop();
 
 					continue;
 				}
 
-				finallyUsedImpartationProfile[attributeName] = attributesAliasesToAddAdditionalToProfileDefined[attributeName];
+				_attributeAliases =
+					_attributesAliasesToAddAccordingToProfile[_attributeName];
+
+				if (_the(_attributeAliases).isNotAnArray()) {
+					_attributeAliases = [_attributeAliases];
+				}
+
+				// Use an object instead of an array to avoid duplications easily.
+				_nonDuplicatedAliases = {};
+				allAvailableAliasesForAllAttributes[_attributeName] = _nonDuplicatedAliases;
+
+				for (_i=0; _i<_attributeAliases.length; _i++) {
+					_attributeAlias = _attributeAliases[_i];
+					_nonDuplicatedAliases[_attributeAlias] = true;
+					allAvailableAliasesForAllAttributesFlattenedBackwardsMapping[_attributeAlias] =
+						_attributeName;
+				}
 			}
+
+		}
+	}
+
+	function _decideAllAttributesToAddToGranteeDirectly() {
+		var _attributesToAddDirectlyUnderGranteeAccordingToProfile =
+			usedImpartationProfileNameOfClass[propertyName_attributesToAddDirectlyUnderGrantee];
+
+		var _i;
+		var _attributeIsFound;
+		var _attributeName;
+		var _attributeAlias;
+		var _attributeAliases;
+		var _nonDuplicatedAliases;
+
+		if (_the(_attributesToAddDirectlyUnderGranteeAccordingToProfile).isAValidObject()) {
+
+			var _attributeNameOrAlias, _attributeMatchesAnAliase;
+
+			for (_attributeNameOrAlias in _attributesToAddDirectlyUnderGranteeAccordingToProfile) {
+				_attributeIsFound =
+					theSourceObjectToImpartAttributesFrom.hasOwnProperty(_attributeNameOrAlias);
+
+				if ( ! _attributeIsFound) {
+					_attributeMatchesAnAliase =
+						allAvailableAliasesForAllAttributesFlattenedBackwardsMapping[_attributeNameOrAlias];
+				}
+
+				if ( ! _attributeIsFound && ! _attributeMatchesAnAliase) {
+					_reportMultilingualErrors({
+						'zh-CN':
+							errorMessageDesiredAttributeNotFound_zhCN+
+							'“'+_attributeName+'”的属性;'+
+							'同时也没有此别名。'
+							,
+
+						'en-US':
+							errorMessageDesiredAttributeNotFound_enUS+
+							'"'+_attributeName+'".'+
+							'Nor does an alias match this caption.'
+					});
+
+					// Although at present the "stop" method does nothing
+					// if it's invoked within the last stage.
+					// But what if this piece of code were settled
+					// into another non-ending stage in the future?
+					stagesOfClassRoute.stop();
+					stagesOfObjectRoute.stop();
+
+					continue;
+				}
+
+				_attributeAliases =
+					_attributesToAddDirectlyUnderGranteeAccordingToProfile[_attributeNameOrAlias];
+
+				if (_the(_attributeAliases).isNotAnArray()) {
+					_attributeAliases = [_attributeAliases];
+				}
+
+				// Use an object instead of an array to avoid duplications easily.
+				_nonDuplicatedAliases = {};
+				allAttributesToAddDirectlyUnderGrantee[_attributeName] = _nonDuplicatedAliases;
+
+				for (_i=0; _i<_attributeAliases.length; _i++) {
+					_attributeAlias = _attributeAliases[_i];
+					_nonDuplicatedAliases[_attributeAlias] = true;
+					allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping[_attributeAlias] =
+						_attributeName;
+				}
+			}
+
 		}
 	}
 
