@@ -3,8 +3,8 @@
 
 
 "@wulechuan/apply-one-stage-one-method-pattern@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@wulechuan/apply-one-stage-one-method-pattern/-/apply-one-stage-one-method-pattern-1.0.10.tgz#45fc0168f6fdf4947ad78958a9bc5b3ffb223fae"
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@wulechuan/apply-one-stage-one-method-pattern/-/apply-one-stage-one-method-pattern-1.0.12.tgz#f6bd1fb4edfa7596937a789f6ce5d51eb47f4c7a"
 
 abbrev@1:
   version "1.1.0"

@@ -11,9 +11,9 @@ module.exports = WulechuanImpartationOperator;
  * 
  * ----- readme start -----
  * 
- * [//]: # "npm"
+ * # npm
  * 
- * [//]: <> "[@wulechuan/impart-features-to-object](https://www.npmjs.com/package/@wulechuan/impart-features-to-object)"
+ * [@wulechuan/impart-features-to-object](https://www.npmjs.com/package/@wulechuan/impart-features-to-object)
  * 
  * # 简介
  * 
@@ -535,6 +535,16 @@ function WulechuanImpartationOperator() {
 
 
 
+	function _buildAllEntranceMethods() {
+		for (var language in nameOfEntranceMethodInAllLanguages) {
+			if (entranceMethodsInAllLanguages[language]) continue;
+
+			entranceMethodsInAllLanguages[language] = (function (usingLanguage) {
+				return _entranceMethodCore.bind(thisOperator, usingLanguage);
+			})(language);
+		}
+	}
+
 	function _exposeEntranceMethodsInAllLanguages() {
 		for (var language in nameOfEntranceMethodInAllLanguages) {
 			var nameOfEntranceMethodInSpecificLanguage =
@@ -545,16 +555,6 @@ function WulechuanImpartationOperator() {
 				enumerable: true,
 				get: entranceMethodsInAllLanguages[language]
 			});
-		}
-	}
-
-	function _buildAllEntranceMethods() {
-		for (var language in nameOfEntranceMethodInAllLanguages) {
-			if (entranceMethodsInAllLanguages[language]) continue;
-
-			entranceMethodsInAllLanguages[language] = (function (usingLanguage) {
-				return _entranceMethodCore.bind(thisOperator, usingLanguage);
-			})(language);
 		}
 	}
 
