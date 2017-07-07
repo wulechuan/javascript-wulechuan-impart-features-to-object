@@ -11,7 +11,7 @@ const allSourceGlobsToWatch = productionSourceGlobJs.concat(
 
 const globsToClearBeforeRebuilding = [
 	productionBuildFolder,
-	examplesFolder + '/*.js',
+	examplesFolder + '/**/webpack*.js',
 	examplesFolder + '/**/*.js.map'
 ];
 
@@ -24,7 +24,6 @@ const replaceFileContent = require('gulp-change');
 const renameFiles = require('gulp-rename');
 const runTasksInSequence = require('gulp-sequence');
 const minifyJs = require('gulp-uglify');
-const pathTool = require('path');
 const pump = require('pump');
 const webpack = require('webpack-stream');
 
