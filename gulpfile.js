@@ -150,10 +150,7 @@ function isRunningInReleasingMode(processArguments) {
 	gulp.task('webpack: examples', () => {
 		return gulp.src(examplesGlobs)
 			.pipe(webpack(require('./webpack.config.js')))
-			.pipe(gulp.dest(pathTool.join(
-				examplesFolder,
-				'example-001'
-			)))
+			.pipe(gulp.dest('.'))
 			;
 	});
 

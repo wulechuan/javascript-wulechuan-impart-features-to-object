@@ -1,19 +1,57 @@
-var path = require('path');
+const examplesJavaScriptsMatchingPattern = 'examples/**/index.js';
+
+
+
+
+const glob = require('glob');
+const pathTool = require('path');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
+const allEntries = (function buildMultipleWebpackEntries(patternsArray) {
+	function processOnePattern(pattern) {
+		const matchedEntriesArray = glob.sync(pattern);
+		matchedEntriesArray.forEach(entry => {
+			// const nearistFolderName = pathTool.dirname(entry).split(pathTool.sep).pop();
+			// const entryName = nearistFolderName;
+			const entryName = pathTool.dirname(entry);
+
+			allEntriesInRelativePaths[entryName] = entry;
+			allEntries[entryName] = pathTool.resolve(__dirname, entry);
+		});
+	}
+
+	const allEntries = {};
+	const allEntriesInRelativePaths = {}; // for better printing
+
+	patternsArray.forEach(pattern => {
+		processOnePattern(pattern);
+	});
+
+	console.log('All entries for webpack:');
+	console.log(JSON.stringify(allEntriesInRelativePaths, null, '\t'));
+
+	return allEntries;
+})([
+	examplesJavaScriptsMatchingPattern
+]);
 
 module.exports = {
-	entry: './examples/example-001/index.js',
+	entry: allEntries,
 	output: {
-		filename: 'webpack-bundle.js',
-		path: path.resolve(__dirname, 'examples/example-001')
+		path: pathTool.resolve(__dirname),
+		filename: '[name]/webpack-bundle.js'
 	},
 	rules: [
 		{
 			test: /\.js$/,
 			exclude: [
-				path.resolve(__dirname, 'node_modules')
+				pathTool.resolve(__dirname, 'node_modules')
 			],
 			use: ['source-map-loader'],
 			enforce: 'pre'
 		}
+	],
+	plugins: [
+		new UglifyJSPlugin()
 	]
 };

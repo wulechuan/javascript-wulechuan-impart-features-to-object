@@ -359,7 +359,7 @@ module.exports = WulechuanImpartationOperator;
  * 
  */
 function WulechuanImpartationOperator() {
-	var WulechuanApplyOneStageOneMethodProgrammingPatternTo =
+	var WulechuanApplyOneStageOneMethodProgrammingPatternToMethodsOwner =
 		// require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
 		require('@wulechuan/apply-one-stage-one-method-pattern');
 
@@ -524,7 +524,6 @@ function WulechuanImpartationOperator() {
 
 	var stagesOfClassRoute  = _defineExecutionRouteForImpartingFromAClassInstance();
 	var stagesOfObjectRoute = _defineExecutionRouteForImpartingFromAnObject();
-	console.log(thisOperator);
 
 
 	_buildAllEntranceMethods();
@@ -580,7 +579,7 @@ function WulechuanImpartationOperator() {
 
 	function _defineExecutionRouteForImpartingFromAClassInstance() {
 		var stagesOfClassRoute =
-			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(
+			new WulechuanApplyOneStageOneMethodProgrammingPatternToMethodsOwner(
 				thisOperator, preferredLanguage
 			);
 
@@ -629,7 +628,7 @@ function WulechuanImpartationOperator() {
 
 	function _defineExecutionRouteForImpartingFromAnObject() {
 		var stagesOfObjectRoute =
-			new WulechuanApplyOneStageOneMethodProgrammingPatternTo(
+			new WulechuanApplyOneStageOneMethodProgrammingPatternToMethodsOwner(
 				thisOperator, preferredLanguage
 			);
 

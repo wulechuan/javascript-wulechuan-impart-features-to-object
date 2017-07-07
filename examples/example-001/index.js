@@ -1,4 +1,5 @@
-window.WulechuanImpartationOperator = require('../../source/wulechuan-impart-features-to-object');
+window.WulechuanImpartationOperator =
+	require('@wulechuan/impart-features-to-object');
 
 
 var theOperator = new window.WulechuanImpartationOperator;
