@@ -11,6 +11,10 @@ module.exports = WulechuanImpartationOperator;
  * 
  * ----- readme start -----
  * 
+ * [//]: # "npm"
+ * 
+ * [//]: <> "[@wulechuan/impart-features-to-object](https://www.npmjs.com/package/@wulechuan/impart-features-to-object)"
+ * 
  * # 简介
  * 
  * 以所谓“传授（impart）”的程序写法实现所谓“混入（Mixin）”功能，使得“受体”具有被传授的属性和方法函数。
