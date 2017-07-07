@@ -3,7 +3,7 @@
   "author": "吴乐川",
   "version": "1.0.0",
   "description": "以所谓“传授（impart）”的程序写法实现所谓“混入（Mix-in）”功能，使得“受体”具有被传授的属性和方法函数。并且，这些被传授的属性和方法均被包裹在getter和setter内，受到保护。",
-  "main": "build/wulechuan-impart-features-to-object.min.js",
+  "main": "build/@wulechuan-impart-features-to-object.min.js",
   "scripts": {
     "dev": "require-self && gulp",
     "release": "gulp --release",
