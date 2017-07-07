@@ -475,9 +475,10 @@ function WulechuanImpartationOperator() {
 	var propertyName_attributesAliasesToAdd = 'attributesAliasesToAdd';
 	var propertyName_attributesToAddDirectlyUnderGrantee = 'attributesToAddDirectlyUnderGrantee';
 	var propertyName_nameToUseForTheObjectItself = 'chiefPropertyNameForTheObjectItself';
+	var propertyName_chiefPropertySetterViaProfiles = 'chiefPropertySetter';
 	var chiefNameRegExps = [
 		new RegExp('\\$\\{主名称\\}', 'g'),
-		new RegExp('\\$\\{ChiefName\\}', 'g')
+		new RegExp('\\$\\{[cC]hief[nN]ame\\}', 'g')
 	];
 
 
@@ -521,17 +522,17 @@ function WulechuanImpartationOperator() {
 	var grantee;
 
 
-	if (preferredLanguage && typeof preferredLanguage === 'string') {
-		preferredLanguage = 'zh-CN';
-	}
 
 
 	var stagesOfClassRoute  = _defineExecutionRouteForImpartingFromAClassInstance();
 	var stagesOfObjectRoute = _defineExecutionRouteForImpartingFromAnObject();
 
-
 	_buildAllEntranceMethods();
 	_exposeEntranceMethodsInAllLanguages();
+
+
+
+
 
 
 
@@ -978,6 +979,20 @@ function WulechuanImpartationOperator() {
 			_tryUpdatingChiefName(
 				usedImpartationProfileOfClass[propertyName_nameToUseForTheObjectItself]
 			);
+
+
+
+
+			// Detect the setter defiend within the used profile
+			if (typeof chiefPropertyCustomizedSetter !== 'function') {
+				var _chiefPropertySetterViaUsedProfile = usedImpartationProfileOfClass[
+					propertyName_chiefPropertySetterViaProfiles
+				];
+				if (typeof _chiefPropertySetterViaUsedProfile === 'function') {
+					chiefPropertyCustomizedSetter = _chiefPropertySetterViaUsedProfile;
+				}
+			}
+			
 
 
 
