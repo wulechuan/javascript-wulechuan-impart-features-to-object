@@ -11,6 +11,8 @@ module.exports = WulechuanImpartationOperator;
  * 
  * ----- readme start -----
  * 
+ * # THIS IS NOT READY FOR USAGE!
+ * 
  * # npm
  * 
  * [@wulechuan/impart-features-to-object](https://www.npmjs.com/package/@wulechuan/impart-features-to-object)
@@ -813,23 +815,22 @@ function WulechuanImpartationOperator() {
 			stagesOfClassRoute.abort();
 		} else {
 			theClassConstructor = theGivenFunction;
-		}
 
-
-		allImpartationProfilesOfClass = theClassConstructor[
-			propertyName_wulechuanImpartationProfiles
-		];
-		if (_the(allImpartationProfilesOfClass).isNotAValidObject()) {
-			allImpartationProfilesOfClass = {};
-		}
-
-		if (_classHasAProfileNamed(propertyName_defaultProfile)) {
-			usedImpartationProfileOfClass = allImpartationProfilesOfClass[
-				propertyName_defaultProfile
+			allImpartationProfilesOfClass = theClassConstructor[
+				propertyName_wulechuanImpartationProfiles
 			];
-			usedImpartationProfileNameOfClass = propertyName_defaultProfile;
-			isUsingImplicitProfileOfClass = false;
-			isUsingDefaultProfileOfClass = true;
+			if (_the(allImpartationProfilesOfClass).isNotAValidObject()) {
+				allImpartationProfilesOfClass = {};
+			}
+
+			if (_classHasAProfileNamed(propertyName_defaultProfile)) {
+				usedImpartationProfileOfClass = allImpartationProfilesOfClass[
+					propertyName_defaultProfile
+				];
+				usedImpartationProfileNameOfClass = propertyName_defaultProfile;
+				isUsingImplicitProfileOfClass = false;
+				isUsingDefaultProfileOfClass = true;
+			}
 		}
 	}
 

@@ -1,3 +1,5 @@
+# THIS IS NOT READY FOR USAGE!
+
 # npm
 
 [@wulechuan/impart-features-to-object](https://www.npmjs.com/package/@wulechuan/impart-features-to-object)
