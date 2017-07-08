@@ -356,11 +356,6 @@ module.exports = WulechuanImpartationOperator;
  * the provided input object itself it the one to impart properties from.
  *
  * @class
- * 
- * @instance
- * @property {function} 传授 - 此为impart函数的包裹函数，其将impart函数的优选语言定为“简体中文”。
- * @property {function} impart - the wrapped impart function, taking the 'en-US' as the preferred language
- * 
  */
 function WulechuanImpartationOperator() {
 	var WulechuanApplyOneStageOneMethodProgrammingPatternToMethodsOwner =
@@ -502,7 +497,7 @@ function WulechuanImpartationOperator() {
 	var theClassConstructionOptions;
 	var allImpartationProfilesOfClass;
 	var usedImpartationProfileNameOfClass;
-	var isUsingImplicitProfileOfClass = true; // make getter and setter for each and every attribute.
+	var isUsingImplicitProfileOfClass = true; // make getter/setter for each and every attribute.
 	var isUsingDefaultProfileOfClass = false;
 
 	var usedImpartationProfileOfClass;
@@ -514,9 +509,9 @@ function WulechuanImpartationOperator() {
 	var attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined = {};
 
 	var usedChiefName;
-	var allAliasesToAddForAllAttributes = {};
+	// var allAliasesToAddForAllAttributes = {};
 	var allAliasesToAddForAllAttributesFlattenedBackwardsMapping = {};
-	var allAttributesToAddDirectlyUnderGrantee = {};
+	// var allAttributesToAddDirectlyUnderGrantee = {};
 	var allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping = {};
 
 	var grantee;
@@ -821,13 +816,17 @@ function WulechuanImpartationOperator() {
 		}
 
 
-		allImpartationProfilesOfClass = theClassConstructor[propertyName_wulechuanImpartationProfiles];
+		allImpartationProfilesOfClass = theClassConstructor[
+			propertyName_wulechuanImpartationProfiles
+		];
 		if (_the(allImpartationProfilesOfClass).isNotAValidObject()) {
 			allImpartationProfilesOfClass = {};
 		}
 
 		if (_classHasAProfileNamed(propertyName_defaultProfile)) {
-			usedImpartationProfileOfClass = allImpartationProfilesOfClass[propertyName_defaultProfile];
+			usedImpartationProfileOfClass = allImpartationProfilesOfClass[
+				propertyName_defaultProfile
+			];
 			usedImpartationProfileNameOfClass = propertyName_defaultProfile;
 			isUsingImplicitProfileOfClass = false;
 			isUsingDefaultProfileOfClass = true;
@@ -893,7 +892,9 @@ function WulechuanImpartationOperator() {
 
 
 
-	function addAliasesForAttributesAdditionalToProfileDefinedAliases(_attributesAliasesToAdd) {
+	function addAliasesForAttributesAdditionalToProfileDefinedAliases(
+		_attributesAliasesToAdd
+	) {
 		if (_the(_attributesAliasesToAdd).isANonEmptyString()) {
 			var _tempConfiguration = {};
 			_tempConfiguration[propertyName_nameToUseForTheObjectItself] =
@@ -919,7 +920,9 @@ function WulechuanImpartationOperator() {
 		}
 	}
 
-	function addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions(_attributesToAddDirectlyUnderGrantee) {
+	function addAttributesDirectlyUnderGranteeAdditionalToProfileDefinitions(
+		_attributesToAddDirectlyUnderGrantee
+	) {
 		if (_the(_attributesToAddDirectlyUnderGrantee).isAValidObject()) {
 			_mergeAttribtesFromBToA(
 				attributesToAddDirectlyUnderGranteeAdditionalToProfileDefined,
@@ -973,7 +976,8 @@ function WulechuanImpartationOperator() {
 
 	function _impartIt() {
 		_decideAllAliasesToUseFinally();
-		_defineAnAttributeForTheImpartedObject();
+
+		_defineTheChiefPropertyForTheImpartedObject();
 		_addAliasesOfAttributesToImpartedObject();
 		_addAttributesDirectlyToGrantee();
 
@@ -1022,8 +1026,9 @@ function WulechuanImpartationOperator() {
 
 			// Try to add attributes directly under grantee according to class profile.
 			var _attributesToAddDirectlyUnderGranteeAccordingToProfile =
-				usedImpartationProfileNameOfClass[propertyName_attributesToAddDirectlyUnderGrantee]
-				;
+				usedImpartationProfileNameOfClass[
+					propertyName_attributesToAddDirectlyUnderGrantee
+				];
 			_aliasesAreToAddToImpartationSourceObject = false;
 			_decideAliasesAccordingTo(
 				_attributesToAddDirectlyUnderGranteeAccordingToProfile,
@@ -1078,7 +1083,7 @@ function WulechuanImpartationOperator() {
 	}
 
 	function _decideAliasesAccordingTo(_aliasesRules, _aliasesAreToAddToImpartationSourceObject) {
-		var _nonDuplicatedAliasesForAllInvolvedAttributes;
+		// var _nonDuplicatedAliasesForAllInvolvedAttributes;
 		var _flatternedRecordsForBackwardsMapping;
 
 
@@ -1091,14 +1096,14 @@ function WulechuanImpartationOperator() {
 
 
 		if (_aliasesAreToAddToImpartationSourceObject) {
-			_nonDuplicatedAliasesForAllInvolvedAttributes =
-				allAliasesToAddForAllAttributes;
+			// _nonDuplicatedAliasesForAllInvolvedAttributes =
+			// 	allAliasesToAddForAllAttributes;
 
 			_flatternedRecordsForBackwardsMapping =
 				allAliasesToAddForAllAttributesFlattenedBackwardsMapping;
 		} else {
-			_nonDuplicatedAliasesForAllInvolvedAttributes =
-				allAttributesToAddDirectlyUnderGrantee;
+			// _nonDuplicatedAliasesForAllInvolvedAttributes =
+			// 	allAttributesToAddDirectlyUnderGrantee;
 
 			_flatternedRecordsForBackwardsMapping =
 				allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping;
@@ -1117,6 +1122,8 @@ function WulechuanImpartationOperator() {
 
 		// The found valid attribute name of the impartation source
 		var _attributeName;
+		var _mappedAttributeNameOrAFunction;
+		var _aliasExistedDefinitionIsAFunction;
 
 		// A single value, which is detected to be an alias, to deal with.
 		var _aliasAmongTheValue;
@@ -1125,7 +1132,7 @@ function WulechuanImpartationOperator() {
 
 
 		var _aliasesArrayFromValueOfCurrentKey;
-		var _nonDuplicatedAliasesForCurrentAttributeName;
+		// var _nonDuplicatedAliasesForCurrentAttributeName;
 
 
 
@@ -1134,6 +1141,9 @@ function WulechuanImpartationOperator() {
 				continue;
 			}
 
+			_attributeName = '';
+			_keyIsAnAliasThatIsAlreadyDefined = false;
+
 			_keyIsAnAttributeName =
 				theSourceObjectToImpartAttributesFrom.hasOwnProperty(
 					_keyAsEitherAttributeNameOrAlias
@@ -1141,18 +1151,23 @@ function WulechuanImpartationOperator() {
 
 			if (_keyIsAnAttributeName) {
 				_attributeName = _keyAsEitherAttributeNameOrAlias;
-				_keyIsAnAliasThatIsAlreadyDefined = false;
 			} else {
-				_attributeName =
+				_mappedAttributeNameOrAFunction =
 					_flatternedRecordsForBackwardsMapping[
 						_keyAsEitherAttributeNameOrAlias
 					];
 				
-				if (_attributeName) {
+				if (_mappedAttributeNameOrAFunction) {
 					_keyIsAnAliasThatIsAlreadyDefined = true;
+
+					_aliasExistedDefinitionIsAFunction =
+						_the(_mappedAttributeNameOrAFunction).isAFunction();
+
+					if ( ! _aliasExistedDefinitionIsAFunction) {
+						_attributeName = _mappedAttributeNameOrAFunction;
+					}
 				}
 			}
-
 
 
 
@@ -1160,31 +1175,29 @@ function WulechuanImpartationOperator() {
 			_valueIsAFunction = _the(_valueOfARule).isAFunction();
 
 
+
 			if (_valueIsAFunction) { // We are about to define a new attribute via the function
 
 				if (_keyIsAnAliasThatIsAlreadyDefined) {
-					var _mappedValue = // Might be either an attribute name of a function
-						_flatternedRecordsForBackwardsMapping[_keyAsEitherAttributeNameOrAlias];
-
-					var _existedDefinitionIsAlsoAFunction = _the(_mappedValue).isAFunction();
-
 					_reportMultilingualErrors({
 						'zh-CN':
 							'名称“'+_keyAsEitherAttributeNameOrAlias+'”'+
-							(_existedDefinitionIsAlsoAFunction ?
+							(
+								_aliasExistedDefinitionIsAFunction ?
 								'已另有函数定义其内容，' :
-								('已定义为属性“'+_mappedValue+'”之别名，')
+								('已定义为属性“'+_mappedAttributeNameOrAFunction+'”之别名，')
 							)+
 							'不应再以一函数重新定义之。'
 							,
 
 						'en-US':
 							'The caption "'+_keyAsEitherAttributeNameOrAlias+'"'+
-							(_existedDefinitionIsAlsoAFunction ?
+							(
+								_aliasExistedDefinitionIsAFunction ?
 								'is already defined via another function, ' :
 								(
 									'is already mapped to the attribute "'+
-									_mappedValue+'" as an alias of its, '
+									_mappedAttributeNameOrAFunction+'" as an alias of its, '
 								)
 							)+
 							'and should not be redefined.'
@@ -1225,30 +1238,33 @@ function WulechuanImpartationOperator() {
 				continue;
 			}
 
+
+
+
 			if (_the(_valueOfARule).isNotAnArray()) {
 				_aliasesArrayFromValueOfCurrentKey = [_valueOfARule];
 			}
 
 
 
-			// Use an object instead of an array to avoid duplications easily.
-			if (_the(
-					_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName]
-				).isNotAValidObject()
-			) {
-				_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName] = {};
-			}
+			// // Use an object instead of an array to avoid duplications easily.
+			// if (_the(
+			// 		_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName]
+			// 	).isNotAValidObject()
+			// ) {
+			// 	_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName] = {};
+			// }
 
-			_nonDuplicatedAliasesForCurrentAttributeName =
-				_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName];
+			// _nonDuplicatedAliasesForCurrentAttributeName =
+			// 	_nonDuplicatedAliasesForAllInvolvedAttributes[_attributeName];
 
 
 
 			for (var _i=0; _i<_aliasesArrayFromValueOfCurrentKey.length; _i++) {
 				_aliasAmongTheValue = _aliasesArrayFromValueOfCurrentKey[_i];
+
 				_theAliasIsActuallyAnAttribute =
-					theSourceObjectToImpartAttributesFrom
-						.hasOwnProperty(_aliasAmongTheValue);
+					theSourceObjectToImpartAttributesFrom.hasOwnProperty(_aliasAmongTheValue);
 
 				if (_theAliasIsActuallyAnAttribute) {
 					if (_aliasAmongTheValue !== _attributeName) {
@@ -1258,7 +1274,8 @@ function WulechuanImpartationOperator() {
 								,
 
 							'en-US':
-								'The alias "'+_aliasAmongTheValue+'" is actually another existing attribute.'
+								'The alias "'+_aliasAmongTheValue+
+								'" is actually another existing attribute.'
 						});
 
 						// Although at present the "abort" method does nothing
@@ -1282,14 +1299,19 @@ function WulechuanImpartationOperator() {
 
 
 
-				_nonDuplicatedAliasesForCurrentAttributeName[_aliasAmongTheValue] = true;
-				_flatternedRecordsForBackwardsMapping[_aliasAmongTheValue] =
-					_attributeName;
+				// _nonDuplicatedAliasesForCurrentAttributeName[_aliasAmongTheValue] = true;
+				if (_valueIsAFunction) {
+					_flatternedRecordsForBackwardsMapping[_aliasAmongTheValue] =
+						_valueOfARule;
+				} else {
+					_flatternedRecordsForBackwardsMapping[_aliasAmongTheValue] =
+						_attributeName;
+				}
 			}
 		}
 	}
 
-	function _defineAnAttributeForTheImpartedObject() {
+	function _defineTheChiefPropertyForTheImpartedObject() {
 		if ( ! usedChiefName) {
 			_dealWithTheAbsentOfTheChiefName();
 			return false;
@@ -1388,25 +1410,43 @@ function WulechuanImpartationOperator() {
 
 	function _addAliasesOfAttributesToImpartedObject() {
 		for (var _alias in allAliasesToAddForAllAttributesFlattenedBackwardsMapping) {
-			var _attributeName = allAliasesToAddForAllAttributesFlattenedBackwardsMapping[_alias];
+			var _attributeNameOrAFunction = allAliasesToAddForAllAttributesFlattenedBackwardsMapping[_alias];
 
-			_impartOneAliasTheDefaultWay(
-				_attributeName,
-				_alias,
-				theSourceObjectToImpartAttributesFrom
-			);
+			if (_the(_attributeNameOrAFunction).isAFunction()) {
+				_defineAMethodUnder(
+					theSourceObjectToImpartAttributesFrom,
+					_alias,
+					_attributeNameOrAFunction,
+					null
+				);
+			} else {
+				_impartOneAliasTheDefaultWay(
+					_attributeNameOrAFunction,
+					_alias,
+					theSourceObjectToImpartAttributesFrom
+				);
+			}
 		}
 	}
 
 	function _addAttributesDirectlyToGrantee() {
 		for (var _alias in allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping) {
-			var _attributeName = allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping[_alias];
+			var _attributeNameOrAFunction = allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping[_alias];
 
-			_impartOneAliasTheDefaultWay(
-				_attributeName,
-				_alias,
-				grantee
-			);
+			if (_the(_attributeNameOrAFunction).isAFunction()) {
+				_defineAMethodUnder(
+					grantee,
+					_alias,
+					_attributeNameOrAFunction,
+					theSourceObjectToImpartAttributesFrom
+				);
+			} else {
+				_impartOneAliasTheDefaultWay(
+					_attributeNameOrAFunction,
+					_alias,
+					grantee
+				);
+			}
 		}
 	}
 
@@ -1429,5 +1469,13 @@ function WulechuanImpartationOperator() {
 		}
 
 		Object.defineProperty(_granteeOfAttribute, _alias, _configuration);
+	}
+
+	function _defineAMethodUnder(_methodOwner, _methodName, _methodFuction, _this_object) {
+		if (_the(_this_object).isAValidObject()) {
+			_methodFuction = _methodFuction.bind(_this_object);
+		}
+
+		_methodOwner[_methodName] = _methodFuction;
 	}
 }
