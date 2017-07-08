@@ -454,7 +454,7 @@ function WulechuanImpartationOperator() {
 
 
 	var methodNames_addAttributesDirectlyUnderGrantee_zhCN = [
-		'且设以下直接可用之属性',
+		'且为受体设以下直接可用之属性',
 	];
 	var methodNames_addAttributesDirectlyUnderGrantee_enUS = [
 		'addAttributesDirectlyUnderGrantee'
@@ -777,7 +777,7 @@ function WulechuanImpartationOperator() {
 					typeof sourceObject + '.'
 			});
 
-			stagesOfObjectRoute.stop();
+			stagesOfObjectRoute.abort();
 		} else {
 			theSourceObjectToImpartAttributesFrom = sourceObject;
 		}
@@ -807,7 +807,7 @@ function WulechuanImpartationOperator() {
 					typeof theGivenFunction + '.'
 			});
 
-			stagesOfClassRoute.stop();
+			stagesOfClassRoute.abort();
 		} else {
 			theClassConstructor = theGivenFunction;
 		}
@@ -869,7 +869,7 @@ function WulechuanImpartationOperator() {
 					'\nThe input was "'+profileName+'".'
 			});
 
-			stagesOfClassRoute.stop();			
+			stagesOfClassRoute.abort();			
 		}
 	}
 
@@ -900,8 +900,8 @@ function WulechuanImpartationOperator() {
 				_attributesAliasesToAdd
 			);
 		} else {
-			stagesOfClassRoute.stop();
-			stagesOfObjectRoute.stop();
+			stagesOfClassRoute.abort();
+			stagesOfObjectRoute.abort();
 		}
 	}
 
@@ -918,10 +918,14 @@ function WulechuanImpartationOperator() {
 				_attributesToAddDirectlyUnderGrantee
 			);
 		} else {
-			stagesOfClassRoute.stop();
-			stagesOfObjectRoute.stop();
+			stagesOfClassRoute.abort();
+			stagesOfObjectRoute.abort();
 		}
 	}
+
+
+
+
 
 	function towards(_grantee) {
 		if (_the(_grantee).isNeitherAnObjectNorAnArray()) {
@@ -934,12 +938,12 @@ function WulechuanImpartationOperator() {
 					'must be an object or an array, and not a null.'
 			});
 
-			// Although at present the "stop" method does nothing
+			// Although at present the "abort" method does nothing
 			// if it's invoked within the last stage.
 			// But what if this piece of code were settled
 			// into another non-ending stage in the future?
-			stagesOfClassRoute.stop();
-			stagesOfObjectRoute.stop();
+			stagesOfClassRoute.abort();
+			stagesOfObjectRoute.abort();
 
 			return;
 		}
@@ -958,7 +962,6 @@ function WulechuanImpartationOperator() {
 			return;
 		}
 	}
-
 
 	function _impartIt() {
 		_decideAllAliasesToUseFinally();
@@ -1145,12 +1148,12 @@ function WulechuanImpartationOperator() {
 						'Nor does an alias match this caption.'
 				});
 
-				// Although at present the "stop" method does nothing
+				// Although at present the "abort" method does nothing
 				// if it's invoked within the last stage.
 				// But what if this piece of code were settled
 				// into another non-ending stage in the future?
-				stagesOfClassRoute.stop();
-				stagesOfObjectRoute.stop();
+				stagesOfClassRoute.abort();
+				stagesOfObjectRoute.abort();
 
 				continue;
 			}
@@ -1196,12 +1199,12 @@ function WulechuanImpartationOperator() {
 								'The alias "'+_alias+'" is actually another existing attribute.'
 						});
 
-						// Although at present the "stop" method does nothing
+						// Although at present the "abort" method does nothing
 						// if it's invoked within the last stage.
 						// But what if this piece of code were settled
 						// into another non-ending stage in the future?
-						stagesOfClassRoute.stop();
-						stagesOfObjectRoute.stop();
+						stagesOfClassRoute.abort();
+						stagesOfObjectRoute.abort();
 					}
 					
 					continue;
