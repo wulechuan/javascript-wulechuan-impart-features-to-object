@@ -48,3 +48,7 @@ console.log('a.newShiningProperty.lovelyName: "'+a.newShiningProperty.lovelyName
 // 'Softimage XSI'
 
 window.a = a;
+
+window.iop = new window.WulechuanImpartationOperator;
+window.iop.impart;
+console.log(window.iop);

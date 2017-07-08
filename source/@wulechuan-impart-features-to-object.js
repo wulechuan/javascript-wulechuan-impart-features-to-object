@@ -361,7 +361,7 @@ module.exports = WulechuanImpartationOperator;
  */
 function WulechuanImpartationOperator() {
 	var WulechuanApplyOneStageOneMethodProgrammingPatternToMethodsOwner =
-		// require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/wulechuan-one-method-one-stage-pattern-builder');
+		// require('../node_modules/@wulechuan/apply-one-stage-one-method-pattern/source/@wulechuan-apply-one-stage-one-method-pattern');
 		require('@wulechuan/apply-one-stage-one-method-pattern');
 
 	var nameOfEntranceMethodInAllLanguages = {

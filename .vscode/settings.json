@@ -6,5 +6,5 @@
         // , "build": true
     },
     "express.portNumber": 8787,
-    "express.relativeRoot": "examples/example-001/"
+    "express.relativeRoot": "examples/example-002/"
 }
