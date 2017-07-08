@@ -6,7 +6,7 @@
   "main": "build/@wulechuan-impart-features-to-object.min.js",
   "scripts": {
     "dev": "require-self && gulp",
-    "ref": "gulp --release",
+    "rel": "gulp --release",
     "release": "gulp --release",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

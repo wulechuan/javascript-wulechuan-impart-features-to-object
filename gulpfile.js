@@ -30,7 +30,8 @@ const webpack = require('webpack-stream');
 
 const isToBuildForRelease = isRunningInReleasingMode(processArguments);
 const isToDevelopWithWatching = !isToBuildForRelease;
-
+global.isInDevelopmentMode = isToDevelopWithWatching;
+// console.log('gulp: isToDevelopWithWatching', isToDevelopWithWatching);
 
 function isRunningInReleasingMode(processArguments) {
 	const thoseArgumentsStandForRelease = [
@@ -123,7 +124,11 @@ function isRunningInReleasingMode(processArguments) {
 		var actionsToTake = [];
 
 		actionsToTake.push(gulp.src(productionSourceGlobJs));
-		actionsToTake.push(minifyJs());
+
+		if ( ! isToDevelopWithWatching) {
+			actionsToTake.push(minifyJs());
+		}
+
 		actionsToTake.push(renameFiles({
 			suffix: '.min'
 		}));

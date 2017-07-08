@@ -1,4 +1,7 @@
 const examplesJavaScriptsMatchingPattern = 'examples/**/index.js';
+const shouldMinifyJsFiles = !global.isInDevelopmentMode;
+// console.log('webpack: global.isInDevelopmentMode', global.isInDevelopmentMode);
+// console.log('webpack: shouldMinifyJsFiles', shouldMinifyJsFiles);
 
 
 
@@ -35,6 +38,12 @@ const allEntries = (function buildMultipleWebpackEntries(patternsArray) {
 	examplesJavaScriptsMatchingPattern
 ]);
 
+const allPlugins = [];
+
+if (shouldMinifyJsFiles) {
+	allPlugins.push(new UglifyJSPlugin);
+}
+
 module.exports = {
 	entry: allEntries,
 	output: {
@@ -51,7 +60,5 @@ module.exports = {
 			enforce: 'pre'
 		}
 	],
-	plugins: [
-		new UglifyJSPlugin()
-	]
+	plugins: allPlugins
 };
