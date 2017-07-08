@@ -203,19 +203,21 @@ So we need a solution, hopefully a slightly better one.
 	}
 
 	function My2DPoint() {
-		impart().theClass(My2DVector).as('position2D').to(this);
+		var impartationOperator = new WulechuanImpartationOperator;
+		impartationOperator.impart.anInstanceOf(My2DVector).as('position2D').to(this);
 	}
 
 	function My2DParticle() {
-		impart().theClass(My2DVector).as('position2D').renamedAs('pos').to(this);
+		var impartationOperator = new WulechuanImpartationOperator;
+		impartationOperator.impart.anInstanceOf(My2DVector).as('position2D').renamedAs('pos').to(this);
 
-		impart().theClass(My2DVector).as('velocity2D').renamedAs({
+		impartationOperator.impart.anInstanceOf(My2DVector).as('velocity2D').renamedAs({
 			speed: 'velocityLength',
 			speed2: 'squareSpeed'
 			velocityDirection: 'movingDirection'
 		}).to(this);
 
-		impart().theClass(My2DVector)
+		impartationOperator.impart.anInstanceOf(My2DVector)
 			.as('position2D')
 			.buildAccordingTo({
 				x: 3,
@@ -228,7 +230,7 @@ So we need a solution, hopefully a slightly better one.
 			})
 			.to(this);
 
-		impart().theClass(My2DVector)
+		impartationOperator.impart.anInstanceOf(My2DVector)
 			.usingThisProfile('force2D')
 			.addAliasesForAttributes({
 				strength: 's',
@@ -248,7 +250,9 @@ Thus the object literal gains new properties and methods.
 	};
 
 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
-	impart().theClass(My2DParticle).to(myLovelyObjectLiteral);
+
+	var impartationOperator = new WulechuanImpartationOperator;
+	impartationOperator.impart.anInstanceOf(My2DParticle).to(myLovelyObjectLiteral);
 
 
 One can imagine that an object literal can also treated
@@ -263,7 +267,8 @@ be it an instance, or another object literal.
 	};
 
 	var myObjectLiteralAsGrantee = { name: '吴乐川', email: 'wulechuan@live.com' };
-	impart
+	var impartationOperator = new WulechuanImpartationOperator;
+	impartationOperator.impart
 		.theObject(myObjectAsImpartationSource)
 		.to(myObjectLiteralAsGrantee);
 

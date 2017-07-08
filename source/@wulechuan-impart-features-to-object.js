@@ -13,6 +13,10 @@ module.exports = WulechuanImpartationOperator;
  * 
  * # THIS IS NOT READY FOR USAGE!
  * 
+ * # THIS IS NOT READY FOR USAGE!
+ * 
+ * # THIS IS NOT READY FOR USAGE!
+ * 
  * # npm
  * 
  * [@wulechuan/impart-features-to-object](https://www.npmjs.com/package/@wulechuan/impart-features-to-object)
@@ -72,28 +76,30 @@ module.exports = WulechuanImpartationOperator;
  * 	}
  * 
  * 	function 二维点() {
- * 		传授(true).实例对象源于此类(二维矢量).视作('二维位置').予(this);
- * 		// “传授(true)”中的“true”代表即便有错误也不抛出，而仅仅在控制台打印错误记录。
+ * 		var 传授操控器 = new WulechuanImportationOperator;
+ * 		传授操控器.传授.类(二维矢量).之实例对象().视作('二维位置').予(this);
  * 	}
  * 
  * 	function 二维粒子() {
- * 		传授().实例对象源于此类(二维矢量)
+ * 		var 传授操控器 = new WulechuanImportationOperator;
+ * 
+ * 		传授操控器.传授.类(二维矢量).之实例对象()
  * 			.视作('二维位置')
  * 			.且定名为('方位')    // 此例中故意将默认配置中的主名称“位置”改称“方位”。
  * 			.予(this); 
  * 
- * 		传授().实例对象源于此类(二维矢量)
+ * 		传授操控器.传授.类(二维矢量).之实例对象()
  * 			.视作('二维速度')
  * 			.并更名以下属性({
  * 				速率2: '速率之平方'     // 此处有意改称之，以为示例。
  * 			})
- * 			.且设以下直接可用之属性({
+ * 			.且为受体设以下直接可用之属性({
  * 				速率: '',             // 此处采用默认名称即可，因而取值留空。
  * 				速率2: '速率之平方'	// 此处采有意改称之，以为示例。
  * 				方向: '移动方向'       // 此处有意将速度之“方向”改称“移动方向”。
  * 			}).予(this);
  * 
- * 		传授().实例对象源于此类(二维矢量)
+ * 		传授操控器.传授.类(二维矢量).之实例对象()
  * 			.视作('二维位置')
  * 			.构建时依据({
  * 				x: 3,
@@ -106,9 +112,9 @@ module.exports = WulechuanImpartationOperator;
  * 			})
  * 			.予(this);
  * 
- * 		传授().实例对象源于此类(二维矢量)
+ * 		传授操控器.传授.类(二维矢量).之实例对象()
  * 			.视作('二维力')
- * 			.且设以下直接可用之属性({
+ * 			.且为受体设以下直接可用之属性({
  * 				强度: '受力强度',
  * 				方向: '受力方向'
  * 			})
@@ -124,7 +130,9 @@ module.exports = WulechuanImpartationOperator;
  * 	};
  * 
  * 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
- * 	传授().对象(My2DParticle).予(一个字面量对象用作受体);
+ * 
+ * 	var 传授操控器 = new WulechuanImportationOperator;
+ * 	传授操控器.传授.类(二维粒子).之实例对象().予(一个字面量对象用作受体);
  * 
  * 
  * 进而不难想见，所谓“普通对象”，亦可被用作传授源体，其属性和方法可传授予“受体”对象。
@@ -137,7 +145,8 @@ module.exports = WulechuanImpartationOperator;
  * 
  * 	var 一个字面量对象用作受体 = { 姓名: '吴乐川', 电子邮件地址: 'wulechuan@live.com' };
  * 	
- * 传授().对象(传授源).予(一个字面量对象用作受体);
+ * 	var 传授操控器 = new WulechuanImportationOperator;
+ * 	传授操控器.传授.类(传授源).予(一个字面量对象用作受体);
  * 
  * 
  * 
@@ -216,19 +225,21 @@ module.exports = WulechuanImpartationOperator;
  * 	}
  * 
  * 	function My2DPoint() {
- * 		impart().theClass(My2DVector).as('position2D').to(this);
+ * 		var impartationOperator = new WulechuanImpartationOperator;
+ * 		impartationOperator.impart.anInstanceOf(My2DVector).as('position2D').to(this);
  * 	}
  * 
  * 	function My2DParticle() {
- * 		impart().theClass(My2DVector).as('position2D').renamedAs('pos').to(this);
+ * 		var impartationOperator = new WulechuanImpartationOperator;
+ * 		impartationOperator.impart.anInstanceOf(My2DVector).as('position2D').renamedAs('pos').to(this);
  * 
- * 		impart().theClass(My2DVector).as('velocity2D').renamedAs({
+ * 		impartationOperator.impart.anInstanceOf(My2DVector).as('velocity2D').renamedAs({
  * 			speed: 'velocityLength',
  * 			speed2: 'squareSpeed'
  * 			velocityDirection: 'movingDirection'
  * 		}).to(this);
  * 
- * 		impart().theClass(My2DVector)
+ * 		impartationOperator.impart.anInstanceOf(My2DVector)
  * 			.as('position2D')
  * 			.buildAccordingTo({
  * 				x: 3,
@@ -241,7 +252,7 @@ module.exports = WulechuanImpartationOperator;
  * 			})
  * 			.to(this);
  * 
- * 		impart().theClass(My2DVector)
+ * 		impartationOperator.impart.anInstanceOf(My2DVector)
  * 			.usingThisProfile('force2D')
  * 			.addAliasesForAttributes({
  * 				strength: 's',
@@ -261,7 +272,9 @@ module.exports = WulechuanImpartationOperator;
  * 	};
  * 
  * 	var myLovelyObjectLiteral = { name: '吴乐川', email: 'wulechuan@live.com' };
- * 	impart().theClass(My2DParticle).to(myLovelyObjectLiteral);
+ * 
+ * 	var impartationOperator = new WulechuanImpartationOperator;
+ * 	impartationOperator.impart.anInstanceOf(My2DParticle).to(myLovelyObjectLiteral);
  * 
  * 
  * One can imagine that an object literal can also treated
@@ -276,7 +289,8 @@ module.exports = WulechuanImpartationOperator;
  * 	};
  * 
  * 	var myObjectLiteralAsGrantee = { name: '吴乐川', email: 'wulechuan@live.com' };
- * 	impart
+ * 	var impartationOperator = new WulechuanImpartationOperator;
+ * 	impartationOperator.impart
  * 		.theObject(myObjectAsImpartationSource)
  * 		.to(myObjectLiteralAsGrantee);
  * 
@@ -373,6 +387,7 @@ function WulechuanImpartationOperator() {
 
 
 	var methodNames_theObject_zhCN = [
+		'对象',
 		'此对象'
 	];
 	var methodNames_theObject_enUS = [
@@ -383,6 +398,7 @@ function WulechuanImpartationOperator() {
 
 
 	var methodNames_theClass_zhCN = [
+		'类',
 		'此类'
 	];
 	var methodNames_theClass_enUS = [
