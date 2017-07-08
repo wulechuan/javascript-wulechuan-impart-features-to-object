@@ -1107,7 +1107,7 @@ function WulechuanImpartationOperator() {
 		var _keyAsEitherAttributeNameOrAlias;
 
 		var _keyIsAnAttributeName;
-		var _keyIsAnAlias;
+		var _keyIsAnAliasThatIsAlreadyDefined;
 
 		// A value might be anything,
 		// an attribute name, another alias,
@@ -1119,12 +1119,12 @@ function WulechuanImpartationOperator() {
 		var _attributeName;
 
 		// A single value, which is detected to be an alias, to deal with.
-		var _alias;
+		var _aliasAmongTheValue;
 		var _theAliasIsActuallyAnAttribute;
 		var _theAliasOfAKeyIsTheSameAsTheKeyItself;
 
 
-		var _aliasesArrayOfCurrentKey;
+		var _aliasesArrayFromValueOfCurrentKey;
 		var _nonDuplicatedAliasesForCurrentAttributeName;
 
 
@@ -1134,8 +1134,6 @@ function WulechuanImpartationOperator() {
 				continue;
 			}
 
-			_valueOfARule = _aliasesRules[_keyAsEitherAttributeNameOrAlias];
-
 			_keyIsAnAttributeName =
 				theSourceObjectToImpartAttributesFrom.hasOwnProperty(
 					_keyAsEitherAttributeNameOrAlias
@@ -1143,7 +1141,7 @@ function WulechuanImpartationOperator() {
 
 			if (_keyIsAnAttributeName) {
 				_attributeName = _keyAsEitherAttributeNameOrAlias;
-				_keyIsAnAlias = false;
+				_keyIsAnAliasThatIsAlreadyDefined = false;
 			} else {
 				_attributeName =
 					_flatternedRecordsForBackwardsMapping[
@@ -1151,11 +1149,58 @@ function WulechuanImpartationOperator() {
 					];
 				
 				if (_attributeName) {
-					_keyIsAnAlias = true;
+					_keyIsAnAliasThatIsAlreadyDefined = true;
 				}
 			}
 
-			if ( ! _keyIsAnAttributeName && ! _keyIsAnAlias) {
+
+
+
+			_valueOfARule = _aliasesRules[_keyAsEitherAttributeNameOrAlias];
+			_valueIsAFunction = _the(_valueOfARule).isAFunction();
+
+
+			if (_valueIsAFunction) { // We are about to define a new attribute via the function
+
+				if (_keyIsAnAliasThatIsAlreadyDefined) {
+					var _mappedValue = // Might be either an attribute name of a function
+						_flatternedRecordsForBackwardsMapping[_keyAsEitherAttributeNameOrAlias];
+
+					var _existedDefinitionIsAlsoAFunction = _the(_mappedValue).isAFunction();
+
+					_reportMultilingualErrors({
+						'zh-CN':
+							'名称“'+_keyAsEitherAttributeNameOrAlias+'”'+
+							(_existedDefinitionIsAlsoAFunction ?
+								'已另有函数定义其内容，' :
+								('已定义为属性“'+_mappedValue+'”之别名，')
+							)+
+							'不应再以一函数重新定义之。'
+							,
+
+						'en-US':
+							'The caption "'+_keyAsEitherAttributeNameOrAlias+'"'+
+							(_existedDefinitionIsAlsoAFunction ?
+								'is already defined via another function, ' :
+								(
+									'is already mapped to the attribute "'+
+									_mappedValue+'" as an alias of its, '
+								)
+							)+
+							'and should not be redefined.'
+					});
+
+					// Although at present the "abort" method does nothing
+					// if it's invoked within the last stage.
+					// But what if this piece of code were settled
+					// into another non-ending stage in the future?
+					stagesOfClassRoute.abort();
+					stagesOfObjectRoute.abort();
+
+					continue;
+				}
+
+			} else if ( ! _keyIsAnAttributeName && ! _keyIsAnAliasThatIsAlreadyDefined) {
 				_reportMultilingualErrors({
 					'zh-CN':
 						'给定对象或给定类之实例没有名为'+
@@ -1180,13 +1225,9 @@ function WulechuanImpartationOperator() {
 				continue;
 			}
 
-			_aliasesArrayOfCurrentKey =
-				_aliasesRules[_keyAsEitherAttributeNameOrAlias];
-
-			if (_the(_aliasesArrayOfCurrentKey).isNotAnArray()) {
-				_aliasesArrayOfCurrentKey = [_aliasesArrayOfCurrentKey];
+			if (_the(_valueOfARule).isNotAnArray()) {
+				_aliasesArrayFromValueOfCurrentKey = [_valueOfARule];
 			}
-
 
 
 
@@ -1203,22 +1244,21 @@ function WulechuanImpartationOperator() {
 
 
 
-
-			for (var _i=0; _i<_aliasesArrayOfCurrentKey.length; _i++) {
-				_alias = _aliasesArrayOfCurrentKey[_i];
+			for (var _i=0; _i<_aliasesArrayFromValueOfCurrentKey.length; _i++) {
+				_aliasAmongTheValue = _aliasesArrayFromValueOfCurrentKey[_i];
 				_theAliasIsActuallyAnAttribute =
 					theSourceObjectToImpartAttributesFrom
-						.hasOwnProperty(_alias);
+						.hasOwnProperty(_aliasAmongTheValue);
 
 				if (_theAliasIsActuallyAnAttribute) {
-					if (_alias !== _attributeName) {
+					if (_aliasAmongTheValue !== _attributeName) {
 						_reportMultilingualErrors({
 							'zh-CN':
-								'所选别名“‘'+_alias+'”与另一属性重名。'
+								'所选别名“‘'+_aliasAmongTheValue+'”与另一属性重名。'
 								,
 
 							'en-US':
-								'The alias "'+_alias+'" is actually another existing attribute.'
+								'The alias "'+_aliasAmongTheValue+'" is actually another existing attribute.'
 						});
 
 						// Although at present the "abort" method does nothing
@@ -1235,15 +1275,15 @@ function WulechuanImpartationOperator() {
 
 
 				_theAliasOfAKeyIsTheSameAsTheKeyItself =
-					_alias === _keyAsEitherAttributeNameOrAlias;
+					_aliasAmongTheValue === _keyAsEitherAttributeNameOrAlias;
 				if (_theAliasOfAKeyIsTheSameAsTheKeyItself) {
 					continue;
 				}
 
 
 
-				_nonDuplicatedAliasesForCurrentAttributeName[_alias] = true;
-				_flatternedRecordsForBackwardsMapping[_alias] =
+				_nonDuplicatedAliasesForCurrentAttributeName[_aliasAmongTheValue] = true;
+				_flatternedRecordsForBackwardsMapping[_aliasAmongTheValue] =
 					_attributeName;
 			}
 		}
