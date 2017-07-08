@@ -669,6 +669,14 @@ function WulechuanImpartationOperator() {
 
 	function _the(subject) {
 		return {
+			isAFunction: function() {
+				return typeof subject === 'function';
+			},
+
+			isNotAFunction: function() {
+				return typeof subject !== 'function';
+			},
+
 			isNeitherAnObjectNorAnArray: function() {
 				return !subject || typeof subject !== 'object';
 			},
@@ -792,7 +800,7 @@ function WulechuanImpartationOperator() {
 	 * @param {!function} theGivenFunction
 	 */
 	function theClass(theGivenFunction) {
-		if (typeof theGivenFunction !== 'function') {
+		if (_the(theGivenFunction).isNotAFunction()) {
 			_reportMultilingualErrors({
 				'zh-CN':
 					'首个参数必须为一个函数。其将被视为一个构造函数以构造一个对象。'+
@@ -906,7 +914,7 @@ function WulechuanImpartationOperator() {
 	}
 
 	function withASetterForTheChiefProperty(_setterFunction) {
-		if (typeof _setterFunction === 'function') {
+		if (_the(_setterFunction).isAFunction()) {
 			chiefPropertyCustomizedSetter = _setterFunction;
 		}
 	}
@@ -987,11 +995,11 @@ function WulechuanImpartationOperator() {
 
 
 			// Detect the setter defiend within the used profile
-			if (typeof chiefPropertyCustomizedSetter !== 'function') {
+			if (_the(chiefPropertyCustomizedSetter).isAFunction()) {
 				var _chiefPropertySetterViaUsedProfile = usedImpartationProfileOfClass[
 					propertyName_chiefPropertySetterViaProfiles
 				];
-				if (typeof _chiefPropertySetterViaUsedProfile === 'function') {
+				if (_the(_chiefPropertySetterViaUsedProfile).isAFunction()) {
 					chiefPropertyCustomizedSetter = _chiefPropertySetterViaUsedProfile;
 				}
 			}
@@ -1096,23 +1104,37 @@ function WulechuanImpartationOperator() {
 				allAttributesToAddDirectlyUnderGranteeFlattenedBackwardsMapping;
 		}
 
+		var _keyAsEitherAttributeNameOrAlias;
 
 		var _keyIsAnAttributeName;
 		var _keyIsAnAlias;
 
+		// A value might be anything,
+		// an attribute name, another alias,
+		// or even a custom function to build up a new attribute using the key as the name.
+		var _valueOfARule;
+		var _valueIsAFunction;
+
+		// The found valid attribute name of the impartation source
 		var _attributeName;
-		var _aliasesArrayOfCurrentKey;
-		var _nonDuplicatedAliasesForCurrentAttributeName;
+
+		// A single value, which is detected to be an alias, to deal with.
 		var _alias;
 		var _theAliasIsActuallyAnAttribute;
 		var _theAliasOfAKeyIsTheSameAsTheKeyItself;
 
 
+		var _aliasesArrayOfCurrentKey;
+		var _nonDuplicatedAliasesForCurrentAttributeName;
 
-		for (var _keyAsEitherAttributeNameOrAlias in _aliasesRules) {
+
+
+		for (_keyAsEitherAttributeNameOrAlias in _aliasesRules) {
 			if (_the(_keyAsEitherAttributeNameOrAlias).isNotAValidKey()) {
 				continue;
 			}
+
+			_valueOfARule = _aliasesRules[_keyAsEitherAttributeNameOrAlias];
 
 			_keyIsAnAttributeName =
 				theSourceObjectToImpartAttributesFrom.hasOwnProperty(
@@ -1240,7 +1262,7 @@ function WulechuanImpartationOperator() {
 			}
 		};
 
-		if (typeof chiefPropertyCustomizedSetter === 'function') {
+		if (_the(chiefPropertyCustomizedSetter).isAFunction()) {
 			_configuration.set = function (newValue) {
 				chiefPropertyCustomizedSetter(theSourceObjectToImpartAttributesFrom, newValue);
 			};
@@ -1356,7 +1378,7 @@ function WulechuanImpartationOperator() {
 			}
 		};
 
-		if (typeof theSourceObjectToImpartAttributesFrom[_attributeName] !== 'function') {
+		if (_the(theSourceObjectToImpartAttributesFrom[_attributeName]).isNotAFunction()) {
 			_configuration.set = function (newValue) {
 				theSourceObjectToImpartAttributesFrom[_attributeName] = newValue;
 			};
