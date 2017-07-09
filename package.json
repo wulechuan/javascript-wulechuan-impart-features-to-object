@@ -6,8 +6,9 @@
   "main": "build/@wulechuan-impart-features-to-object.min.js",
   "scripts": {
     "dev": "require-self && gulp",
-    "rel": "gulp --release",
     "release": "gulp --release",
+    "rel": "npm run release",
+    "prepublish": "npm run release && npm version patch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
